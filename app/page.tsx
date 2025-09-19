@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Image from 'next/image'
 
 // Page components — authentication UI is provided by root `ClerkProvider` and header.
 
@@ -36,7 +37,7 @@ const TestimonialCard = ({ quote, name, title, avatar }: TestimonialCardProps) =
     <div className="bg-white/80 backdrop-blur-sm p-8 rounded-xl shadow-lg border border-gray-200 text-left">
   <p className="text-gray-600 italic mb-4">&quot;{quote}&quot;</p>
         <div className="flex items-center">
-            <img src={avatar} alt={name} className="w-12 h-12 rounded-full mr-4 border-2 border-sky-200"/>
+            <Image src={avatar} alt={name} width={48} height={48} unoptimized className="w-12 h-12 rounded-full mr-4 border-2 border-sky-200"/>
             <div>
                 <p className="font-bold text-gray-800">{name}</p>
                 <p className="text-gray-500 text-sm">{title}</p>
@@ -48,8 +49,6 @@ const TestimonialCard = ({ quote, name, title, avatar }: TestimonialCardProps) =
 
 const App = () => {
   const [isYearly, setIsYearly] = useState(false);
-  // A simple state to toggle between logged in and logged out view for demonstration
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Animation on scroll hook
   const useOnScreen = (options: IntersectionObserverInit): [React.RefObject<HTMLElement | null>, boolean] => {
@@ -104,7 +103,7 @@ const App = () => {
                 </a>
               </div>
               <div className="mt-12 sm:mt-16 relative w-full max-w-5xl mx-auto">
-                 <img src="https://placehold.co/1000x600/e0f2fe/0c4a6e?text=Dev+Pocket+UI" alt="Dev Pocket Dashboard Mockup" className="w-full h-auto rounded-xl shadow-2xl border-2 border-white transition-transform transform hover:scale-105 duration-300" />
+                 <Image src="https://placehold.co/1000x600/e0f2fe/0c4a6e?text=Dev+Pocket+UI" alt="Dev Pocket Dashboard Mockup" width={1000} height={600} unoptimized className="w-full h-auto rounded-xl shadow-2xl border-2 border-white transition-transform transform hover:scale-105 duration-300" />
               </div>
             </div>
   </section>
@@ -149,7 +148,7 @@ const App = () => {
   <section ref={testimonialsRef} id="testimonials" className={`py-16 sm:py-24 bg-sky-50/70 rounded-3xl transition-all duration-700 ease-out ${testimonialsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}> 
             <div className="max-w-6xl mx-auto text-center">
                 <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">Loved by Developers Worldwide</h2>
-                <p className="text-lg text-gray-600 mb-12">Don't just take our word for it. Here's what our users are saying.</p>
+                <p className="text-lg text-gray-600 mb-12">Don&apos;t just take our word for it. Here&apos;s what our users are saying.</p>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <TestimonialCard 
                         quote="Dev Pocket completely changed how I approach learning. The personalized roadmap was a game-changer for me."
@@ -176,7 +175,7 @@ const App = () => {
   {/* Pricing */}
   <section ref={pricingRef} id="pricing" className={`py-16 sm:py-24 text-center transition-all duration-700 ease-out ${pricingVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}> 
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">Simple, Transparent Pricing</h2>
-            <p className="text-lg text-gray-600 mb-8">Choose the plan that's right for you.</p>
+            <p className="text-lg text-gray-600 mb-8">Choose the plan that&apos;s right for you.</p>
             <div className="flex justify-center items-center space-x-4 mb-10">
                 <span className={`font-medium ${!isYearly ? 'text-sky-600' : 'text-gray-500'}`}>Monthly</span>
                 <label className="relative inline-flex items-center cursor-pointer">
