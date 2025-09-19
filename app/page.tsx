@@ -2,15 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 
-// Mock Components for Clerk/Next.js since they aren't available in this environment
-// This is for display purposes only.
-const SignedOut = ({ children }: { children: React.ReactNode }) => <div className="flex items-center gap-4">{children}</div>;
-const SignedIn = ({ children }: { children: React.ReactNode }) => <div className="flex items-center gap-4">{children}</div>;
-const UserButton = () => (
-    <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
-        <img src="https://placehold.co/100x100/E2E8F0/4A5568?text=U" alt="User Avatar" />
-    </div>
-);
+// Page components — authentication UI is provided by root `ClerkProvider` and header.
 
 // Helper component for Icons
 const Icon = ({ children }: { children: React.ReactNode }) => (
@@ -42,7 +34,7 @@ interface TestimonialCardProps {
 }
 const TestimonialCard = ({ quote, name, title, avatar }: TestimonialCardProps) => (
     <div className="bg-white/80 backdrop-blur-sm p-8 rounded-xl shadow-lg border border-gray-200 text-left">
-        <p className="text-gray-600 italic mb-4">"{quote}"</p>
+  <p className="text-gray-600 italic mb-4">&quot;{quote}&quot;</p>
         <div className="flex items-center">
             <img src={avatar} alt={name} className="w-12 h-12 rounded-full mr-4 border-2 border-sky-200"/>
             <div>

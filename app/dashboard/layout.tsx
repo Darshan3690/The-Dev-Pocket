@@ -13,7 +13,7 @@ import {
   Bot
 } from "lucide-react"
 
-import { ClerkProvider, UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import { UserButton } from "@clerk/nextjs";
 
 
 
