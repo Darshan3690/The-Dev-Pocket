@@ -6,6 +6,7 @@ The Dev Pocket is an open-source project built to empower **learners, students, 
 ![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=for-the-badge)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
 ![GitHub Repo stars](https://img.shields.io/github/stars/Darshan3690/The-Dev-Pocket?style=for-the-badge)
+![GitHub forks](https://img.shields.io/github/forks/Darshan3690/The-Dev-Pocket?style=for-the-badge)
 
 ---
 
@@ -122,7 +123,7 @@ We love contributions from everyone! 💖
 
 This project is part of **Hacktoberfest 2025**! 🌍✨
 
-* Submit 4 PRs to win official swag 🎉
+* Submit 6 PRs to win official swag 🎉
 * Check the [issues](https://github.com/Darshan3690/The-Dev-Pocket/issues) tagged `hacktoberfest`, `good first issue`, or `help wanted`
 
 ---
@@ -145,12 +146,23 @@ Here are some previews of the project in action:
 
 ---
 
-## 👥 Contributors
+## 👥 Contributors, Stargazers & Forkers
 
 Thanks goes to these wonderful people:
 
+### 👥 Contributors
 <a href="https://github.com/Darshan3690/The-Dev-Pocket/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Darshan3690/The-Dev-Pocket" />
+</a>
+
+### ⭐ Stargazers
+<a href="https://github.com/Darshan3690/The-Dev-Pocket/stargazers">
+  <img src="https://reporoster.com/stars/Darshan3690/The-Dev-Pocket" alt="Stargazers repo roster" />
+</a>
+
+### 🍴 Forkers
+<a href="https://github.com/Darshan3690/The-Dev-Pocket/network/members">
+  <img src="https://reporoster.com/forks/Darshan3690/The-Dev-Pocket" alt="Forkers repo roster" />
 </a>
 
 ---
