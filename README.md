@@ -22,10 +22,12 @@ The Dev Pocket is an open-source project built to empower **learners, students, 
 
 ## 🛠️ Tech Stack
 
-* **Frontend**: Next.js, TypeScript, Tailwind CSS
-* **Backend**: Node.js, Express, MongoDB (future scope)
-* **Auth**: Clerk
-* **Deployment**: Vercel / Netlify
+- **Frontend**: Next.js, React.js, TypeScript, Tailwind CSS  
+- **Backend**: Next.js (API Routes), Node.js  
+- **ORM**: Prisma  
+- **Auth**: Clerk  
+- **Database**: Supabase  
+- **Deployment**: Vercel  
 
 ---
 
@@ -89,13 +91,29 @@ Visit `http://localhost:3000`
 
 ## 🤝 Contributing
 
-We love contributions from everyone! 💖
+We love contributions from everyone! 💖  
 
-1. Fork this repository
-2. Create a feature branch (`git checkout -b feature-xyz`)
-3. Commit your changes (`git commit -m "feat: add new xyz"`)
-4. Push to your fork (`git push origin feature-xyz`)
-5. Open a Pull Request 🚀
+### 🚩 Before You Start  
+⭐ **First, star the repository** — show some love to the project!  
+🍴 Then, fork it and start contributing 🚀  
+
+### Steps to Contribute  
+
+1. **Star** this repository ⭐  
+2. **Fork** the repo  
+3. Create a feature branch  
+   ```bash
+   git checkout -b feature-xyz
+   ```  
+4. Commit your changes  
+   ```bash
+   git commit -m "feat: add new xyz"
+   ```  
+5. Push to your fork  
+   ```bash
+   git push origin feature-xyz
+   ```  
+6. Open a Pull Request 🚀  
 
 📌 Please read our [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) before contributing.
 
