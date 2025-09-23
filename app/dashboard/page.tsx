@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link";
 
 export default function DashboardPage() {
   const [studyBuddyOpen, setStudyBuddyOpen] = useState(false)
@@ -10,22 +11,22 @@ export default function DashboardPage() {
       {/* Stat Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="bg-white p-4 rounded-lg shadow">
-            <p className="text-sm text-gray-500">Points</p>
-            <h3 className="text-2xl font-bold">1,240</h3>
+          <p className="text-sm text-gray-500">Points</p>
+          <h3 className="text-2xl font-bold">1,240</h3>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
-            <p className="text-sm text-gray-500">Streak</p>
-            <h3 className="text-2xl font-bold">7 Days 🔥</h3>
+          <p className="text-sm text-gray-500">Streak</p>
+          <h3 className="text-2xl font-bold">7 Days 🔥</h3>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
-            <p className="text-sm text-gray-500">Daily Goal</p>
-            <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                <div className="bg-blue-600 h-2.5 rounded-full" style={{width: "60%"}}></div>
-            </div>
+          <p className="text-sm text-gray-500">Daily Goal</p>
+          <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+            <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "60%" }}></div>
+          </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
-            <p className="text-sm text-gray-500">Tasks Done</p>
-            <h3 className="text-2xl font-bold">12/20</h3>
+          <p className="text-sm text-gray-500">Tasks Done</p>
+          <h3 className="text-2xl font-bold">12/20</h3>
         </div>
       </div>
 
@@ -33,12 +34,20 @@ export default function DashboardPage() {
       <div className="space-y-4">
         <h2 className="text-lg font-semibold">Quick Actions</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <button onClick={() => setStudyBuddyOpen(true)} className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition">Study Buddy</button>
-            <button className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition">AI Project Recommender</button>
-            <button className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition">Resume Builder</button>
-            <button className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition">Quiz Center</button>
-            <button className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition">Notes / To-Do</button>
-            <button className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition">Calendar</button>
+          <Link href="/create-roadmap">
+            <button className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition w-full">
+              ✨ Create Roadmap
+            </button>
+          </Link>
+
+
+
+          <button onClick={() => setStudyBuddyOpen(true)} className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition">Study Buddy</button>
+          <button className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition">AI Project Recommender</button>
+          <button className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition">Resume Builder</button>
+          <button className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition">Quiz Center</button>
+          <button className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition">Notes / To-Do</button>
+          <button className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition">Calendar</button>
         </div>
       </div>
 

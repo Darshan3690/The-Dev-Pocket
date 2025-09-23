@@ -1,0 +1,18 @@
+.roadmap-creator-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: auto;
+  font-family: sans-serif;
+}
+/* ... etc, paste all the CSS from the previous step here ... */
+.roadmap-title-input { width: 100%; padding: 0.75rem; font-size: 1.2rem; margin-bottom: 2rem; border: 1px solid #ccc; border-radius: 8px; }
+.creator-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
+.skill-library, .roadmap-canvas { border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; background-color: #f9f9f9; }
+h2 { margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
+.skill-list { max-height: 60vh; overflow-y: auto; }
+.skill-item, .roadmap-node { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border-radius: 6px; margin-bottom: 0.5rem; background-color: #fff; border: 1px solid #ddd; }
+.skill-item button { background-color: #28a745; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-weight: bold; }
+.roadmap-node .node-index { margin-right: 1rem; color: #888; font-weight: bold; }
+.roadmap-node .node-name { flex-grow: 1; }
+.roadmap-node .remove-btn { background-color: #dc3545; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-weight: bold; }
+.empty-message { color: #777; text-align: center; padding: 2rem; }
