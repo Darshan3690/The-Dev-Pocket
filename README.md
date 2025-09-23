@@ -128,24 +128,6 @@ This project is part of **Hacktoberfest 2025**! 🌍✨
 
 ---
 
-## 📸 Screenshots
-
-Here are some previews of the project in action:
-
-### Getting Started Setup
-
-![Getting Started](docs/images/getting-started.png)
-
-### Dashboard Preview
-
-![Dashboard](docs/images/dashboard.png)
-
-### Resource Page
-
-![Resources](docs/images/resources.png)
-
----
-
 ## 👥 Contributors, Stargazers & Forkers
 
 Thanks goes to these wonderful people:
