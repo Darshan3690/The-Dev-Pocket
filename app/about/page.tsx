@@ -14,50 +14,81 @@ const AboutPage = () => {
         />
       </Head>
 
-      <main className="max-w-4xl mx-auto px-6 py-16">
-        <h1 className="text-4xl font-bold mb-6 text-gray-900">About Dev Pocket</h1>
+      <main className="max-w-5xl mx-auto px-6 py-20 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-lg shadow-lg">
+        <h1 className="text-5xl font-extrabold mb-10 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-pink-600">
+          About Dev Pocket
+        </h1>
 
-        <p className="text-lg text-gray-700 mb-6">
-          Dev Pocket is an AI-powered platform designed to help developers grow their careers faster and smarter. 
-          Whether you're just starting out or looking to advance, we bring all the essential tools and resources 
-          together in one place.
+        <p className="text-xl text-gray-800 mb-8 max-w-3xl mx-auto">
+          <span className="font-semibold text-indigo-700">Dev Pocket</span> is a cutting-edge AI-powered platform dedicated to empowering developers at every stage of their careers. Whether you're a beginner taking your first steps or an experienced engineer seeking new challenges, Dev Pocket provides a personalized experience tailored just for you.
         </p>
 
-        <h2 className="text-2xl font-semibold text-gray-900 mb-4">What We Offer</h2>
-        <ul className="list-disc list-inside text-gray-700 space-y-2 mb-6">
-          <li>
-            <strong>Personalized Roadmaps:</strong> Custom learning paths built by AI, tailored to your goals and current skills.
-          </li>
-          <li>
-            <strong>Curated Learning:</strong> High-quality tutorials, courses, and resources—all hand-picked for your success.
-          </li>
-          <li>
-            <strong>Job Search & Matching:</strong> Discover job opportunities that match your skills and interests.
-          </li>
-          <li>
-            <strong>Resume & Portfolio Tools:</strong> Build polished, professional resumes and portfolios using intelligent templates.
-          </li>
-        </ul>
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold text-indigo-700 mb-6">What We Offer</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow cursor-pointer">
+              <h3 className="text-xl font-semibold text-pink-600 mb-3">Personalized Roadmaps</h3>
+              <p className="text-gray-700">
+                AI-driven custom learning paths designed to match your unique goals and skillset — so you learn efficiently and effectively.
+              </p>
+            </div>
+            <div className="p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow cursor-pointer">
+              <h3 className="text-xl font-semibold text-pink-600 mb-3">Curated Learning</h3>
+              <p className="text-gray-700">
+                Access high-quality tutorials, courses, and resources vetted by experts to help you stay ahead in your development journey.
+              </p>
+            </div>
+            <div className="p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow cursor-pointer">
+              <h3 className="text-xl font-semibold text-pink-600 mb-3">Job Search & Matching</h3>
+              <p className="text-gray-700">
+                Discover job opportunities perfectly aligned with your skills, interests, and career aspirations, powered by intelligent matching.
+              </p>
+            </div>
+            <div className="p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow cursor-pointer">
+              <h3 className="text-xl font-semibold text-pink-600 mb-3">Resume & Portfolio Tools</h3>
+              <p className="text-gray-700">
+                Create professional resumes and portfolios effortlessly with AI-powered templates and personalized feedback.
+              </p>
+            </div>
+          </div>
+        </section>
 
-        <h2 className="text-2xl font-semibold text-gray-900 mb-4">Our Mission</h2>
-        <p className="text-gray-700 mb-6">
-          We believe every developer deserves a clear path to success. Our mission is to eliminate guesswork and empower 
-          you to achieve your career goals with structure, insight, and support.
-        </p>
+        <section className="mb-12 bg-indigo-100 p-8 rounded-xl shadow-inner">
+          <h2 className="text-3xl font-bold text-indigo-800 mb-6">Our Mission</h2>
+          <p className="text-gray-900 max-w-4xl mx-auto">
+            At <span className="font-semibold">Dev Pocket</span>, we believe every developer deserves a clear, guided path to success. We strive to eliminate the guesswork, providing you with structured insights, smart tools, and continuous support to help you achieve your career goals faster and with confidence.
+          </p>
+        </section>
 
-        <h2 className="text-2xl font-semibold text-gray-900 mb-4">Trusted by Developers Worldwide</h2>
-        <p className="text-gray-700 mb-6">
-          Thousands of developers around the world use Dev Pocket to learn new skills, stay updated with job opportunities, 
-          and present themselves professionally in the job market.
-        </p>
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold text-pink-700 mb-6">Trusted by Developers Worldwide</h2>
+          <p className="text-gray-800 max-w-4xl mx-auto mb-6">
+            Thousands of developers globally rely on Dev Pocket to learn new skills, connect with job opportunities, and showcase their talents professionally.
+          </p>
+          <div className="flex flex-wrap justify-center gap-8">
+            {["🌎 Global Reach", "💡 Innovative AI", "👩‍💻 Expert Community", "🚀 Career Growth"].map((item) => (
+              <div key={item} className="bg-white rounded-full px-6 py-3 shadow-md text-indigo-600 font-semibold text-lg hover:bg-indigo-50 transition cursor-default">
+                {item}
+              </div>
+            ))}
+          </div>
+        </section>
 
-        <p className="text-gray-700">
-          Ready to take the next step?{' '}
-          <a href="/" className="text-blue-600 underline hover:text-blue-800">
-            Get started for free today
-          </a>{' '}
-          and begin your journey with Dev Pocket.
-        </p>
+        <section className="text-center">
+          <p className="text-gray-700 text-lg mb-8">
+            Ready to take your developer career to the next level?{' '}
+            <a href="/" className="text-indigo-700 underline font-bold hover:text-indigo-900">
+              Get started for free today
+            </a>{' '}
+            and join the <span className="font-semibold">Dev Pocket</span> community.
+          </p>
+          <a
+            href="/signup"
+            className="inline-block bg-gradient-to-r from-pink-500 to-indigo-600 text-white px-10 py-3 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition"
+          >
+            Join Now
+          </a>
+        </section>
       </main>
     </>
   );
