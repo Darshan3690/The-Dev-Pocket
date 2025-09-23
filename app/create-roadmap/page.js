@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link'; // Use next/link
 import skillsData from '../data/skills.json'; // Adjusted import path
 import './CreateRoadmapPage.css'; // We will create this CSS file next
 

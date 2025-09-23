@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 
 const AboutPage = () => {
   return (
@@ -20,7 +21,7 @@ const AboutPage = () => {
         </h1>
 
         <p className="text-xl text-gray-800 mb-8 max-w-3xl mx-auto">
-          <span className="font-semibold text-indigo-700">Dev Pocket</span> is a cutting-edge AI-powered platform dedicated to empowering developers at every stage of their careers. Whether you're a beginner taking your first steps or an experienced engineer seeking new challenges, Dev Pocket provides a personalized experience tailored just for you.
+          <span className="font-semibold text-indigo-700">Dev Pocket</span> is a cutting-edge AI-powered platform dedicated to empowering developers at every stage of their careers. Whether you&apos;re a beginner taking your first steps or an experienced engineer seeking new challenges, Dev Pocket provides a personalized experience tailored just for you.
         </p>
 
         <section className="mb-12">
@@ -77,17 +78,17 @@ const AboutPage = () => {
         <section className="text-center">
           <p className="text-gray-700 text-lg mb-8">
             Ready to take your developer career to the next level?{' '}
-            <a href="/" className="text-indigo-700 underline font-bold hover:text-indigo-900">
+            <Link href="/" className="text-indigo-700 underline font-bold hover:text-indigo-900">
               Get started for free today
-            </a>{' '}
+            </Link>{' '}
             and join the <span className="font-semibold">Dev Pocket</span> community.
           </p>
-          <a
+          <Link
             href="/signup"
             className="inline-block bg-gradient-to-r from-pink-500 to-indigo-600 text-white px-10 py-3 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition"
           >
             Join Now
-          </a>
+          </Link>
         </section>
       </main>
     </>
