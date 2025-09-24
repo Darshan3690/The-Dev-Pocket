@@ -5,40 +5,10 @@ import Image from "next/image";
 import { motion } from "framer-motion"; // ✅ for animation
 import { HeroWithMockup } from "@/components/hero-with-mockup";
 import FeaturesSectionWithHoverEffects from "./components/FeaturedSection";
-import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-
-interface TestimonialBubbleProps {
-  quote: string;
-  name: string;
-  title: string;
-  avatar: string;
-}
-
-const testimonials = [
-  {
-    quote:
-      "Dev Pocket completely changed how I approach learning. The personalized roadmap was a game-changer for me.",
-    name: "Sarah Johnson",
-    designation: "Frontend Developer",
-    src: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    quote:
-      "The job matching feature is incredible. I found a role that was a perfect fit in less than a month.",
-    name: "Michael Chen",
-    designation: "Backend Engineer",
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    quote:
-      "As a recent bootcamp grad, Dev Pocket gave me the structure and confidence I needed to land my first tech job.",
-    name: "Jessica Rodriguez",
-    designation: "Junior Full-Stack Developer",
-    src: "https://images.unsplash.com/photo-1623582854588-d60de57fa33f?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-];
+import HowItWorks from "./components/HowItWorks";
+import Testimonials from "./components/Testimonials";
 
 // const TestimonialBubble = ({ quote, name, title, avatar }: TestimonialBubbleProps) => (
 
@@ -102,10 +72,6 @@ const App = () => {
 
   const [heroRef, heroVisible] = useOnScreen({ threshold: 0.3 });
   const [featuresRef, featuresVisible] = useOnScreen({ threshold: 0.2 });
-  const [howItWorksRef, howItWorksVisible] = useOnScreen({ threshold: 0.2 });
-  const [testimonialsRef, testimonialsVisible] = useOnScreen({
-    threshold: 0.1,
-  });
   const [pricingRef, pricingVisible] = useOnScreen({ threshold: 0.2 });
   const [ctaRef, ctaVisible] = useOnScreen({ threshold: 0.3 });
 
@@ -148,85 +114,11 @@ const App = () => {
       </motion.section>
 
       {/* How It Works */}
-      <section
-        ref={howItWorksRef}
-        id="how-it-works"
-        className={`py-16 sm:py-24 text-center transition-all max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 duration-700 ease-out ${
-          howItWorksVisible
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-10"
-        }`}
-      >
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
-          Get Started in 3 Simple Steps
-        </h2>
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-12 relative">
-          {/* Dotted line for desktop */}
-          <div
-            className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 border-t-2 border-dashed border-sky-300"
-            style={{ transform: "translateY(-50%)", zIndex: -1 }}
-          ></div>
-          <div className="relative">
-            <div className="w-16 h-16 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-2xl font-bold text-sky-600 mx-auto mb-4">
-              1
-            </div>
-            <h3 className="text-xl font-bold mb-2">Sign Up</h3>
-            <p className="text-gray-500">
-              Create your free account and tell us about your career goals.
-            </p>
-          </div>
-          <div className="relative">
-            <div className="w-16 h-16 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-2xl font-bold text-sky-600 mx-auto mb-4">
-              2
-            </div>
-            <h3 className="text-xl font-bold mb-2">Get Your Roadmap</h3>
-            <p className="text-gray-500">
-              Our AI analyzes your profile and generates a personalized plan.
-            </p>
-          </div>
-          <div className="relative">
-            <div className="w-16 h-16 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-2xl font-bold text-sky-600 mx-auto mb-4">
-              3
-            </div>
-            <h3 className="text-xl font-bold mb-2">Start Growing</h3>
-            <p className="text-gray-500">
-              Follow your plan, track progress, and land your dream job.
-            </p>
-          </div>
-        </div>
-      </section>
+        <HowItWorks />
 
-      <section
-        id="testimonials"
-        className="relative py-20 sm:py-28 bg-gradient-to-r from-sky-50 via-[#135b85]/10 to-sky-50"
-      >
-        {/* 🔹 Top Wave Divider */}
-        <div className="absolute top-0 left-0 w-full overflow-hidden leading-none">
-          <svg
-            data-name="Layer 1"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 1200 120"
-            preserveAspectRatio="none"
-            className="w-full h-20 fill-white"
-          >
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
-          </svg>
-        </div>
-
-        {/* 🔹 Content */}
-        <div className="relative max-w-6xl mx-auto text-center z-10">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Loved by Developers Worldwide
-          </h2>
-          <p className="text-lg text-gray-600 mb-12">
-            Here’s how Dev Pocket is transforming careers across the globe.
-          </p>
-
-          {/* ✅ Animated Testimonials */}
-          <AnimatedTestimonials testimonials={testimonials} />
-        </div>
-      </section>
-
+      {/* Testimonials */}
+        <Testimonials />
+          
       {/* Pricing */}
       <section
         ref={pricingRef}
