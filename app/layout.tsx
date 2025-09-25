@@ -51,12 +51,12 @@ export default function RootLayout({
                   >
                     Features
                   </a>
-                  <a
-                    href="#about"
+                  <Link
+                    href="/about"
                     className="text-gray-600 hover:text-blue-600 transition-colors"
                   >
                     About
-                  </a>
+                  </Link>
                   <a
                     href="#"
                     className="text-gray-600 hover:text-blue-600 transition-colors"

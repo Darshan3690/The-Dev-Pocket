@@ -1,0 +1,17 @@
+[
+  { "id": "html", "name": "HTML5" },
+  { "id": "css", "name": "CSS3" },
+  { "id": "javascript", "name": "JavaScript (ES6+)" },
+  { "id": "react", "name": "React" },
+  { "id": "vue", "name": "Vue.js" },
+  { "id": "angular", "name": "Angular" },
+  { "id": "nodejs", "name": "Node.js" },
+  { "id": "express", "name": "Express.js" },
+  { "id": "mongodb", "name": "MongoDB" },
+  { "id": "sql", "name": "SQL Databases" },
+  { "id": "docker", "name": "Docker" },
+  { "id": "git", "name": "Git & GitHub" },
+  { "id": "typescript", "name": "TypeScript" },
+  { "id": "python", "name": "Python" },
+  { "id": "aws-basics", "name": "AWS Basics" }
+]
