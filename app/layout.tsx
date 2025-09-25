@@ -51,6 +51,21 @@ export default function RootLayout({
                   href="/"
                   aria-label="Go to homepage"
                   className="flex items-center space-x-2 group"
+                  onClick={(e) => {
+                    // If already on homepage, just scroll to top smoothly and don't re-navigate
+                    if (pathname === "/") {
+                      e.preventDefault();
+                      setMobileOpen(false);
+                      try {
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      } catch {
+                        window.scrollTo(0, 0);
+                      }
+                      setHash("");
+                    } else {
+                      setMobileOpen(false);
+                    }
+                  }}
                 >
                   <svg
                     className="w-8 h-8 text-blue-600 transition-transform group-hover:scale-105"
