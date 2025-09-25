@@ -109,30 +109,30 @@ const App = () => {
           heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
-        <div className="bg-gradient-to-b from-sky-100 to-white py-20 sm:py-28 px-4 sm:px-6 lg:px-8 text-center rounded-3xl mt-6 border border-sky-200 shadow-xl overflow-hidden">
+        <div className="bg-gradient-to-b from-sky-100 to-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 text-center rounded-3xl mt-6 border border-sky-200 shadow-xl overflow-hidden">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-800 leading-tight mb-4">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-800 leading-tight mb-3">
               The AI-Powered Platform for Your Dev Career
             </h1>
-            <p className="text-lg sm:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
               Dev Pocket centralizes learning, personalized roadmaps, job
               updates, and powerful resume tools—all in one smart dashboard.
             </p>
             <a
               href="#pricing"
-              className="inline-block bg-sky-600 text-white text-lg font-semibold py-3 px-8 rounded-full shadow-2xl hover:bg-sky-700 transition-transform transform hover:scale-105"
+              className="inline-block bg-sky-600 text-white text-base font-semibold py-2.5 px-6 rounded-full shadow-2xl hover:bg-sky-700 transition-transform transform hover:scale-105"
             >
               Get Started Free
             </a>
           </div>
-          <div className="mt-12 sm:mt-16 relative w-full max-w-5xl mx-auto">
+          <div className="mt-8 sm:mt-12 relative w-full max-w-4xl mx-auto">
             <Image
               src="https://placehold.co/1000x600/e0f2fe/0c4a6e?text=Dev+Pocket+UI"
               alt="Dev Pocket Dashboard Mockup"
               width={1000}
               height={600}
               unoptimized
-              className="w-full h-auto rounded-xl shadow-2xl border-2 border-white transition-transform transform hover:scale-105 duration-300"
+              className="w-full h-auto rounded-xl shadow-2xl border border-white transition-transform transform hover:scale-105 duration-300"
             />
           </div>
         </div>
@@ -142,7 +142,7 @@ const App = () => {
       <section
         ref={featuresRef}
         id="features"
-        className={`py-16 sm:py-24 text-center transition-all duration-700 ease-out ${
+        className={`py-12 sm:py-16 text-center transition-all duration-700 ease-out ${
           featuresVisible
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-10"
@@ -151,11 +151,11 @@ const App = () => {
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
           All the Tools You Need, in One Place
         </h2>
-        <p className="text-lg text-gray-600 mb-12 max-w-3xl mx-auto">
+        <p className="text-base sm:text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
           Stop juggling multiple platforms. Dev Pocket brings everything
           together to accelerate your growth.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
           <FeatureCard
             title="Personalized Roadmaps"
             icon={
@@ -256,7 +256,7 @@ const App = () => {
       <section
         ref={howItWorksRef}
         id="how-it-works"
-        className={`py-16 sm:py-24 text-center transition-all duration-700 ease-out ${
+        className={`py-12 sm:py-16 text-center transition-all duration-700 ease-out ${
           howItWorksVisible
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-10"
@@ -265,14 +265,14 @@ const App = () => {
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
           Get Started in 3 Simple Steps
         </h2>
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 relative">
           {/* Dotted line for desktop */}
           <div
             className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 border-t-2 border-dashed border-sky-300"
             style={{ transform: "translateY(-50%)", zIndex: -1 }}
           ></div>
           <div className="relative">
-            <div className="w-16 h-16 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-2xl font-bold text-sky-600 mx-auto mb-4">
+            <div className="w-12 h-12 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-xl font-bold text-sky-600 mx-auto mb-3">
               1
             </div>
             <h3 className="text-xl font-bold mb-2">Sign Up</h3>
@@ -281,7 +281,7 @@ const App = () => {
             </p>
           </div>
           <div className="relative">
-            <div className="w-16 h-16 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-2xl font-bold text-sky-600 mx-auto mb-4">
+            <div className="w-12 h-12 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-xl font-bold text-sky-600 mx-auto mb-3">
               2
             </div>
             <h3 className="text-xl font-bold mb-2">Get Your Roadmap</h3>
@@ -290,7 +290,7 @@ const App = () => {
             </p>
           </div>
           <div className="relative">
-            <div className="w-16 h-16 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-2xl font-bold text-sky-600 mx-auto mb-4">
+            <div className="w-12 h-12 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-xl font-bold text-sky-600 mx-auto mb-3">
               3
             </div>
             <h3 className="text-xl font-bold mb-2">Start Growing</h3>
@@ -305,7 +305,7 @@ const App = () => {
       <section
         ref={testimonialsRef}
         id="testimonials"
-        className={`py-16 sm:py-24 bg-sky-50/70 rounded-3xl transition-all duration-700 ease-out ${
+        className={`py-12 sm:py-16 bg-sky-50/70 rounded-3xl transition-all duration-700 ease-out ${
           testimonialsVisible
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-10"
@@ -315,11 +315,11 @@ const App = () => {
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
             Loved by Developers Worldwide
           </h2>
-          <p className="text-lg text-gray-600 mb-12">
+          <p className="text-base sm:text-lg text-gray-600 mb-8">
             Don&apos;t just take our word for it. Here&apos;s what our users are
             saying.
           </p>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <TestimonialCard
               quote="Dev Pocket completely changed how I approach learning. The personalized roadmap was a game-changer for me."
               name="Sarah Johnson"
@@ -346,7 +346,7 @@ const App = () => {
       <section
         ref={pricingRef}
         id="pricing"
-        className={`py-16 sm:py-24 text-center transition-all duration-700 ease-out ${
+        className={`py-12 sm:py-16 text-center transition-all duration-700 ease-out ${
           pricingVisible
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-10"
@@ -355,10 +355,10 @@ const App = () => {
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
           Simple, Transparent Pricing
         </h2>
-        <p className="text-lg text-gray-600 mb-8">
+        <p className="text-base sm:text-lg text-gray-600 mb-6">
           Choose the plan that&apos;s right for you.
         </p>
-        <div className="flex justify-center items-center space-x-4 mb-10">
+        <div className="flex justify-center items-center space-x-3 mb-8">
           <span
             className={`font-medium ${
               !isYearly ? "text-sky-600" : "text-gray-500"
@@ -387,51 +387,51 @@ const App = () => {
           </span>
         </div>
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {/* Free Plan */}
-          <div className="border border-gray-200 rounded-2xl p-8">
-            <h3 className="text-2xl font-bold mb-2">Hobby</h3>
+          <div className="border border-gray-200 rounded-2xl p-6">
+            <h3 className="text-xl font-bold mb-2">Hobby</h3>
             <p className="text-gray-500 mb-6">
               For individuals getting started.
             </p>
-            <p className="text-5xl font-extrabold mb-6">
-              $0<span className="text-lg font-medium text-gray-500">/mo</span>
+            <p className="text-4xl font-extrabold mb-5">
+              $0<span className="text-base font-medium text-gray-500">/mo</span>
             </p>
             <a
               href="#"
-              className="w-full inline-block bg-gray-100 text-gray-700 font-bold py-3 px-10 rounded-full hover:bg-gray-200 transition-colors"
+              className="w-full inline-block bg-gray-100 text-gray-700 font-bold py-2.5 px-6 rounded-full hover:bg-gray-200 transition-colors"
             >
               Get Started
             </a>
           </div>
           {/* Pro Plan */}
-          <div className="border-2 border-sky-500 rounded-2xl p-8 relative shadow-2xl">
+          <div className="border-2 border-sky-500 rounded-2xl p-6 relative shadow-2xl">
             <span className="absolute top-0 -translate-y-1/2 bg-sky-500 text-white text-xs font-bold px-3 py-1 rounded-full">
               MOST POPULAR
             </span>
-            <h3 className="text-2xl font-bold mb-2">Pro</h3>
+            <h3 className="text-xl font-bold mb-2">Pro</h3>
             <p className="text-gray-500 mb-6">
               For professionals ready to accelerate.
             </p>
-            <p className="text-5xl font-extrabold mb-6">
+            <p className="text-4xl font-extrabold mb-5">
               ${isYearly ? "12" : "15"}
-              <span className="text-lg font-medium text-gray-500">/mo</span>
+              <span className="text-base font-medium text-gray-500">/mo</span>
             </p>
             <a
               href="#"
-              className="w-full inline-block bg-sky-600 text-white font-bold py-3 px-10 rounded-full hover:bg-sky-700 transition-colors"
+              className="w-full inline-block bg-sky-600 text-white font-bold py-2.5 px-6 rounded-full hover:bg-sky-700 transition-colors"
             >
               Start Free Trial
             </a>
           </div>
           {/* Teams Plan */}
-          <div className="border border-gray-200 rounded-2xl p-8">
-            <h3 className="text-2xl font-bold mb-2">Teams</h3>
+          <div className="border border-gray-200 rounded-2xl p-6">
+            <h3 className="text-xl font-bold mb-2">Teams</h3>
             <p className="text-gray-500 mb-6">For organizations and groups.</p>
-            <p className="text-5xl font-extrabold mb-6">Custom</p>
+            <p className="text-4xl font-extrabold mb-5">Custom</p>
             <a
               href="#"
-              className="w-full inline-block bg-gray-100 text-gray-700 font-bold py-3 px-10 rounded-full hover:bg-gray-200 transition-colors"
+              className="w-full inline-block bg-gray-100 text-gray-700 font-bold py-2.5 px-6 rounded-full hover:bg-gray-200 transition-colors"
             >
               Contact Sales
             </a>
@@ -442,21 +442,21 @@ const App = () => {
       {/* Call to Action */}
       <section
         ref={ctaRef}
-        className={`bg-gradient-to-r from-sky-600 to-indigo-600 text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 text-center rounded-3xl mx-auto max-w-7xl mb-16 shadow-xl transition-all duration-700 ease-out ${
+        className={`bg-gradient-to-r from-sky-600 to-indigo-600 text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 text-center rounded-3xl mx-auto max-w-7xl mb-12 shadow-xl transition-all duration-700 ease-out ${
           ctaVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-extrabold mb-4">
+          <h2 className="text-3xl sm:text-4xl font-extrabold mb-3">
             Ready to Level Up Your Career?
           </h2>
-          <p className="text-lg sm:text-xl font-light mb-8 opacity-90">
+          <p className="text-base sm:text-lg font-light mb-6 opacity-90">
             Join thousands of developers already using Dev Pocket to achieve
             their goals.
           </p>
           <a
             href="#"
-            className="inline-block bg-white text-sky-600 font-bold text-lg py-3 px-10 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-105"
+            className="inline-block bg-white text-sky-600 font-bold text-base py-2.5 px-6 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-105"
           >
             Start Your Free Trial
           </a>
