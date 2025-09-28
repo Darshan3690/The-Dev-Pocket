@@ -44,9 +44,8 @@ export default function RootLayout({
           ) : (
             <>
               {/* Header */}
-              <header className={`w-full max-w-7xl mx-auto py-4 sm:py-5 px-4 sm:px-6 lg:px-8 flex justify-between items-center z-10 sticky top-0 ${
-                scrolled ? "bg-white/90 shadow-md" : "bg-white/70 shadow-sm"
-              } backdrop-blur-sm rounded-b-xl border-b border-gray-200 transition-colors`}>
+              <header className={`w-full max-w-7xl mx-auto py-4 sm:py-5 px-4 sm:px-6 lg:px-8 flex justify-between items-center z-10 sticky top-0 ${scrolled ? "bg-white/90 shadow-md" : "bg-white/70 shadow-sm"
+                } backdrop-blur-sm rounded-b-xl border-b border-gray-200 transition-colors`}>
                 <Link
                   href="/"
                   aria-label="Go to homepage"
@@ -85,25 +84,22 @@ export default function RootLayout({
                 <nav className="hidden md:flex space-x-1">
                   <Link
                     href="/#features"
-                    className={`rounded-full px-3 py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white transition-colors ${
-                      hash === "#features" && pathname === "/" ? "text-blue-700 bg-blue-50" : "text-gray-700 hover:text-blue-600"
-                    }`}
+                    className={`rounded-full px-3 py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white transition-colors ${hash === "#features" && pathname === "/" ? "text-blue-700 bg-blue-50" : "text-gray-700 hover:text-blue-600"
+                      }`}
                   >
                     Features
                   </Link>
                   <Link
                     href="/about"
-                    className={`rounded-full px-3 py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white transition-colors ${
-                      pathname.startsWith("/about") ? "text-blue-700 bg-blue-50" : "text-gray-700 hover:text-blue-600"
-                    }`}
+                    className={`rounded-full px-3 py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white transition-colors ${pathname.startsWith("/about") ? "text-blue-700 bg-blue-50" : "text-gray-700 hover:text-blue-600"
+                      }`}
                   >
                     About
                   </Link>
                   <Link
                     href="/#pricing"
-                    className={`rounded-full px-3 py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white transition-colors ${
-                      hash === "#pricing" && pathname === "/" ? "text-blue-700 bg-blue-50" : "text-gray-700 hover:text-blue-600"
-                    }`}
+                    className={`rounded-full px-3 py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white transition-colors ${hash === "#pricing" && pathname === "/" ? "text-blue-700 bg-blue-50" : "text-gray-700 hover:text-blue-600"
+                      }`}
                   >
                     Pricing
                   </Link>
@@ -161,19 +157,18 @@ export default function RootLayout({
               {/* Footer */}
               <footer className="w-full max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center text-gray-500 border-t">
                 <p className="mb-2">
-                  &copy; {new Date().getFullYear()} Dev Pocket. All rights
-                  reserved.
+                  &copy; {new Date().getFullYear()} Dev Pocket. All rights reserved.
                 </p>
                 <div className="flex justify-center space-x-4">
-                  <a href="#" className="hover:text-sky-600 transition-colors">
+                  <Link href="/privacy" className="hover:text-sky-600 transition-colors">
                     Privacy Policy
-                  </a>
-                  <a href="#" className="hover:text-sky-600 transition-colors">
+                  </Link>
+                  <Link href="/terms" className="hover:text-sky-600 transition-colors">
                     Terms of Service
-                  </a>
-                  <a href="#" className="hover:text-sky-600 transition-colors">
+                  </Link>
+                  <Link href="/contact" className="hover:text-sky-600 transition-colors">
                     Contact
-                  </a>
+                  </Link>
                 </div>
               </footer>
             </>
