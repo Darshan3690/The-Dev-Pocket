@@ -266,11 +266,6 @@ const App = () => {
           Get Started in 3 Simple Steps
         </h2>
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-          {/* Dotted line for desktop */}
-          <div
-            className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 border-t-2 border-dashed border-sky-300"
-            style={{ transform: "translateY(-50%)", zIndex: -1 }}
-          ></div>
           <div className="relative">
             <div className="w-12 h-12 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-xl font-bold text-sky-600 mx-auto mb-3">
               1
