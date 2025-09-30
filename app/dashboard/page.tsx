@@ -30,27 +30,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="space-y-4">
-        <h2 className="text-lg font-semibold">Quick Actions</h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Link href="/create-roadmap">
-            <button className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition w-full">
-              ✨ Create Roadmap
-            </button>
-          </Link>
-
-
-
-          <button onClick={() => setStudyBuddyOpen(true)} className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition">Study Buddy</button>
-          <button className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition">AI Project Recommender</button>
-          <button className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition">Resume Builder</button>
-          <button className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition">Quiz Center</button>
-          <button className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition">Notes / To-Do</button>
-          <button className="bg-blue-600 text-white p-3 rounded-lg shadow hover:bg-blue-700 transition">Calendar</button>
-        </div>
-      </div>
-
+      
       {/* AI Study Buddy Modal (simplified) */}
       {studyBuddyOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
