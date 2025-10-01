@@ -1,6 +1,6 @@
 "use client"
 
-import { ReactNode } from "react"
+import { ReactNode, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -11,161 +11,315 @@ import {
   Calendar,
   StickyNote,
   Bot,
+  ChevronLeft,
+  ChevronRight,
   Search,
+  Bell,
+  Settings,
+  User,
+  LogOut,
   Menu,
-  X
+  X,
+  Plus,
+  UserPlus,
+  Zap,
+  MapPin,
+  ArrowRight
 } from "lucide-react"
-import { UserButton } from "@clerk/nextjs"
-import { useState, useEffect } from "react"
+
+import { UserButton } from "@clerk/nextjs";
 
 const sidebarLinks = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "AI Project Recommender", href: "/dashboard/projects", icon: Bot },
-  { name: "Quiz Center", href: "/dashboard/quiz", icon: Brain },
-  { name: "Resume Builder", href: "/dashboard/resume", icon: FileText },
-  { name: "Community Forum", href: "/dashboard/forum", icon: Users },
-  { name: "Notes / To-Do", href: "/dashboard/notes", icon: StickyNote },
-  { name: "Calendar", href: "/dashboard/calendar", icon: Calendar },
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard, tooltip: "Overview" },
+  { name: "AI Project Recommender", href: "/dashboard/projects", icon: Bot, tooltip: "Get AI project suggestions" },
+  { name: "Quiz Center", href: "/dashboard/quiz", icon: Brain, tooltip: "Test your knowledge" },
+  { name: "Resume Builder", href: "/dashboard/resume", icon: FileText, tooltip: "Build your resume" },
+  { name: "Community Forum", href: "/dashboard/forum", icon: Users, tooltip: "Connect with others" },
+  { name: "Notes / To-Do", href: "/dashboard/notes", icon: StickyNote, tooltip: "Manage your tasks" },
+  { name: "Calendar", href: "/dashboard/calendar", icon: Calendar, tooltip: "Schedule events" }
+]
+
+// Enhanced Quick Actions data with better organization make it more interactive and visually appealing
+const quickActions = [
+  {
+    id: "create-roadmap",
+    title: "Create Roadmap",
+    subtitle: "Plan your learning journey",
+    icon: MapPin,
+    href: "/create-roadmap", // it already exists
+    gradient: "from-blue-500 via-blue-600 to-indigo-600",
+    hoverGradient: "from-blue-600 via-blue-700 to-indigo-700",
+    category: "Planning"
+  },
+  {
+    id: "study-buddy",
+    title: "Study Buddy",
+    subtitle: "Find learning partners",
+    icon: UserPlus,
+    href: "/dashboard/study-buddy", // add the study buddy link here
+    gradient: "from-purple-500 via-purple-600 to-pink-600",
+    hoverGradient: "from-purple-600 via-purple-700 to-pink-700",
+    category: "Social"
+  },
+  {
+    id: "ai-recommender",
+    title: "AI Project Recommender",
+    subtitle: "Get personalized suggestions",
+    icon: Bot,
+    href: "/dashboard/projects", // add the AI recommender link here
+    gradient: "from-emerald-500 via-teal-600 to-cyan-600",
+    hoverGradient: "from-emerald-600 via-teal-700 to-cyan-700",
+    category: "AI Tools"
+  },
+  {
+    id: "resume-builder",
+    title: "Resume Builder",
+    subtitle: "Create stunning resumes",
+    icon: FileText,
+    href: "/dashboard/resume", // add the resume link here
+    gradient: "from-orange-500 via-red-500 to-pink-500",
+    hoverGradient: "from-orange-600 via-red-600 to-pink-600",
+    category: "Career"
+  },
+  {
+    id: "quiz-center",
+    title: "Quiz Center",
+    subtitle: "Test your knowledge",
+    icon: Brain,
+    href: "/dashboard/quiz", // add the quiz link here
+    gradient: "from-violet-500 via-purple-500 to-indigo-500",
+    hoverGradient: "from-violet-600 via-purple-600 to-indigo-600",
+    category: "Learning"
+  },
+  {
+    id: "notes-todo",
+    title: "Notes / To-Do",
+    subtitle: "Organize your tasks",
+    icon: StickyNote,
+    href: "/dashboard/notes", //add the notes link here
+    gradient: "from-amber-500 via-orange-500 to-red-500",
+    hoverGradient: "from-amber-600 via-orange-600 to-red-600",
+    category: "Productivity"
+  },
+  {
+    id: "calendar",
+    title: "Calendar",
+    subtitle: "Schedule and manage events",
+    icon: Calendar,
+    href: "/dashboard/calendar", // add the calendar link here
+    gradient: "from-green-500 via-emerald-500 to-teal-500",
+    hoverGradient: "from-green-600 via-emerald-600 to-teal-600",
+    category: "Planning"
+  },
+  {
+    id: "quick-start",
+    title: "Quick Start",
+    subtitle: "Jump into any topic",
+    icon: Zap,
+    href: "/dashboard/quick-start",
+    gradient: "from-pink-500 via-rose-500 to-red-500",
+    hoverGradient: "from-pink-600 via-rose-600 to-red-600",
+    category: "Getting Started"
+  }
 ]
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname()
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [notificationsOpen, setNotificationsOpen] = useState(false)
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false)
 
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-    
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+  // Quick Actions Component for better organization and readability
+  const QuickActionsSection = () => (
+    <div className="mb-8">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+            Quick Actions
+          </h2>
+          <p className="text-slate-600 mt-1">Jump into any feature instantly</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {quickActions.map((action) => {
+          const Icon = action.icon
+          return (
+            <Link
+              key={action.id}
+              href={action.href}
+              className="group relative overflow-hidden bg-white rounded-2xl border border-slate-200/60 hover:border-slate-300/60 transition-all duration-300 hover:shadow-xl hover:shadow-slate-200/40 hover:-translate-y-1"
+            >
+              {/* Background Gradient */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
+              
+              {/* Content */}
+              <div className="relative p-6">
+                {/* Icon with gradient background */}
+                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${action.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                  <Icon className="w-6 h-6 text-white" />
+                </div>
+
+                {/* Category Badge */}
+                <div className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600 mb-3 group-hover:bg-slate-200 transition-colors duration-200">
+                  {action.category}
+                </div>
+
+                {/* Title and Subtitle */}
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-slate-900 group-hover:text-slate-800 transition-colors duration-200">
+                    {action.title}
+                  </h3>
+                  <p className="text-sm text-slate-600 group-hover:text-slate-700 transition-colors duration-200">
+                    {action.subtitle}
+                  </p>
+                </div>
+
+                {/* Arrow Icon */}
+                <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                  <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600" />
+                </div>
+
+                {/* Hover Shine Effect */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                </div>
+              </div>
+
+              {/* Bottom Border Accent */}
+              <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${action.gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left`} />
+            </Link>
+          )
+        })}
+      </div>
+    </div>
+  )
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-gray-50 to-blue-50/30">
-      {/* Mobile Menu Button */}
-      <button
-        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="md:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-lg border"
-      >
-        {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-      </button>
+    <div className="flex h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      {/* Mobile overlay */}
+      {mobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
 
-      {/* Sidebar */}
+      {/* here we define the Sidebar */}
       <aside className={`
-        fixed md:static inset-y-0 left-0 z-40
-        w-64 bg-white/95 backdrop-blur-lg shadow-xl md:shadow-lg
-        transform transition-transform duration-300 ease-in-out
-        flex flex-col border-r border-gray-200
-        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        ${sidebarCollapsed ? 'w-16' : 'w-64'} 
+        ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        fixed lg:static inset-y-0 left-0 z-50
+        bg-white/90 backdrop-blur-xl border-r border-slate-200/60 
+        flex flex-col transition-all duration-300 ease-in-out
+        shadow-xl lg:shadow-none
       `}>
-        {/* Logo */}
-        <div className="h-20 flex items-center justify-center border-b border-gray-200 bg-gradient-to-r from-blue-600 to-purple-600">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-white">The Dev Pocket</h1>
-            <p className="text-blue-100 text-xs mt-1">Learn • Build • Grow</p>
-          </div>
+        {/* here we define the Logo/Brand */}
+        <div className="h-16 flex items-center justify-between px-4 border-b border-slate-200/60">
+          {!sidebarCollapsed && (
+            <div className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              The Dev Pocket
+            </div>
+          )}
+          <button
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            className="hidden lg:flex p-2 rounded-lg hover:bg-slate-100 transition-colors"
+          >
+            {sidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+          </button>
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="lg:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-1">
+        {/* here we define the Navigation */}
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
           {sidebarLinks.map((link) => {
             const isActive = pathname === link.href
             const Icon = link.icon
             return (
-              <Link
-                key={link.name}
-                href={link.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`
-                  flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200
-                  group relative overflow-hidden
-                  ${isActive 
-                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/25" 
-                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900 hover:shadow-md"
-                  }
-                `}
-              >
-                {/* Animated background */}
-                <div className={`
-                  absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 transition-transform duration-300
-                  ${isActive ? 'scale-100' : 'scale-0 group-hover:scale-100'}
-                `} />
+              <div key={link.name} className="relative group">
+                <Link
+                  href={link.href}
+                  className={`
+                    flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200
+                    ${isActive 
+                      ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg shadow-blue-500/25" 
+                      : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+                    }
+                    ${sidebarCollapsed ? 'justify-center' : ''}
+                  `}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Icon className={`${sidebarCollapsed ? 'w-5 h-5' : 'w-4 h-4'} flex-shrink-0`} />
+                  {!sidebarCollapsed && <span className="truncate">{link.name}</span>}
+                  {isActive && !sidebarCollapsed && (
+                    <div className="ml-auto w-2 h-2 bg-white rounded-full" />
+                  )}
+                </Link>
                 
-                {/* Content */}
-                <div className="relative z-10 flex items-center gap-3">
-                  <Icon className={`w-5 h-5 transition-transform duration-200 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
-                  <span className="font-medium">{link.name}</span>
-                </div>
-
-                {/* Active indicator */}
-                {isActive && (
-                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                {/* Tooltip for collapsed sidebar */}
+                {sidebarCollapsed && (
+                  <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-3 py-2 bg-slate-900 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50">
+                    {link.name}
+                    <div className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-4 border-transparent border-r-slate-900" />
                   </div>
                 )}
-              </Link>
+              </div>
             )
           })}
         </nav>
 
-        {/* User Profile Section */}
-        <div className="p-4 border-t border-gray-200">
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-50/50">
-            <div className="flex-shrink-0">
-              <UserButton 
-                appearance={{
-                  elements: {
-                    avatarBox: "w-10 h-10 ring-2 ring-white shadow-sm"
-                  }
-                }}
-              />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">Welcome back!</p>
-              <p className="text-xs text-gray-500 truncate">Continue learning</p>
-            </div>
-          </div>
+        {/* Bottom section */}
+        <div className="p-3 border-t border-slate-200/60">
+          <button className={`
+            flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 transition-all duration-200 w-full
+            ${sidebarCollapsed ? 'justify-center' : ''}
+          `}>
+            <Settings className={`${sidebarCollapsed ? 'w-5 h-5' : 'w-4 h-4'} flex-shrink-0`} />
+            {!sidebarCollapsed && <span>Settings</span>}
+          </button>
         </div>
       </aside>
 
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Navbar */}
-        <header className="h-20 bg-white/80 backdrop-blur-lg border-b border-gray-200/60 flex items-center justify-between px-6 lg:px-8">
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-blue-600 bg-clip-text text-transparent">
-              {sidebarLinks.find(link => link.href === pathname)?.name || "Dashboard"}
+        {/* Header */}
+        <header className="h-16 bg-white/80 backdrop-blur-xl border-b border-slate-200/60 flex items-center justify-between px-6 sticky top-0 z-30">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="lg:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+            <h1 className="text-xl font-semibold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+              Dashboard
             </h1>
-            <p className="text-sm text-gray-500 mt-1">
-              {getPageDescription(pathname)}
-            </p>
           </div>
           
-          <div className="flex items-center gap-4">
-            {/* Search Bar */}
+          <div className="flex items-center gap-3">
+            {/* Search */}
             <div className="relative hidden sm:block">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
                 type="text"
-                placeholder="Search features, tools..."
-                className="pl-10 pr-4 py-2.5 bg-gray-100 border-0 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all w-64 lg:w-80"
+                placeholder="Search anything..."
+                className="pl-10 pr-4 py-2 w-64 bg-slate-100/70 border-0 rounded-xl text-sm placeholder:text-slate-500 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-200"
               />
             </div>
 
-            {/* User Actions */}
-            <div className="flex items-center gap-3">
-              <div className="hidden sm:flex items-center gap-2 bg-blue-50 rounded-lg px-3 py-1.5">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm font-medium text-blue-700">Online</span>
-              </div>
+            {/* Profile */}
+            <div className="flex items-center gap-2">
               <UserButton 
-                afterSignOutUrl="/"
+                afterSignOutUrl="/" 
                 appearance={{
                   elements: {
-                    avatarBox: "w-10 h-10 ring-2 ring-blue-100 shadow-sm hover:ring-blue-200 transition-all"
+                    avatarBox: "w-9 h-9 rounded-xl"
                   }
                 }}
               />
@@ -174,35 +328,18 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-6 lg:p-8">
-          <div className="max-w-7xl mx-auto">
-            {children}
-          </div>
+        <main className="flex-1 overflow-y-auto p-6 bg-gradient-to-br from-slate-50/50 to-white/50">
+          {/* Render Quick Actions if on dashboard page, otherwise render children */}
+          {pathname === '/dashboard' ? (
+            <div>
+              <QuickActionsSection />
+              {children}
+            </div>
+          ) : (
+            children
+          )}
         </main>
       </div>
-
-      {/* Mobile Overlay */}
-      {isMobileMenuOpen && (
-        <div 
-          className="fixed inset-0 bg-black/20 z-30 md:hidden"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
     </div>
   )
-}
-
-// Helper function to get page descriptions
-function getPageDescription(pathname: string): string {
-  const descriptions: { [key: string]: string } = {
-    "/dashboard": "Overview of your learning progress and quick actions",
-    "/dashboard/projects": "AI-powered project recommendations based on your skills",
-    "/dashboard/quiz": "Test your knowledge with interactive quizzes",
-    "/dashboard/resume": "Build and customize your professional resume",
-    "/dashboard/forum": "Connect with other learners and share knowledge",
-    "/dashboard/notes": "Organize your notes and to-do lists",
-    "/dashboard/calendar": "Schedule and manage your learning sessions"
-  }
-  
-  return descriptions[pathname] || "Manage your learning journey"
 }
