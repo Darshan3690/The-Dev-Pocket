@@ -2,7 +2,7 @@ name: DevPocket
 on: [push, pull_request]
 
 jobs:
-  CI for Health Check:
+  CI_for_Health_Check:
     runs-on: ubuntu-latest
 
     services:
