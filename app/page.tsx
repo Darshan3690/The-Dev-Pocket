@@ -6,8 +6,12 @@ import Image from "next/image";
 // Page components — authentication UI is provided by root `ClerkProvider` and header.
 
 // Helper component for Icons
-const Icon = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex-shrink-0 w-12 h-12 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mb-4">
+const Icon = ({ children, ariaLabel }: { children: React.ReactNode; ariaLabel: string }) => (
+  <div 
+    className="flex-shrink-0 w-12 h-12 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mb-4"
+    role="img"
+    aria-label={ariaLabel}
+  >
     {children}
   </div>
 );
@@ -15,15 +19,16 @@ const Icon = ({ children }: { children: React.ReactNode }) => (
 // Feature Card Component
 interface FeatureCardProps {
   icon: React.ReactNode;
+  iconLabel: string;
   title: string;
   children: React.ReactNode;
 }
-const FeatureCard = ({ icon, title, children }: FeatureCardProps) => (
-  <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform">
-    {icon}
+const FeatureCard = ({ icon, iconLabel, title, children }: FeatureCardProps) => (
+  <article className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform">
+    <Icon ariaLabel={iconLabel}>{icon}</Icon>
     <h3 className="text-xl font-bold text-gray-800 mb-2">{title}</h3>
     <p className="text-gray-500 leading-relaxed">{children}</p>
-  </div>
+  </article>
 );
 
 // Testimonial Card Component
@@ -39,23 +44,23 @@ const TestimonialCard = ({
   title,
   avatar,
 }: TestimonialCardProps) => (
-  <div className="bg-white/80 backdrop-blur-sm p-8 rounded-xl shadow-lg border border-gray-200 text-left">
+  <blockquote className="bg-white/80 backdrop-blur-sm p-8 rounded-xl shadow-lg border border-gray-200 text-left">
     <p className="text-gray-600 italic mb-4">&quot;{quote}&quot;</p>
-    <div className="flex items-center">
+    <footer className="flex items-center">
       <Image
         src={avatar}
-        alt={name}
+        alt={`Profile photo of ${name}`}
         width={48}
         height={48}
         unoptimized
         className="w-12 h-12 rounded-full mr-4 border-2 border-sky-200"
       />
       <div>
-        <p className="font-bold text-gray-800">{name}</p>
+        <cite className="font-bold text-gray-800 not-italic">{name}</cite>
         <p className="text-gray-500 text-sm">{title}</p>
       </div>
-    </div>
-  </div>
+    </footer>
+  </blockquote>
 );
 
 const App = () => {
@@ -101,32 +106,43 @@ const App = () => {
   const [ctaRef, ctaVisible] = useOnScreen({ threshold: 0.3 });
 
   return (
-    <>
+    <main>
+      {/* Skip to main content link for keyboard navigation */}
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-sky-600 text-white px-4 py-2 rounded-md z-50"
+      >
+        Skip to main content
+      </a>
+      
       {/* Hero Section */}
       <section
+        id="main-content"
         ref={heroRef}
+        aria-labelledby="hero-heading"
         className={`transition-all duration-700 ease-out ${
           heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
         <div className="bg-gradient-to-b from-sky-100 to-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 text-center rounded-3xl mt-6 border border-sky-200 shadow-xl overflow-hidden">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-800 leading-tight mb-3">
-              The AI-Powered Platform for Your Dev Career
-            </h1>
-            <p className="text-base sm:text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
-              Dev Pocket centralizes learning, personalized roadmaps, job
-              updates, and powerful resume tools—all in one smart dashboard.
-            </p>
-            <a
+             <h1 id="hero-heading" className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-800 leading-tight mb-3">
+               The AI-Powered Platform for Your Dev Career
+             </h1>
+             <p className="text-base sm:text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
+               Dev Pocket centralizes learning, personalized roadmaps, job
+               updates, and powerful resume tools—all in one smart dashboard.
+             </p>
+             <a
               href="#pricing"
-              className="inline-block bg-sky-600 text-white text-base font-semibold py-2.5 px-6 rounded-full shadow-2xl hover:bg-sky-700 transition-transform transform hover:scale-105"
-            >
-              Get Started Free
-            </a>
-          </div>
-          <div className="mt-8 sm:mt-12 relative w-full max-w-4xl mx-auto">
-            <Image
+              className="inline-block bg-sky-600 text-white text-base font-semibold py-2.5 px-6 rounded-full shadow-2xl hover:bg-sky-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-sky-300 focus:ring-opacity-50"
+              aria-describedby="pricing-section"
+             >
+               Get Started Free
+             </a>
+           </div>
+           <div className="mt-8 sm:mt-12 relative w-full max-w-4xl mx-auto">
+             <Image
               src="https://placehold.co/1000x600/e0f2fe/0c4a6e?text=Dev+Pocket+UI"
               alt="Dev Pocket Dashboard Mockup"
               width={1000}
@@ -134,117 +150,130 @@ const App = () => {
               unoptimized
               className="w-full h-auto rounded-xl shadow-2xl border border-white transition-transform transform hover:scale-105 duration-300"
             />
-          </div>
-        </div>
-      </section>
+           </div>
+         </div>
+       </section>
 
-      {/* Features */}
-      <section
+       {/* Features */}
+       <section
         ref={featuresRef}
         id="features"
+        aria-labelledby="features-heading"
         className={`py-12 sm:py-16 text-center transition-all duration-700 ease-out ${
           featuresVisible
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-10"
         }`}
       >
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
-          All the Tools You Need, in One Place
-        </h2>
-        <p className="text-base sm:text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
-          Stop juggling multiple platforms. Dev Pocket brings everything
-          together to accelerate your growth.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-          <FeatureCard
-            title="Personalized Roadmaps"
-            icon={
-              <Icon>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
-              </Icon>
-            }
-          >
+         <h2 id="features-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
+           All the Tools You Need, in One Place
+         </h2>
+         <p className="text-base sm:text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
+           Stop juggling multiple platforms. Dev Pocket brings everything
+           together to accelerate your growth.
+         </p>
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left" role="list">
+           <FeatureCard
+             title="Personalized Roadmaps"
+             iconLabel="Lightning bolt icon representing personalized roadmaps"
+             icon={
+               <svg
+                 xmlns="http://www.w3.org/2000/svg"
+                 className="h-6 w-6"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor"
+                 aria-hidden="true"
+               >
+                 <path
+                   strokeLinecap="round"
+                   strokeLinejoin="round"
+                   strokeWidth={2}
+                   d="M13 10V3L4 14h7v7l9-11h-7z"
+                 />
+               </svg>
+             }
+           >
             Our AI crafts a custom learning path based on your goals and skill
             level.
-          </FeatureCard>
-          <FeatureCard
-            title="Curated Learning"
-            icon={
-              <Icon>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 6.253v11.494m-5.22-8.485l10.44 0M17.22 6.253L6.78 17.747M6.78 6.253l10.44 11.494"
-                  />
-                </svg>
-              </Icon>
-            }
-          >
-            Access top-tier courses, tutorials, and articles all in one place.
-          </FeatureCard>
-          <FeatureCard
+           </FeatureCard>
+           <FeatureCard
+             title="Curated Learning"
+             iconLabel="Academic cap icon representing curated learning"
+             icon={
+               <svg
+                 xmlns="http://www.w3.org/2000/svg"
+                 className="h-6 w-6"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor"
+                 aria-hidden="true"
+               >
+                 <path
+                   strokeLinecap="round"
+                   strokeLinejoin="round"
+                   strokeWidth={2}
+                   d="M12 6.253v11.494m-5.22-8.485l10.44 0M17.22 6.253L6.78 17.747M6.78 6.253l10.44 11.494"
+                 />
+                 <path
+                   strokeLinecap="round"
+                   strokeLinejoin="round"
+                   strokeWidth={2}
+                   d="M9.5 4L14.5 4"
+                 />
+                 <path
+                   strokeLinecap="round"
+                   strokeLinejoin="round"
+                   strokeWidth={2}
+                   d="M6.5 7.5L17.5 7.5"
+                 />
+               </svg>
+             }
+           >
+             Access top-tier courses, tutorials, and articles all in one place.
+           </FeatureCard>
+           <FeatureCard
             title="Job Search & Matching"
+            iconLabel="Search icon representing job search and matching"
             icon={
-              <Icon>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </Icon>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
             }
           >
             Find roles perfectly matched to your skills and interests.
           </FeatureCard>
           <FeatureCard
             title="Resume & Portfolio Tools"
+            iconLabel="Document icon representing resume and portfolio tools"
             icon={
-              <Icon>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  />
-                </svg>
-              </Icon>
+                />
+              </svg>
             }
           >
             Build professional resumes and portfolios with AI-powered templates.
@@ -256,23 +285,21 @@ const App = () => {
       <section
         ref={howItWorksRef}
         id="how-it-works"
+        aria-labelledby="how-it-works-heading"
         className={`py-12 sm:py-16 text-center transition-all duration-700 ease-out ${
           howItWorksVisible
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-10"
         }`}
       >
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
+        <h2 id="how-it-works-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
           Get Started in 3 Simple Steps
         </h2>
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-          {/* Dotted line for desktop */}
-          <div
-            className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 border-t-2 border-dashed border-sky-300"
-            style={{ transform: "translateY(-50%)", zIndex: -1 }}
-          ></div>
           <div className="relative">
-            <div className="w-12 h-12 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-xl font-bold text-sky-600 mx-auto mb-3">
+            <div className="w-12 h-12 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-xl font-bold text-sky-600 mx-auto mb-3"
+              aria-label="Step 1"
+            >
               1
             </div>
             <h3 className="text-xl font-bold mb-2">Sign Up</h3>
@@ -281,46 +308,51 @@ const App = () => {
             </p>
           </div>
           <div className="relative">
-            <div className="w-12 h-12 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-xl font-bold text-sky-600 mx-auto mb-3">
-              2
-            </div>
-            <h3 className="text-xl font-bold mb-2">Get Your Roadmap</h3>
-            <p className="text-gray-500">
-              Our AI analyzes your profile and generates a personalized plan.
-            </p>
-          </div>
-          <div className="relative">
-            <div className="w-12 h-12 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-xl font-bold text-sky-600 mx-auto mb-3">
-              3
-            </div>
-            <h3 className="text-xl font-bold mb-2">Start Growing</h3>
-            <p className="text-gray-500">
-              Follow your plan, track progress, and land your dream job.
-            </p>
-          </div>
-        </div>
-      </section>
+            <div className="w-12 h-12 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-xl font-bold text-sky-600 mx-auto mb-3"
+               aria-label="Step 2"
+             >
+               2
+             </div>
+             <h3 className="text-xl font-bold mb-2">Get Your Roadmap</h3>
+             <p className="text-gray-500">
+               Our AI analyzes your profile and generates a personalized plan.
+             </p>
+           </div>
+           <div className="relative">
+             <div className="w-12 h-12 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-xl font-bold text-sky-600 mx-auto mb-3"
+               aria-label="Step 3"
+             >
+               3
+             </div>
+             <h3 className="text-xl font-bold mb-2">Start Growing</h3>
+             <p className="text-gray-500">
+               Follow your plan, track progress, and land your dream job.
+             </p>
+           </div>
+         </div>
+       </section>
 
-      {/* Testimonials */}
-      <section
+       {/* Testimonials */}
+       <section
         ref={testimonialsRef}
         id="testimonials"
+        aria-labelledby="testimonials-heading"
         className={`py-12 sm:py-16 bg-sky-50/70 rounded-3xl transition-all duration-700 ease-out ${
           testimonialsVisible
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-10"
         }`}
       >
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
-            Loved by Developers Worldwide
-          </h2>
-          <p className="text-base sm:text-lg text-gray-600 mb-8">
-            Don&apos;t just take our word for it. Here&apos;s what our users are
-            saying.
-          </p>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <TestimonialCard
+         <div className="max-w-6xl mx-auto text-center">
+           <h2 id="testimonials-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
+             Loved by Developers Worldwide
+           </h2>
+           <p className="text-base sm:text-lg text-gray-600 mb-8">
+             Don&apos;t just take our word for it. Here&apos;s what our users are
+             saying.
+           </p>
+           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+             <TestimonialCard
               quote="Dev Pocket completely changed how I approach learning. The personalized roadmap was a game-changer for me."
               name="Sarah Johnson"
               title="Frontend Developer"
@@ -342,43 +374,52 @@ const App = () => {
         </div>
       </section>
 
-      {/* Pricing */}
-      <section
+       {/* Pricing */}
+       <section
         ref={pricingRef}
         id="pricing"
+        aria-labelledby="pricing-heading"
         className={`py-12 sm:py-16 text-center transition-all duration-700 ease-out ${
           pricingVisible
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-10"
         }`}
       >
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
-          Simple, Transparent Pricing
-        </h2>
-        <p className="text-base sm:text-lg text-gray-600 mb-6">
-          Choose the plan that&apos;s right for you.
-        </p>
-        <div className="flex justify-center items-center space-x-3 mb-8">
-          <span
+         <h2 id="pricing-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
+           Simple, Transparent Pricing
+         </h2>
+         <p className="text-base sm:text-lg text-gray-600 mb-6">
+           Choose the plan that&apos;s right for you.
+         </p>
+         <div className="flex justify-center items-center space-x-3 mb-8">
+           <span
             className={`font-medium ${
               !isYearly ? "text-sky-600" : "text-gray-500"
             }`}
+            id="monthly-label"
           >
             Monthly
           </span>
-          <label className="relative inline-flex items-center cursor-pointer">
+          <label 
+            className="relative inline-flex items-center cursor-pointer"
+            htmlFor="billing-toggle"
+          >
             <input
+              id="billing-toggle"
               type="checkbox"
               checked={isYearly}
               onChange={() => setIsYearly(!isYearly)}
               className="sr-only peer"
+              aria-describedby="yearly-label"
+              aria-label="Toggle between monthly and yearly billing"
             />
-            <div className="w-14 h-7 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-sky-600"></div>
-          </label>
-          <span
+             <div className="w-14 h-7 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-sky-600"></div>
+           </label>
+           <span
             className={`font-medium ${
               isYearly ? "text-sky-600" : "text-gray-500"
             }`}
+            id="yearly-label"
           >
             Yearly{" "}
             <span className="text-sm text-green-500 font-semibold">
@@ -386,52 +427,58 @@ const App = () => {
             </span>
           </span>
         </div>
-        {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {/* Free Plan */}
-          <div className="border border-gray-200 rounded-2xl p-6">
-            <h3 className="text-xl font-bold mb-2">Hobby</h3>
-            <p className="text-gray-500 mb-6">
-              For individuals getting started.
-            </p>
-            <p className="text-4xl font-extrabold mb-5">
-              $0<span className="text-base font-medium text-gray-500">/mo</span>
-            </p>
-            <a
+         {/* Pricing Cards */}
+         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+           {/* Free Plan */}
+           <div className="border border-gray-200 rounded-2xl p-6" role="article" aria-labelledby="hobby-plan">
+             <h3 id="hobby-plan" className="text-xl font-bold mb-2">Hobby</h3>
+             <p className="text-gray-500 mb-6">
+               For individuals getting started.
+             </p>
+             <p className="text-4xl font-extrabold mb-5">
+               <span aria-label="0 dollars">$0</span>
+               <span className="text-base font-medium text-gray-500">/mo</span>
+             </p>
+             <a
               href="#"
-              className="w-full inline-block bg-gray-100 text-gray-700 font-bold py-2.5 px-6 rounded-full hover:bg-gray-200 transition-colors"
+              className="w-full inline-block bg-gray-100 text-gray-700 font-bold py-2.5 px-6 rounded-full hover:bg-gray-200 transition-colors focus:outline-none focus:ring-4 focus:ring-gray-300 focus:ring-opacity-50"
+              aria-describedby="hobby-plan"
             >
               Get Started
             </a>
           </div>
-          {/* Pro Plan */}
-          <div className="border-2 border-sky-500 rounded-2xl p-6 relative shadow-2xl">
-            <span className="absolute top-0 -translate-y-1/2 bg-sky-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-              MOST POPULAR
-            </span>
-            <h3 className="text-xl font-bold mb-2">Pro</h3>
-            <p className="text-gray-500 mb-6">
-              For professionals ready to accelerate.
-            </p>
-            <p className="text-4xl font-extrabold mb-5">
-              ${isYearly ? "12" : "15"}
-              <span className="text-base font-medium text-gray-500">/mo</span>
-            </p>
-            <a
+           {/* Pro Plan */}
+           <div className="border-2 border-sky-500 rounded-2xl p-6 relative shadow-2xl" role="article" aria-labelledby="pro-plan">
+             <span className="absolute top-0 -translate-y-1/2 bg-sky-500 text-white text-xs font-bold px-3 py-1 rounded-full" aria-label="Most popular plan">
+               MOST POPULAR
+             </span>
+             <h3 id="pro-plan" className="text-xl font-bold mb-2">Pro</h3>
+             <p className="text-gray-500 mb-6">
+               For professionals ready to accelerate.
+             </p>
+             <p className="text-4xl font-extrabold mb-5">
+               <span aria-label={`${isYearly ? "12" : "15"} dollars`}> {/* FIX: Add screen reader-friendly price */}
+                 ${isYearly ? "12" : "15"}
+               </span>
+               <span className="text-base font-medium text-gray-500">/mo</span>
+             </p>
+             <a
               href="#"
-              className="w-full inline-block bg-sky-600 text-white font-bold py-2.5 px-6 rounded-full hover:bg-sky-700 transition-colors"
+              className="w-full inline-block bg-sky-600 text-white font-bold py-2.5 px-6 rounded-full hover:bg-sky-700 transition-colors focus:outline-none focus:ring-4 focus:ring-sky-300 focus:ring-opacity-50"
+             aria-describedby="pro-plan"
             >
               Start Free Trial
             </a>
           </div>
-          {/* Teams Plan */}
-          <div className="border border-gray-200 rounded-2xl p-6">
-            <h3 className="text-xl font-bold mb-2">Teams</h3>
-            <p className="text-gray-500 mb-6">For organizations and groups.</p>
-            <p className="text-4xl font-extrabold mb-5">Custom</p>
-            <a
+           {/* Teams Plan */}
+           <div className="border border-gray-200 rounded-2xl p-6" role="article" aria-labelledby="teams-plan">
+             <h3 id="teams-plan" className="text-xl font-bold mb-2">Teams</h3>
+             <p className="text-gray-500 mb-6">For organizations and groups.</p>
+             <p className="text-4xl font-extrabold mb-5" aria-label="Custom pricing">Custom</p>
+             <a
               href="#"
-              className="w-full inline-block bg-gray-100 text-gray-700 font-bold py-2.5 px-6 rounded-full hover:bg-gray-200 transition-colors"
+              className="w-full inline-block bg-gray-100 text-gray-700 font-bold py-2.5 px-6 rounded-full hover:bg-gray-200 transition-colors focus:outline-none focus:ring-4 focus:ring-gray-300 focus:ring-opacity-50"
+              aria-describedby="teams-plan"
             >
               Contact Sales
             </a>
@@ -439,15 +486,16 @@ const App = () => {
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section
+       {/* Call to Action */}
+       <section
         ref={ctaRef}
+        aria-labelledby="cta-heading"
         className={`bg-gradient-to-r from-sky-600 to-indigo-600 text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 text-center rounded-3xl mx-auto max-w-7xl mb-12 shadow-xl transition-all duration-700 ease-out ${
           ctaVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-extrabold mb-3">
+          <h2 id="cta-heading" className="text-3xl sm:text-4xl font-extrabold mb-3">
             Ready to Level Up Your Career?
           </h2>
           <p className="text-base sm:text-lg font-light mb-6 opacity-90">
@@ -456,13 +504,13 @@ const App = () => {
           </p>
           <a
             href="#"
-            className="inline-block bg-white text-sky-600 font-bold text-base py-2.5 px-6 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-105"
+            className="inline-block bg-white text-sky-600 font-bold text-base py-2.5 px-6 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50"
           >
             Start Your Free Trial
           </a>
         </div>
       </section>
-    </>
+    </main>
   );
 };
 
