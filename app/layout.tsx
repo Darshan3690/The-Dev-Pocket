@@ -166,7 +166,7 @@ export default function RootLayout({
                   <Link href="/terms" className="hover:text-sky-600 transition-colors">
                     Terms of Service
                   </Link>
-                  <Link href="/contact" className="hover:text-sky-600 transition-colors">
+                  <Link href="https://bento.me/darshan3690" target="_blank" rel="noopener noreferrer" className="hover:text-sky-600 transition-colors">
                     Contact
                   </Link>
                 </div>
