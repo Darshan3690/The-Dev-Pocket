@@ -25,7 +25,3 @@ model Project {
   userId    String?
   createdAt DateTime @default(now())
 }
-
-{
-  darshan
-}
