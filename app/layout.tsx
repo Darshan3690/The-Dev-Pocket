@@ -155,8 +155,11 @@ export default function RootLayout({
               <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {children}
               </main>
-              {/* Footer */}
-<footer className="w-full bg-gray-900 text-gray-300 py-12 px-6">
+             {/* Footer */}
+<footer 
+  className="w-full bg-gray-900 text-gray-300 py-12 px-6 mt-auto" 
+  role="contentinfo"
+>
   <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
     
     {/* Contact Section */}
@@ -249,13 +252,18 @@ export default function RootLayout({
       <Link href="/terms" className="hover:text-sky-400 transition-colors">
         Terms of Service
       </Link>
-      <Link href="/contact" className="hover:text-sky-400 transition-colors">
+      <Link 
+        href="https://bento.me/darshan3690" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="hover:text-sky-400 transition-colors"
+      >
         Contact
       </Link>
     </div>
   </div>
 </footer>
- </>
+</>
           )}
         </ClerkProvider>
       </body>
