@@ -156,106 +156,106 @@ export default function RootLayout({
                 {children}
               </main>
               {/* Footer */}
-              <footer className="w-full bg-gray-900 text-gray-300 py-12 px-6">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
-        
-        {/* Contact Section */}
-        <div>
-          <h2 className="flex items-center justify-center md:justify-start text-lg font-semibold text-white mb-4">
-            <FaPhoneAlt className="mr-2 text-pink-400" /> Contact Us
-          </h2>
-          <p className="mb-1">
-            <FaEnvelope className="inline-block mr-2 text-sky-400" />
-            <a
-              href="https://bento.me/darshan3690"
-              className="hover:text-sky-400 transition"
-            >
-              info@The-Dev-Pocket.com
-            </a>
-          </p>
-        </div>
+<footer className="w-full bg-gray-900 text-gray-300 py-12 px-6">
+  <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
+    
+    {/* Contact Section */}
+    <div>
+      <h2 className="flex items-center justify-center md:justify-start text-lg font-semibold text-white mb-4">
+        <FaPhoneAlt className="mr-2 text-pink-400" /> Contact Us
+      </h2>
+      <p className="mb-1">
+        <FaEnvelope className="inline-block mr-2 text-sky-400" />
+        <a
+          href="mailto:info@The-Dev-Pocket.com"
+          className="hover:text-sky-400 transition"
+        >
+          info@The-Dev-Pocket.com
+        </a>
+      </p>
+    </div>
 
-        {/* Feedback Section */}
-        <div>
-          <h2 className="flex items-center justify-center md:justify-start text-lg font-semibold text-white mb-4">
-            <FaRegCommentDots className="mr-2 text-indigo-400" /> Feedback
-          </h2>
-          <form className="flex flex-col space-y-3 max-w-sm mx-auto md:mx-0">
-            <input
-              type="text"
-              placeholder="Your Feedback"
-              className="p-3 rounded-lg bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
-            />
-            <button
-              type="submit"
-              className="bg-sky-500 hover:bg-sky-600 text-white py-2 rounded-lg font-medium transition"
-            >
-              Submit
-            </button>
-          </form>
-        </div>
+    {/* Feedback Section */}
+    <div>
+      <h2 className="flex items-center justify-center md:justify-start text-lg font-semibold text-white mb-4">
+        <FaRegCommentDots className="mr-2 text-indigo-400" /> Feedback
+      </h2>
+      <form className="flex flex-col space-y-3 max-w-sm mx-auto md:mx-0">
+        <input
+          type="text"
+          placeholder="Your Feedback"
+          className="p-3 rounded-lg bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
+        />
+        <button
+          type="submit"
+          className="bg-sky-500 hover:bg-sky-600 text-white py-2 rounded-lg font-medium transition"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
 
-        {/* Social Media Section */}
-        <div>
-          <h2 className="flex items-center justify-center md:justify-start text-lg font-semibold text-white mb-4">
-            <FaGlobe className="mr-2 text-green-400" /> Connect With Us
-          </h2>
-          <div className="flex justify-center md:justify-start space-x-6">
-            <a
-              href="https://github.com/Darshan3690"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-sky-400 transition"
-            >
-              <FaGithub size={28} />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/darshan-rajput-4b0b23288/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-sky-400 transition"
-            >
-              <FaLinkedin size={28} />
-            </a>
-            <a
-              href="https://instagram.com/yourprofile"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-sky-400 transition"
-            >
-              <FaInstagram size={28} />
-            </a>
-            <a
-              href="https://discord.com/channels/@me"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-sky-400 transition"
-            >
-              <FaDiscord size={28} />
-            </a>
-          </div>
-        </div>
+    {/* Social Media Section */}
+    <div>
+      <h2 className="flex items-center justify-center md:justify-start text-lg font-semibold text-white mb-4">
+        <FaGlobe className="mr-2 text-green-400" /> Connect With Us
+      </h2>
+      <div className="flex justify-center md:justify-start space-x-6">
+        <a
+          href="https://github.com/Darshan3690"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-sky-400 transition"
+        >
+          <FaGithub size={28} />
+        </a>
+        <a
+          href="https://www.linkedin.com/in/darshan-rajput-4b0b23288/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-sky-400 transition"
+        >
+          <FaLinkedin size={28} />
+        </a>
+        <a
+          href="https://instagram.com/yourprofile"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-sky-400 transition"
+        >
+          <FaInstagram size={28} />
+        </a>
+        <a
+          href="https://discord.com/channels/@me"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-sky-400 transition"
+        >
+          <FaDiscord size={28} />
+        </a>
       </div>
+    </div>
+  </div>
 
-      {/* Bottom Line */}
-      <div className="border-t border-gray-700 mt-10 pt-5 text-center text-sm text-gray-400">
-        <p className="mb-3">
-          &copy; {new Date().getFullYear()} Dev Pocket. All rights reserved.
-        </p>
-        <div className="flex justify-center space-x-6">
-          <Link href="/privacy" className="hover:text-sky-400 transition-colors">
-            Privacy Policy
-          </Link>
-          <Link href="/terms" className="hover:text-sky-400 transition-colors">
-            Terms of Service
-          </Link>
-          <Link href="/contact" className="hover:text-sky-400 transition-colors">
-            Contact
-          </Link>
-        </div>
-      </div>
-    </footer>
-            </>
+  {/* Bottom Line */}
+  <div className="border-t border-gray-700 mt-10 pt-5 text-center text-sm text-gray-400">
+    <p className="mb-3">
+      &copy; {new Date().getFullYear()} Dev Pocket. All rights reserved.
+    </p>
+    <div className="flex justify-center space-x-6">
+      <Link href="/privacy" className="hover:text-sky-400 transition-colors">
+        Privacy Policy
+      </Link>
+      <Link href="/terms" className="hover:text-sky-400 transition-colors">
+        Terms of Service
+      </Link>
+      <Link href="/contact" className="hover:text-sky-400 transition-colors">
+        Contact
+      </Link>
+    </div>
+  </div>
+</footer>
+ </>
           )}
         </ClerkProvider>
       </body>
