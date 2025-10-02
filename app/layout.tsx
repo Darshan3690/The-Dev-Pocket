@@ -129,6 +129,38 @@ export default function RootLayout({
                   </svg>
                 </button>
 
+                {mobileOpen && (
+                  <div 
+                    id="mobile-menu"
+                    className="absolute top-full left-0 right-0 mt-2 mx-4 bg-white rounded-xl shadow-lg border border-gray-200 md:hidden overflow-hidden"
+                  >
+                    <nav className="flex flex-col p-2">
+                      <Link
+                        href="/#features"
+                        className="rounded-lg px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        Features
+                      </Link>
+                      <Link
+                        href="/about"
+                        className="rounded-lg px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        About
+                      </Link>
+                      <Link
+                        href="/#pricing"
+                        className="rounded-lg px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        Pricing
+                      </Link>
+                    </nav>
+                  </div>
+                )}
+
+
                 {/* If NOT logged in → Show Login */}
                 <SignedOut>
                   <Link href="/sign-in">
