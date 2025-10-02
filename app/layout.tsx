@@ -15,11 +15,15 @@ export default function RootLayout({
   const pathname = usePathname?.() || "";
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   // Initialize with empty string to match server output; update after mount
   const [hash, setHash] = useState<string>("");
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 8);
+      setShowScrollTop(window.scrollY > 300);
+    };
     const onHashChange = () => setHash(window.location.hash);
     onScroll();
     // Set initial hash after mount to avoid SSR/CSR mismatch
@@ -33,6 +37,14 @@ export default function RootLayout({
   }, []);
 
   const isDashboard = pathname.startsWith("/dashboard");
+
+  const scrollToTop = () => {
+    try {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch {
+      window.scrollTo(0, 0);
+    }
+  };
 
   return (
     <html lang="en">
@@ -317,6 +329,31 @@ export default function RootLayout({
                 </nav>
               </footer>
             </>
+          )}
+          
+          {/* Scroll to Top Button */}
+          {!isDashboard && (
+            <button
+              onClick={scrollToTop}
+              className={`scroll-to-top ${showScrollTop ? "visible" : "hidden"}`}
+              aria-label="Scroll to top"
+              type="button"
+            >
+              <svg
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2.5}
+                  d="M5 10l7-7m0 0l7 7m-7-7v18"
+                />
+              </svg>
+            </button>
           )}
         </ClerkProvider>
       </body>

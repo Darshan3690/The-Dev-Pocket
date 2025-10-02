@@ -26,6 +26,59 @@ html {
 .animate-slideDown {
   animation: slideDown 0.3s ease-out;
 }
+
+/* Scroll to Top Button */
+.scroll-to-top {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 50;
+  width: 3rem;
+  height: 3rem;
+  background: linear-gradient(to right, #2563eb, #3b82f6);
+  color: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scroll-to-top:hover {
+  background: linear-gradient(to right, #1d4ed8, #2563eb);
+  box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.4);
+  transform: scale(1.1);
+}
+
+.scroll-to-top:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6, 0 0 0 4px rgba(59, 130, 246, 0.5);
+}
+
+.scroll-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.scroll-to-top.hidden {
+  opacity: 0;
+  transform: translateY(1rem);
+  pointer-events: none;
+}
+
+.scroll-to-top svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  transition: transform 0.2s ease;
+}
+
+.scroll-to-top:hover svg {
+  transform: scale(1.1);
+}
 /* 
 :root {
   --background: #ffffff;
