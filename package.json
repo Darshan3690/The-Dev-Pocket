@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "echo \"No tests specified\" && exit 0"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.32.0",
@@ -21,6 +22,7 @@
     "react": "^19.1.0",
     "react-big-calendar": "^1.19.4",
     "react-dom": "^19.1.0",
+    "react-icons": "^5.4.0",
     "reactflow": "^11.11.4"
   },
   "devDependencies": {
