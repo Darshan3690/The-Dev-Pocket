@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { ThemeSwitcher } from "./ThemeSwitcher";
 import "./globals.css";
 
 import Link from "next/link";
 import { ClerkProvider, UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider } from "next-themes"; // 👈 Added ThemeProvider
+import { ThemeSwitcher } from "./ThemeSwitcher"; // 👈 Added ThemeSwitcher
 import {
   FaPhoneAlt,
   FaEnvelope,
@@ -18,7 +18,6 @@ import {
   FaInstagram,
   FaDiscord,
 } from "react-icons/fa";
-import { Sun, Moon, Laptop } from "lucide-react";
 
 export default function RootLayout({
   children,
@@ -46,9 +45,10 @@ export default function RootLayout({
   const isDashboard = pathname.startsWith("/dashboard");
 
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="font-sans text-gray-800 bg-gray-50 dark:bg-gray-900 dark:text-gray-100">
+    <html lang="en">
+      <body className="font-sans text-gray-800 bg-gray-50/50">
         <ClerkProvider>
+          {/* 👇 Wrap everything in ThemeProvider */}
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             {isDashboard ? (
               <>{children}</>
@@ -57,10 +57,8 @@ export default function RootLayout({
                 {/* Header */}
                 <header
                   className={`w-full max-w-7xl mx-auto py-4 sm:py-5 px-4 sm:px-6 lg:px-8 flex justify-between items-center z-10 sticky top-0 ${
-                    scrolled
-                      ? "bg-white/90 dark:bg-gray-800/90 shadow-md"
-                      : "bg-white/70 dark:bg-gray-800/70 shadow-sm"
-                  } backdrop-blur-sm rounded-b-xl border-b border-gray-200 dark:border-gray-700 transition-colors`}
+                    scrolled ? "bg-white/90 shadow-md" : "bg-white/70 shadow-sm"
+                  } backdrop-blur-sm rounded-b-xl border-b border-gray-200 transition-colors`}
                 >
                   <Link
                     href="/"
@@ -101,8 +99,8 @@ export default function RootLayout({
                       href="/#features"
                       className={`rounded-full px-3 py-1 transition-colors ${
                         hash === "#features" && pathname === "/"
-                          ? "text-blue-700 bg-blue-50 dark:bg-gray-700 dark:text-blue-400"
-                          : "text-gray-700 dark:text-gray-200 hover:text-blue-600"
+                          ? "text-blue-700 bg-blue-50"
+                          : "text-gray-700 hover:text-blue-600"
                       }`}
                     >
                       Features
@@ -111,8 +109,8 @@ export default function RootLayout({
                       href="/about"
                       className={`rounded-full px-3 py-1 transition-colors ${
                         pathname.startsWith("/about")
-                          ? "text-blue-700 bg-blue-50 dark:bg-gray-700 dark:text-blue-400"
-                          : "text-gray-700 dark:text-gray-200 hover:text-blue-600"
+                          ? "text-blue-700 bg-blue-50"
+                          : "text-gray-700 hover:text-blue-600"
                       }`}
                     >
                       About
@@ -121,21 +119,21 @@ export default function RootLayout({
                       href="/#pricing"
                       className={`rounded-full px-3 py-1 transition-colors ${
                         hash === "#pricing" && pathname === "/"
-                          ? "text-blue-700 bg-blue-50 dark:bg-gray-700 dark:text-blue-400"
-                          : "text-gray-700 dark:text-gray-200 hover:text-blue-600"
+                          ? "text-blue-700 bg-blue-50"
+                          : "text-gray-700 hover:text-blue-600"
                       }`}
                     >
                       Pricing
                     </Link>
 
-                    {/* 👇 Theme Toggle Button */}
+                    {/* 👇 Theme Switcher Added */}
                     <ThemeSwitcher />
                   </nav>
 
                   {/* Mobile menu button */}
                   <button
                     type="button"
-                    className="md:hidden inline-flex items-center justify-center rounded-full p-2 text-gray-700 dark:text-gray-200 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-gray-700"
+                    className="md:hidden inline-flex items-center justify-center rounded-full p-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60"
                     aria-controls="mobile-menu"
                     aria-expanded={mobileOpen}
                     onClick={() => setMobileOpen((v) => !v)}
@@ -168,7 +166,6 @@ export default function RootLayout({
                     </svg>
                   </button>
 
-                  {/* Auth buttons */}
                   <SignedOut>
                     <Link href="/sign-in">
                       <button className="w-24 transform rounded-full bg-blue-600 px-6 py-2 font-medium text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-blue-700 md:w-32">
@@ -194,8 +191,116 @@ export default function RootLayout({
                   {children}
                 </main>
 
-                {/* Footer (your existing footer code) */}
-                {/* ... */}
+                {/* Footer */}
+                <footer
+                  className="w-full bg-gray-900 text-gray-300 py-12 px-6 mt-auto"
+                  role="contentinfo"
+                >
+                  <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
+                    {/* Contact Section */}
+                    <div>
+                      <h2 className="flex items-center justify-center md:justify-start text-lg font-semibold text-white mb-4">
+                        <FaPhoneAlt className="mr-2 text-pink-400" /> Contact Us
+                      </h2>
+                      <p className="mb-1">
+                        <FaEnvelope className="inline-block mr-2 text-sky-400" />
+                        <a
+                          href="mailto:info@The-Dev-Pocket.com"
+                          className="hover:text-sky-400 transition"
+                        >
+                          info@The-Dev-Pocket.com
+                        </a>
+                      </p>
+                    </div>
+
+                    {/* Feedback Section */}
+                    <div>
+                      <h2 className="flex items-center justify-center md:justify-start text-lg font-semibold text-white mb-4">
+                        <FaRegCommentDots className="mr-2 text-indigo-400" />{" "}
+                        Feedback
+                      </h2>
+                      <form className="flex flex-col space-y-3 max-w-sm mx-auto md:mx-0">
+                        <input
+                          type="text"
+                          placeholder="Your Feedback"
+                          className="p-3 rounded-lg bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                        />
+                        <button
+                          type="submit"
+                          className="bg-sky-500 hover:bg-sky-600 text-white py-2 rounded-lg font-medium transition"
+                        >
+                          Submit
+                        </button>
+                      </form>
+                    </div>
+
+                    {/* Social Media Section */}
+                    <div>
+                      <h2 className="flex items-center justify-center md:justify-start text-lg font-semibold text-white mb-4">
+                        <FaGlobe className="mr-2 text-green-400" /> Connect With
+                        Us
+                      </h2>
+                      <div className="flex justify-center md:justify-start space-x-6">
+                        <a
+                          href="https://github.com/Darshan3690"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-sky-400 transition"
+                        >
+                          <FaGithub size={28} />
+                        </a>
+                        <a
+                          href="https://www.linkedin.com/in/darshan-rajput-4b0b23288/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-sky-400 transition"
+                        >
+                          <FaLinkedin size={28} />
+                        </a>
+                        <a
+                          href="https://instagram.com/yourprofile"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-sky-400 transition"
+                        >
+                          <FaInstagram size={28} />
+                        </a>
+                        <a
+                          href="https://discord.com/channels/@me"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-sky-400 transition"
+                        >
+                          <FaDiscord size={28} />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom Section */}
+                  <div className="border-t border-gray-700 mt-10 pt-6 text-center text-sm text-gray-400">
+                    <p className="mb-2">
+                      &copy; {new Date().getFullYear()} Dev Pocket. All rights
+                      reserved.
+                    </p>
+                    <div className="flex justify-center space-x-6">
+                      <Link href="/privacy" className="hover:text-blue-500">
+                        Privacy Policy
+                      </Link>
+                      <Link href="/terms" className="hover:text-blue-500">
+                        Terms of Service
+                      </Link>
+                      <Link
+                        href="https://bento.me/darshan3690"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-blue-500"
+                      >
+                        Contact
+                      </Link>
+                    </div>
+                  </div>
+                </footer>
               </>
             )}
           </ThemeProvider>

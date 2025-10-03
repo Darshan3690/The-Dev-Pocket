@@ -2,34 +2,29 @@
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { Sun, Moon, Laptop } from "lucide-react";
+import { FaSun, FaMoon } from "react-icons/fa";
 
-export function ThemeSwitcher() {
-  const { theme, setTheme } = useTheme();
+export const ThemeSwitcher = () => {
+  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
-
   if (!mounted) return null;
 
+  const isDark = resolvedTheme === "dark";
+
   return (
-    <div className="flex items-center space-x-2">
-      <button
-        onClick={() => setTheme("light")}
-        className={`p-2 rounded-full ${
-          theme === "light" ? "bg-blue-100 dark:bg-gray-700" : ""
-        }`}
-      >
-        <Sun className="w-5 h-5" />
-      </button>
-      <button
-        onClick={() => setTheme("dark")}
-        className={`p-2 rounded-full ${
-          theme === "dark" ? "bg-blue-100 dark:bg-gray-700" : ""
-        }`}
-      >
-        <Moon className="w-5 h-5" />
-      </button>
-    </div>
+    <button
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      className="ml-4 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+      aria-label="Toggle Theme"
+    >
+      {/* Icon color is now permanent, independent of hover */}
+      {isDark ? (
+        <FaSun size={20} className="text-yellow-400" />
+      ) : (
+        <FaMoon size={20} className="text-gray-800" />
+      )}
+    </button>
   );
-}
+};
