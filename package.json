@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "echo \"No tests specified\" && exit 0"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.32.0",

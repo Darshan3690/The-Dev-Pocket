@@ -9,6 +9,11 @@ const isPublicRoute = createRouteMatcher([
 ])
 
 export default clerkMiddleware(async (auth, req) => {
+  // Skip auth check if using dummy keys (CI environment)
+  if (process.env.CLERK_SECRET_KEY === 'dummy') {
+    return;
+  }
+  
   if (!isPublicRoute(req)) {
     await auth.protect()
   }
