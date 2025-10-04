@@ -51,3 +51,13 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 } */
+/* globals.css */
+body {
+  background-color: #f9fafb; /* light bg */
+  color: #111827; /* light text */
+}
+
+.dark body {
+  background-color: #111827; /* dark bg */
+  color: #f9fafb; /* dark text */
+}
