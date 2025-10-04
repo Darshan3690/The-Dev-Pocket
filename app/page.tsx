@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { useUser } from "@clerk/nextjs";
+import Link from "next/link";
+
 
 // Page components — authentication UI is provided by root `ClerkProvider` and header.
 
@@ -30,6 +33,7 @@ const FeatureCard = ({ icon, iconLabel, title, children }: FeatureCardProps) => 
     <p className="text-gray-500 leading-relaxed">{children}</p>
   </article>
 );
+
 
 // Testimonial Card Component
 interface TestimonialCardProps {
@@ -104,6 +108,7 @@ const App = () => {
   });
   const [pricingRef, pricingVisible] = useOnScreen({ threshold: 0.2 });
   const [ctaRef, ctaVisible] = useOnScreen({ threshold: 0.3 });
+  const {isSignedIn}=useUser();
 
   return (
     <main>
@@ -134,7 +139,7 @@ const App = () => {
                updates, and powerful resume tools—all in one smart dashboard.
              </p>
              <a
-              href="#pricing"
+              href="/sign-in"
               className="inline-block bg-sky-600 text-white text-base font-semibold py-2.5 px-6 rounded-full shadow-2xl hover:bg-sky-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-sky-300 focus:ring-opacity-50"
               aria-describedby="pricing-section"
              >
@@ -440,7 +445,7 @@ const App = () => {
                <span className="text-base font-medium text-gray-500">/mo</span>
              </p>
              <a
-              href="#"
+              href="/sign-in?plan=hobby"
               className="w-full inline-block bg-gray-100 text-gray-700 font-bold py-2.5 px-6 rounded-full hover:bg-gray-200 transition-colors focus:outline-none focus:ring-4 focus:ring-gray-300 focus:ring-opacity-50"
               aria-describedby="hobby-plan"
             >
@@ -462,13 +467,20 @@ const App = () => {
                </span>
                <span className="text-base font-medium text-gray-500">/mo</span>
              </p>
-             <a
-              href="#"
-              className="w-full inline-block bg-sky-600 text-white font-bold py-2.5 px-6 rounded-full hover:bg-sky-700 transition-colors focus:outline-none focus:ring-4 focus:ring-sky-300 focus:ring-opacity-50"
-             aria-describedby="pro-plan"
-            >
-              Start Free Trial
-            </a>
+
+             {isSignedIn ? (
+                <Link href="/checkout/pro">
+                  <button className="w-full bg-sky-600 text-white font-bold py-2.5 px-6 rounded-full hover:bg-sky-700 transition-colors focus:outline-none focus:ring-4 focus:ring-sky-300 focus:ring-opacity-50">
+                    Start Free Trial
+                  </button>
+                </Link>
+              ) : (
+                <Link href="/sign-in?redirect_url=/checkout/pro">
+                  <button className="w-full bg-sky-600 text-white font-bold py-2.5 px-6 rounded-full hover:bg-sky-700 transition-colors focus:outline-none focus:ring-4 focus:ring-sky-300 focus:ring-opacity-50">
+                    Start Free Trial
+                  </button>
+                </Link>
+            )}
           </div>
            {/* Teams Plan */}
            <div className="border border-gray-200 rounded-2xl p-6" role="article" aria-labelledby="teams-plan">
@@ -476,7 +488,7 @@ const App = () => {
              <p className="text-gray-500 mb-6">For organizations and groups.</p>
              <p className="text-4xl font-extrabold mb-5" aria-label="Custom pricing">Custom</p>
              <a
-              href="#"
+              href="https://bento.me/darshan3690"
               className="w-full inline-block bg-gray-100 text-gray-700 font-bold py-2.5 px-6 rounded-full hover:bg-gray-200 transition-colors focus:outline-none focus:ring-4 focus:ring-gray-300 focus:ring-opacity-50"
               aria-describedby="teams-plan"
             >
@@ -502,12 +514,12 @@ const App = () => {
             Join thousands of developers already using Dev Pocket to achieve
             their goals.
           </p>
-          <a
-            href="#"
-            className="inline-block bg-white text-sky-600 font-bold text-base py-2.5 px-6 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50"
-          >
-            Start Your Free Trial
-          </a>
+          <Link href={isSignedIn ? "/dashboard" : "/sign-in?redirect_url=/dashboard"}>
+            <button className="inline-block bg-white text-sky-600 font-bold text-base py-2.5 px-6 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50">
+              Start Your Free Trial
+            </button>
+        </Link>
+
         </div>
       </section>
     </main>
