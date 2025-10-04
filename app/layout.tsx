@@ -144,7 +144,7 @@ export default function RootLayout({
                   <div className="flex items-center gap-6">
                     <UserButton afterSignOutUrl="/" />
                     <Link href="/dashboard">
-                      <button className="hidden md:inline-block bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white rounded-full shadow-lg px-6 py-2 font-medium transition-all duration-300">
+                      <button className="hidden md:inline-block bg-gradient-to-r from-blue-500 to-blue-400 hover:from-blue-700 hover:to-white-600 text-white rounded-full shadow-lg px-6 py-2 font-medium transition-all duration-300">
                         Dashboard
                       </button>
                     </Link>
