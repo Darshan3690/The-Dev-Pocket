@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
+import Particles from "./components/ui/Particle";
 
 
 // Page components — authentication UI is provided by root `ClerkProvider` and header.
@@ -129,8 +130,23 @@ const App = () => {
           heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
-        <div className="bg-gradient-to-b from-sky-100 to-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 text-center rounded-3xl mt-6 border border-sky-200 shadow-xl overflow-hidden">
-          <div className="max-w-4xl mx-auto">
+       <div className="relative bg-gradient-to-b from-sky-100 to-white py-20 sm:py-28 px-6 sm:px-10 lg:px-16 text-center overflow-hidden mt-10 mb-10">
+
+
+          <div className="absolute inset-0 z-0">
+            <Particles
+              particleColors={["#000000", "#000000"]}
+              particleCount={500}
+              particleSpread={7}
+              speed={0.2}
+              particleBaseSize={50}
+              moveParticlesOnHover={false}
+              alphaParticles={false}
+              disableRotation={false}
+              className="w-full h-full"
+            />
+          </div>
+          <div className="relative z-10 max-w-4xl mx-auto">
              <h1 id="hero-heading" className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-800 leading-tight mb-3">
                The AI-Powered Platform for Your Dev Career
              </h1>
@@ -146,15 +162,8 @@ const App = () => {
                Get Started Free
              </a>
            </div>
-           <div className="mt-8 sm:mt-12 relative w-full max-w-4xl mx-auto">
-             <Image
-              src="https://placehold.co/1000x600/e0f2fe/0c4a6e?text=Dev+Pocket+UI"
-              alt="Dev Pocket Dashboard Mockup"
-              width={1000}
-              height={600}
-              unoptimized
-              className="w-full h-auto rounded-xl shadow-2xl border border-white transition-transform transform hover:scale-105 duration-300"
-            />
+          <div className="mt-8 sm:mt-12 relative w-full max-w-4xl mx-auto">
+             
            </div>
          </div>
        </section>
