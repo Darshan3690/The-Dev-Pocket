@@ -135,7 +135,7 @@ export default function RootLayout({
                     type="button"
                     className="md:hidden inline-flex items-center justify-center rounded-full p-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60"
                     aria-controls="mobile-menu"
-                    aria-expanded={mobileOpen}
+                    aria-expanded={mobileOpen ? 'true' : 'false'}
                     onClick={() => setMobileOpen((v) => !v)}
                   >
                     <span className="sr-only">Toggle main menu</span>
@@ -165,6 +165,48 @@ export default function RootLayout({
                       )}
                     </svg>
                   </button>
+
+                  {/* Mobile menu */}
+                  <div
+                    className={`absolute top-full left-0 right-0 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-lg transition-all duration-300 ${mobileOpen ? 'block' : 'hidden'} md:hidden`}
+                    id="mobile-menu"
+                  >
+                    <div className="p-4 space-y-3">
+                      <Link
+                        href="/#features"
+                        className={`block rounded-lg px-4 py-2 text-center transition-colors ${hash === '#features' && pathname === '/' ? 'text-blue-700 bg-blue-50' : 'text-gray-700 hover:bg-gray-100'}`}
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        Features
+                      </Link>
+                      <Link
+                        href="/about"
+                        className={`block rounded-lg px-4 py-2 text-center transition-colors ${pathname.startsWith('/about') ? 'text-blue-700 bg-blue-50' : 'text-gray-700 hover:bg-gray-100'}`}
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        About
+                      </Link>
+                      <Link
+                        href="/#pricing"
+                        className={`block rounded-lg px-4 py-2 text-center transition-colors ${hash === '#pricing' && pathname === '/' ? 'text-blue-700 bg-blue-50' : 'text-gray-700 hover:bg-gray-100'}`}
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        Pricing
+                      </Link>
+                      <SignedIn>
+                        <Link
+                          href="/dashboard"
+                          className="block rounded-lg px-4 py-2 text-center bg-gradient-to-r from-purple-600 to-pink-500 text-white font-medium"
+                          onClick={() => setMobileOpen(false)}
+                        >
+                          Dashboard
+                        </Link>
+                      </SignedIn>
+                      <div className="flex justify-center">
+                        <ThemeSwitcher />
+                      </div>
+                    </div>
+                  </div>
 
                   <SignedOut>
                     <Link href="/sign-in">
@@ -246,6 +288,7 @@ export default function RootLayout({
                           target="_blank"
                           rel="noopener noreferrer"
                           className="hover:text-sky-400 transition"
+                          aria-label="GitHub Profile"
                         >
                           <FaGithub size={28} />
                         </a>
@@ -254,6 +297,7 @@ export default function RootLayout({
                           target="_blank"
                           rel="noopener noreferrer"
                           className="hover:text-sky-400 transition"
+                          aria-label="LinkedIn Profile"
                         >
                           <FaLinkedin size={28} />
                         </a>
@@ -262,6 +306,7 @@ export default function RootLayout({
                           target="_blank"
                           rel="noopener noreferrer"
                           className="hover:text-sky-400 transition"
+                          aria-label="Instagram Profile"
                         >
                           <FaInstagram size={28} />
                         </a>
@@ -270,6 +315,7 @@ export default function RootLayout({
                           target="_blank"
                           rel="noopener noreferrer"
                           className="hover:text-sky-400 transition"
+                          aria-label="Discord Channel"
                         >
                           <FaDiscord size={28} />
                         </a>
