@@ -9,7 +9,15 @@ export const ThemeSwitcher = () => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
-  if (!mounted) return null;
+  
+  // Show a placeholder during hydration to prevent layout shift
+  if (!mounted) {
+    return (
+      <div className="ml-4 p-2 rounded-full w-10 h-10 flex items-center justify-center">
+        <div className="w-5 h-5 rounded-full bg-gray-200 animate-pulse" />
+      </div>
+    );
+  }
 
   const isDark = resolvedTheme === "dark";
 

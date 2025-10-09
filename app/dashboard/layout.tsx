@@ -14,13 +14,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Search,
-  Bell,
   Settings,
-  User,
-  LogOut,
   Menu,
   X,
-  Plus,
   UserPlus,
   Zap,
   MapPin,
@@ -127,8 +123,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [notificationsOpen, setNotificationsOpen] = useState(false)
-  const [profileMenuOpen, setProfileMenuOpen] = useState(false)
 
   // Quick Actions Component for better organization and readability
   const QuickActionsSection = () => (
@@ -208,17 +202,18 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
       {/* here we define the Sidebar */}
       <aside
+        id="dashboard-sidebar"
         className={`
+          fixed lg:static inset-y-0 left-0 z-50
           ${sidebarCollapsed ? 'w-16' : 'w-64'} 
           ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-          fixed lg:static inset-y-0 left-0 z-50
           bg-white/95 backdrop-blur-xl border-r border-slate-200/60 
           flex flex-col transition-all duration-300 ease-in-out
           shadow-2xl lg:shadow-none
         `}
         role="navigation"
         aria-label="Dashboard sidebar navigation"
-        aria-hidden={!mobileMenuOpen && typeof window !== 'undefined' && window.innerWidth < 1024}
+        aria-hidden={!mobileMenuOpen}
       >
         {/* here we define the Logo/Brand */}
         <div className="h-20 flex items-center justify-between px-4 border-b border-slate-200/60">
@@ -226,7 +221,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <div
               className="font-extrabold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent drop-shadow-sm"
               role="heading"
-              aria-level={1}
+              aria-level="1"
             >
               The Dev Pocket
             </div>
@@ -328,7 +323,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               onClick={() => setMobileMenuOpen(true)}
               className="lg:hidden p-3 rounded-2xl hover:bg-slate-100/80 backdrop-blur-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-all duration-300 hover:scale-105"
               aria-label="Open sidebar menu"
-              aria-controls="sidebar"
+              aria-controls="dashboard-sidebar"
               type="button"
             >
               <Menu className="w-6 h-6" aria-hidden="true" />
