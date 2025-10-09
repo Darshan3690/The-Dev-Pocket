@@ -45,11 +45,16 @@ export default function RootLayout({
   const isDashboard = pathname.startsWith("/dashboard");
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="font-sans text-gray-800 bg-gray-50/50">
         <ClerkProvider>
-          {/* 👇 Wrap everything in ThemeProvider */}
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {/*  Wrap everything in ThemeProvider */}
+          <ThemeProvider 
+            attribute="class" 
+            defaultTheme="light" 
+            enableSystem
+            disableTransitionOnChange={false}
+          >
             {isDashboard ? (
               <>{children}</>
             ) : (
@@ -86,10 +91,7 @@ export default function RootLayout({
                     >
                       <path d="M20 6h-2V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM10 4h4v2h-4V4zm10 16H8V8h12v12zm-3-5.5V11c0-.3-.1-.5-.4-.7l-1.5-1c-.2-.1-.5-.1-.7-.1-.2 0-.5.1-.7.2l-1.4.9-.7-.5-.7.5-1.4-.9c-.2-.1-.5-.1-.7-.1-.2 0-.5.1-.7.2L5.8 11c-.3.2-.4.4-.4.7V14h14v-2.5zM12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z" />
                     </svg>
-                    <span
-                      className="text-2xl font-bold"
-                      style={{ color: "#FCB415" }}
-                    >
+                    <span className="text-2xl font-bold text-yellow-500">
                       The Dev Pocket
                     </span>
                   </Link>
@@ -135,7 +137,7 @@ export default function RootLayout({
                     type="button"
                     className="md:hidden inline-flex items-center justify-center rounded-full p-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60"
                     aria-controls="mobile-menu"
-                    aria-expanded={mobileOpen ? 'true' : 'false'}
+                    aria-expanded={mobileOpen ? "true" : "false"}
                     onClick={() => setMobileOpen((v) => !v)}
                   >
                     <span className="sr-only">Toggle main menu</span>
