@@ -179,7 +179,7 @@ const App = () => {
             : "opacity-0 translate-y-10"
         }`}
       >
-         <h2 id="features-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
+         <h2 id="features-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-400 mb-4">
            All the Tools You Need, in One Place
          </h2>
          <p className="text-base sm:text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
@@ -306,7 +306,7 @@ const App = () => {
             : "opacity-0 translate-y-10"
         }`}
       >
-        <h2 id="how-it-works-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
+        <h2 id="how-it-works-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-400 mb-4">
           Get Started in 3 Simple Steps
         </h2>
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 relative">
@@ -399,7 +399,7 @@ const App = () => {
             : "opacity-0 translate-y-10"
         }`}
       >
-         <h2 id="pricing-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
+         <h2 id="pricing-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-400 mb-4">
            Simple, Transparent Pricing
          </h2>
          <p className="text-base sm:text-lg text-gray-600 mb-6">
