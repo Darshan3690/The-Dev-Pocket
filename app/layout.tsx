@@ -46,12 +46,12 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="font-sans text-gray-800 bg-gray-50/50">
+      <body className="font-sans text-gray-800 dark:text-gray-100 bg-gray-50 dark:bg-gray-900">
         <ClerkProvider>
           {/*  Wrap everything in ThemeProvider */}
-          <ThemeProvider 
-            attribute="class" 
-            defaultTheme="light" 
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
             enableSystem
             disableTransitionOnChange={false}
           >
@@ -61,9 +61,8 @@ export default function RootLayout({
               <>
                 {/* Header */}
                 <header
-                  className={`w-full max-w-7xl mx-auto py-4 sm:py-5 px-4 sm:px-6 lg:px-8 flex justify-between items-center z-10 sticky top-0 ${
-                    scrolled ? "bg-white/90 shadow-md" : "bg-white/70 shadow-sm"
-                  } backdrop-blur-sm rounded-b-xl border-b border-gray-200 transition-colors`}
+                  className={`w-full max-w-7xl mx-auto py-4 sm:py-5 px-4 sm:px-6 lg:px-8 flex justify-between items-center z-10 sticky top-0 ${scrolled ? "bg-white/90 shadow-md" : "bg-white/90 shadow-sm"
+                    } backdrop-blur-sm rounded-b-xl border-b border-gray-200 transition-colors`}
                 >
                   <Link
                     href="/"
@@ -99,31 +98,28 @@ export default function RootLayout({
                   <nav className="hidden md:flex space-x-1 items-center">
                     <Link
                       href="/#features"
-                      className={`rounded-full px-3 py-1 transition-colors ${
-                        hash === "#features" && pathname === "/"
-                          ? "text-blue-700 bg-blue-50"
-                          : "text-gray-700 hover:text-blue-600"
-                      }`}
+                      className={`rounded-full px-3 py-1 transition-colors ${hash === "#features" && pathname === "/"
+                        ? "text-blue-700 bg-blue-50"
+                        : "text-gray-700 hover:text-blue-600"
+                        }`}
                     >
                       Features
                     </Link>
                     <Link
                       href="/about"
-                      className={`rounded-full px-3 py-1 transition-colors ${
-                        pathname.startsWith("/about")
-                          ? "text-blue-700 bg-blue-50"
-                          : "text-gray-700 hover:text-blue-600"
-                      }`}
+                      className={`rounded-full px-3 py-1 transition-colors ${pathname.startsWith("/about")
+                        ? "text-blue-700 bg-blue-50"
+                        : "text-gray-700 hover:text-blue-600"
+                        }`}
                     >
                       About
                     </Link>
                     <Link
                       href="/#pricing"
-                      className={`rounded-full px-3 py-1 transition-colors ${
-                        hash === "#pricing" && pathname === "/"
-                          ? "text-blue-700 bg-blue-50"
-                          : "text-gray-700 hover:text-blue-600"
-                      }`}
+                      className={`rounded-full px-3 py-1 transition-colors ${hash === "#pricing" && pathname === "/"
+                        ? "text-blue-700 bg-blue-50"
+                        : "text-gray-700 hover:text-blue-600"
+                        }`}
                     >
                       Pricing
                     </Link>
@@ -142,9 +138,8 @@ export default function RootLayout({
                   >
                     <span className="sr-only">Toggle main menu</span>
                     <svg
-                      className={`h-6 w-6 transition-transform ${
-                        mobileOpen ? "rotate-90" : "rotate-0"
-                      }`}
+                      className={`h-6 w-6 transition-transform ${mobileOpen ? "rotate-90" : "rotate-0"
+                        }`}
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
