@@ -6,6 +6,11 @@ import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import Particles from "./components/ui/Particle";
 
+// Import enhanced utilities
+import { useAccessibility } from "../lib/accessibility";
+import { usePerformanceMonitoring } from "../lib/performance";
+import { useErrorHandling } from "../lib/error-handling";
+
 
 // Page components — authentication UI is provided by root `ClerkProvider` and header.
 
@@ -71,6 +76,11 @@ const TestimonialCard = ({
 const App = () => {
   const [isYearly, setIsYearly] = useState(false);
 
+  // Initialize enhanced utilities
+  const { announce, announceSuccess, announceError } = useAccessibility();
+  const { startTimer, endTimer, measureAsync } = usePerformanceMonitoring();
+  const { handleError, wrapAsync } = useErrorHandling();
+
   // Animation on scroll hook
   const useOnScreen = (
     options: IntersectionObserverInit
@@ -110,6 +120,25 @@ const App = () => {
   const [pricingRef, pricingVisible] = useOnScreen({ threshold: 0.2 });
   const [ctaRef, ctaVisible] = useOnScreen({ threshold: 0.3 });
   const {isSignedIn}=useUser();
+
+  // Enhanced error handling for component initialization
+  useEffect(() => {
+    startTimer('page-initialization');
+    
+    const initializePage = wrapAsync(async () => {
+      try {
+        // Simulate any async initialization
+        await new Promise(resolve => setTimeout(resolve, 100));
+        announceSuccess('Dev Pocket homepage loaded successfully');
+      } catch (error) {
+        announceError('Failed to initialize homepage');
+        handleError(error as Error, 'error', 'Page Initialization');
+      }
+    }, 'Page Initialization');
+
+    initializePage();
+    endTimer('page-initialization');
+  }, [startTimer, endTimer, announceSuccess, announceError, handleError, wrapAsync]);
 
   return (
     <main>
