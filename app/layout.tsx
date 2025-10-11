@@ -19,6 +19,11 @@ import {
   FaDiscord,
 } from "react-icons/fa";
 
+// Import enhanced utilities
+import { AccessibilityAnnouncer, SkipLink, useAccessibility } from "../lib/accessibility";
+import { usePerformanceMonitoring } from "../lib/performance";
+import { ErrorBoundary, useErrorHandling } from "../lib/error-handling";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -29,18 +34,32 @@ export default function RootLayout({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hash, setHash] = useState<string>("");
 
+  // Initialize enhanced utilities
+  const { announce, announceSuccess, announceError } = useAccessibility();
+  const { startTimer, endTimer } = usePerformanceMonitoring();
+  const { handleError, wrapAsync } = useErrorHandling();
+
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    const onHashChange = () => setHash(window.location.hash);
+    startTimer('layout-initialization');
+    
+    const onScroll = wrapAsync(() => setScrolled(window.scrollY > 8), 'Scroll Handler');
+    const onHashChange = wrapAsync(() => setHash(window.location.hash), 'Hash Change Handler');
+    
     onScroll();
     setHash(window.location.hash);
+    
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("hashchange", onHashChange);
+    
+    // Announce successful layout initialization
+    announceSuccess('Dev Pocket application loaded successfully');
+    endTimer('layout-initialization');
+    
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("hashchange", onHashChange);
     };
-  }, []);
+  }, [startTimer, endTimer, announceSuccess, wrapAsync]);
 
   const isDashboard = pathname.startsWith("/dashboard");
 
@@ -55,15 +74,26 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange={false}
           >
-            {isDashboard ? (
-              <>{children}</>
-            ) : (
-              <>
-                {/* Header */}
-                <header
-                  className={`w-full max-w-7xl mx-auto py-4 sm:py-5 px-4 sm:px-6 lg:px-8 flex justify-between items-center z-10 sticky top-0 ${scrolled ? "bg-white/90 shadow-md" : "bg-white/90 shadow-sm"
-                    } backdrop-blur-sm rounded-b-xl border-b border-gray-200 transition-colors`}
-                >
+            <ErrorBoundary>
+              {/* Accessibility announcements */}
+              <AccessibilityAnnouncer />
+              
+              {/* Skip to main content link */}
+              <SkipLink href="#main-content">
+                Skip to main content
+              </SkipLink>
+              
+              {isDashboard ? (
+                <>{children}</>
+              ) : (
+                <>
+                  {/* Header */}
+                  <header
+                    className={`w-full max-w-7xl mx-auto py-4 sm:py-5 px-4 sm:px-6 lg:px-8 flex justify-between items-center z-10 sticky top-0 ${scrolled ? "bg-white/90 shadow-md" : "bg-white/90 shadow-sm"
+                      } backdrop-blur-sm rounded-b-xl border-b border-gray-200 transition-colors`}
+                    role="banner"
+                    aria-label="Main navigation"
+                  >
                   <Link
                     href="/"
                     aria-label="Go to homepage"
@@ -226,7 +256,12 @@ export default function RootLayout({
                 </header>
 
                 {/* Main content */}
-                <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <main 
+                  id="main-content"
+                  className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+                  role="main"
+                  aria-label="Main content"
+                >
                   {children}
                 </main>
 
@@ -344,8 +379,9 @@ export default function RootLayout({
                     </div>
                   </div>
                 </footer>
-              </>
-            )}
+                </>
+              )}
+            </ErrorBoundary>
           </ThemeProvider>
         </ClerkProvider>
       </body>
