@@ -216,30 +216,32 @@ const App = () => {
            together to accelerate your growth.
          </p>
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left" role="list">
-           <FeatureCard
-             title="Personalized Roadmaps"
-             iconLabel="Lightning bolt icon representing personalized roadmaps"
-             icon={
-               <svg
-                 xmlns="http://www.w3.org/2000/svg"
-                 className="h-6 w-6"
-                 fill="none"
-                 viewBox="0 0 24 24"
-                 stroke="currentColor"
-                 aria-hidden="true"
-               >
-                 <path
-                   strokeLinecap="round"
-                   strokeLinejoin="round"
-                   strokeWidth={2}
-                   d="M13 10V3L4 14h7v7l9-11h-7z"
-                 />
-               </svg>
-             }
-           >
-            Our AI crafts a custom learning path based on your goals and skill
-            level.
-           </FeatureCard>
+           <Link href="/create-roadmap" className="group block">
+             <FeatureCard
+               title="Personalized Roadmaps"
+               iconLabel="Lightning bolt icon representing personalized roadmaps"
+               icon={
+                 <svg
+                   xmlns="http://www.w3.org/2000/svg"
+                   className="h-6 w-6"
+                   fill="none"
+                   viewBox="0 0 24 24"
+                   stroke="currentColor"
+                   aria-hidden="true"
+                 >
+                   <path
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     strokeWidth={2}
+                     d="M13 10V3L4 14h7v7l9-11h-7z"
+                   />
+                 </svg>
+               }
+             >
+              Our AI crafts a custom learning path based on your goals and skill
+              level. <span className="inline-block ml-1 text-sky-600 group-hover:translate-x-1 transition-transform">→</span>
+             </FeatureCard>
+           </Link>
            <FeatureCard
              title="Curated Learning"
              iconLabel="Academic cap icon representing curated learning"
