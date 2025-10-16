@@ -2,6 +2,15 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { useUser } from "@clerk/nextjs";
+import Link from "next/link";
+import Particles from "./components/ui/Particle";
+
+// Import enhanced utilities
+import { useAccessibility } from "../lib/accessibility";
+import { usePerformanceMonitoring } from "../lib/performance";
+import { useErrorHandling } from "../lib/error-handling";
+
 
 // Page components — authentication UI is provided by root `ClerkProvider` and header.
 
@@ -30,6 +39,7 @@ const FeatureCard = ({ icon, iconLabel, title, children }: FeatureCardProps) => 
     <p className="text-gray-500 leading-relaxed">{children}</p>
   </article>
 );
+
 
 // Testimonial Card Component
 interface TestimonialCardProps {
@@ -65,6 +75,11 @@ const TestimonialCard = ({
 
 const App = () => {
   const [isYearly, setIsYearly] = useState(false);
+
+  // Initialize enhanced utilities
+  const { announce, announceSuccess, announceError } = useAccessibility();
+  const { startTimer, endTimer, measureAsync } = usePerformanceMonitoring();
+  const { handleError, wrapAsync } = useErrorHandling();
 
   // Animation on scroll hook
   const useOnScreen = (
@@ -104,6 +119,26 @@ const App = () => {
   });
   const [pricingRef, pricingVisible] = useOnScreen({ threshold: 0.2 });
   const [ctaRef, ctaVisible] = useOnScreen({ threshold: 0.3 });
+  const {isSignedIn}=useUser();
+
+  // Enhanced error handling for component initialization
+  useEffect(() => {
+    startTimer('page-initialization');
+    
+    const initializePage = wrapAsync(async () => {
+      try {
+        // Simulate any async initialization
+        await new Promise(resolve => setTimeout(resolve, 100));
+        announceSuccess('Dev Pocket homepage loaded successfully');
+      } catch (error) {
+        announceError('Failed to initialize homepage');
+        handleError(error as Error, 'error', 'Page Initialization');
+      }
+    }, 'Page Initialization');
+
+    initializePage();
+    endTimer('page-initialization');
+  }, [startTimer, endTimer, announceSuccess, announceError, handleError, wrapAsync]);
 
   return (
     <main>
@@ -124,8 +159,23 @@ const App = () => {
           heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
-        <div className="bg-gradient-to-b from-sky-100 to-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 text-center rounded-3xl mt-6 border border-sky-200 shadow-xl overflow-hidden">
-          <div className="max-w-4xl mx-auto">
+       <div className="relative bg-gradient-to-b from-sky-100 to-white py-20 sm:py-28 px-6 sm:px-10 lg:px-16 text-center overflow-hidden mt-10 mb-10">
+
+
+          <div className="absolute inset-0 z-0">
+            <Particles
+              particleColors={["#000000", "#000000"]}
+              particleCount={500}
+              particleSpread={7}
+              speed={0.2}
+              particleBaseSize={50}
+              moveParticlesOnHover={false}
+              alphaParticles={false}
+              disableRotation={false}
+              className="w-full h-full"
+            />
+          </div>
+          <div className="relative z-10 max-w-4xl mx-auto">
              <h1 id="hero-heading" className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-800 leading-tight mb-3">
                The AI-Powered Platform for Your Dev Career
              </h1>
@@ -134,22 +184,15 @@ const App = () => {
                updates, and powerful resume tools—all in one smart dashboard.
              </p>
              <a
-              href="#pricing"
+              href="/sign-in"
               className="inline-block bg-sky-600 text-white text-base font-semibold py-2.5 px-6 rounded-full shadow-2xl hover:bg-sky-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-sky-300 focus:ring-opacity-50"
               aria-describedby="pricing-section"
              >
                Get Started Free
              </a>
            </div>
-           <div className="mt-8 sm:mt-12 relative w-full max-w-4xl mx-auto">
-             <Image
-              src="https://placehold.co/1000x600/e0f2fe/0c4a6e?text=Dev+Pocket+UI"
-              alt="Dev Pocket Dashboard Mockup"
-              width={1000}
-              height={600}
-              unoptimized
-              className="w-full h-auto rounded-xl shadow-2xl border border-white transition-transform transform hover:scale-105 duration-300"
-            />
+          <div className="mt-8 sm:mt-12 relative w-full max-w-4xl mx-auto">
+             
            </div>
          </div>
        </section>
@@ -165,7 +208,7 @@ const App = () => {
             : "opacity-0 translate-y-10"
         }`}
       >
-         <h2 id="features-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
+         <h2 id="features-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-400 mb-4">
            All the Tools You Need, in One Place
          </h2>
          <p className="text-base sm:text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
@@ -292,7 +335,7 @@ const App = () => {
             : "opacity-0 translate-y-10"
         }`}
       >
-        <h2 id="how-it-works-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
+        <h2 id="how-it-works-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-400 mb-4">
           Get Started in 3 Simple Steps
         </h2>
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 relative">
@@ -385,7 +428,7 @@ const App = () => {
             : "opacity-0 translate-y-10"
         }`}
       >
-         <h2 id="pricing-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
+         <h2 id="pricing-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-400 mb-4">
            Simple, Transparent Pricing
          </h2>
          <p className="text-base sm:text-lg text-gray-600 mb-6">
@@ -440,7 +483,7 @@ const App = () => {
                <span className="text-base font-medium text-gray-500">/mo</span>
              </p>
              <a
-              href="#"
+              href="/sign-in?plan=hobby"
               className="w-full inline-block bg-gray-100 text-gray-700 font-bold py-2.5 px-6 rounded-full hover:bg-gray-200 transition-colors focus:outline-none focus:ring-4 focus:ring-gray-300 focus:ring-opacity-50"
               aria-describedby="hobby-plan"
             >
@@ -462,13 +505,20 @@ const App = () => {
                </span>
                <span className="text-base font-medium text-gray-500">/mo</span>
              </p>
-             <a
-              href="#"
-              className="w-full inline-block bg-sky-600 text-white font-bold py-2.5 px-6 rounded-full hover:bg-sky-700 transition-colors focus:outline-none focus:ring-4 focus:ring-sky-300 focus:ring-opacity-50"
-             aria-describedby="pro-plan"
-            >
-              Start Free Trial
-            </a>
+
+             {isSignedIn ? (
+                <Link href="/checkout/pro">
+                  <button className="w-full bg-sky-600 text-white font-bold py-2.5 px-6 rounded-full hover:bg-sky-700 transition-colors focus:outline-none focus:ring-4 focus:ring-sky-300 focus:ring-opacity-50">
+                    Start Free Trial
+                  </button>
+                </Link>
+              ) : (
+                <Link href="/sign-in?redirect_url=/checkout/pro">
+                  <button className="w-full bg-sky-600 text-white font-bold py-2.5 px-6 rounded-full hover:bg-sky-700 transition-colors focus:outline-none focus:ring-4 focus:ring-sky-300 focus:ring-opacity-50">
+                    Start Free Trial
+                  </button>
+                </Link>
+            )}
           </div>
            {/* Teams Plan */}
            <div className="border border-gray-200 rounded-2xl p-6" role="article" aria-labelledby="teams-plan">
@@ -476,7 +526,7 @@ const App = () => {
              <p className="text-gray-500 mb-6">For organizations and groups.</p>
              <p className="text-4xl font-extrabold mb-5" aria-label="Custom pricing">Custom</p>
              <a
-              href="#"
+              href="https://bento.me/darshan3690"
               className="w-full inline-block bg-gray-100 text-gray-700 font-bold py-2.5 px-6 rounded-full hover:bg-gray-200 transition-colors focus:outline-none focus:ring-4 focus:ring-gray-300 focus:ring-opacity-50"
               aria-describedby="teams-plan"
             >
@@ -502,12 +552,12 @@ const App = () => {
             Join thousands of developers already using Dev Pocket to achieve
             their goals.
           </p>
-          <a
-            href="#"
-            className="inline-block bg-white text-sky-600 font-bold text-base py-2.5 px-6 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50"
-          >
-            Start Your Free Trial
-          </a>
+          <Link href={isSignedIn ? "/dashboard" : "/sign-in?redirect_url=/dashboard"}>
+            <button className="inline-block bg-white text-sky-600 font-bold text-base py-2.5 px-6 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50">
+              Start Your Free Trial
+            </button>
+        </Link>
+
         </div>
       </section>
     </main>

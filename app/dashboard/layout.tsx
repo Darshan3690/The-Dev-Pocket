@@ -14,13 +14,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Search,
-  Bell,
   Settings,
-  User,
-  LogOut,
   Menu,
   X,
-  Plus,
   UserPlus,
   Zap,
   MapPin,
@@ -127,8 +123,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [notificationsOpen, setNotificationsOpen] = useState(false)
-  const [profileMenuOpen, setProfileMenuOpen] = useState(false)
 
   // Quick Actions Component for better organization and readability
   const QuickActionsSection = () => (
@@ -153,7 +147,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             >
               {/* Background Gradient */}
               <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
-              
+
               {/* Content */}
               <div className="relative p-6">
                 {/* Icon with gradient background */}
@@ -200,33 +194,34 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     <div className="flex h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Mobile overlay */}
       {mobileMenuOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
 
       {/* here we define the Sidebar */}
-      <aside 
+      <aside
+        id="dashboard-sidebar"
         className={`
+          fixed lg:static inset-y-0 left-0 z-50
           ${sidebarCollapsed ? 'w-16' : 'w-64'} 
           ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-          fixed lg:static inset-y-0 left-0 z-50
           bg-white/95 backdrop-blur-xl border-r border-slate-200/60 
           flex flex-col transition-all duration-300 ease-in-out
           shadow-2xl lg:shadow-none
         `}
         role="navigation"
         aria-label="Dashboard sidebar navigation"
-        aria-hidden={!mobileMenuOpen && typeof window !== 'undefined' && window.innerWidth < 1024}
+        aria-hidden={!mobileMenuOpen}
       >
         {/* here we define the Logo/Brand */}
         <div className="h-20 flex items-center justify-between px-4 border-b border-slate-200/60">
           {!sidebarCollapsed && (
-            <div 
+            <div
               className="font-extrabold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent drop-shadow-sm"
               role="heading"
-              aria-level={1}
+              aria-level="1"
             >
               The Dev Pocket
             </div>
@@ -262,8 +257,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   className={`
                     flex items-center gap-3 px-4 py-3.5 rounded-2xl text-base font-bold transition-all duration-300
                     focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2
-                    ${isActive 
-                      ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-xl shadow-blue-500/40 scale-105" 
+                    ${isActive
+                      ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-xl shadow-blue-500/40 scale-105"
                       : "text-slate-700 hover:bg-slate-100/80 hover:text-slate-900 hover:scale-105 hover:shadow-md"
                     }
                     ${sidebarCollapsed ? 'justify-center' : ''}
@@ -279,10 +274,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     <div className="ml-auto w-2.5 h-2.5 bg-white rounded-full animate-pulse shadow-lg" aria-hidden="true" />
                   )}
                 </Link>
-                
+
                 {/* Tooltip for collapsed sidebar */}
                 {sidebarCollapsed && (
-                  <div 
+                  <div
                     className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-4 py-2.5 bg-slate-900 text-white text-sm font-bold rounded-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 whitespace-nowrap z-50 pointer-events-none shadow-xl"
                     role="tooltip"
                     aria-hidden="true"
@@ -298,26 +293,28 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
         {/* Bottom section */}
         <div className="p-3 border-t border-slate-200/60">
-          <button 
-            className={`
+          <Link href={"/settings"}>
+            <button
+              className={`
               flex items-center gap-3 px-4 py-3.5 rounded-2xl text-base font-bold text-slate-700 hover:bg-slate-100/80 hover:text-slate-900 hover:scale-105 hover:shadow-md transition-all duration-300 w-full
               focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2
               ${sidebarCollapsed ? 'justify-center' : ''}
-            `}
-            aria-label={sidebarCollapsed ? "Settings" : undefined}
-            title={sidebarCollapsed ? "Settings" : undefined}
-            type="button"
-          >
-            <Settings className={`${sidebarCollapsed ? 'w-6 h-6' : 'w-5 h-5'} flex-shrink-0`} aria-hidden="true" />
-            {!sidebarCollapsed && <span>Settings</span>}
-          </button>
+              `}
+              aria-label={sidebarCollapsed ? "Settings" : undefined}
+              title={sidebarCollapsed ? "Settings" : undefined}
+              type="button"
+            >
+              <Settings className={`${sidebarCollapsed ? 'w-6 h-6' : 'w-5 h-5'} flex-shrink-0`} aria-hidden="true" />
+              {!sidebarCollapsed && <span>Settings</span>}
+            </button>
+          </Link>
         </div>
       </aside>
 
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <header 
+        <header
           className="h-20 bg-white/70 backdrop-blur-xl border-b border-slate-200/60 flex items-center justify-between px-8 sticky top-0 z-30 shadow-lg"
           role="banner"
         >
@@ -326,7 +323,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               onClick={() => setMobileMenuOpen(true)}
               className="lg:hidden p-3 rounded-2xl hover:bg-slate-100/80 backdrop-blur-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-all duration-300 hover:scale-105"
               aria-label="Open sidebar menu"
-              aria-controls="sidebar"
+              aria-controls="dashboard-sidebar"
               type="button"
             >
               <Menu className="w-6 h-6" aria-hidden="true" />
@@ -335,7 +332,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               Dashboard
             </h1>
           </div>
-          
+
           <div className="flex items-center gap-4">
             {/* Search */}
             <div className="relative hidden sm:block">
@@ -352,8 +349,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
             {/* Profile */}
             <div className="flex items-center gap-2" role="complementary" aria-label="User menu">
-              <UserButton 
-                afterSignOutUrl="/" 
+              <UserButton
+                afterSignOutUrl="/"
                 appearance={{
                   elements: {
                     avatarBox: "w-11 h-11 rounded-2xl transition-all duration-300 hover:scale-110 shadow-md"
