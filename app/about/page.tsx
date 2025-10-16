@@ -74,7 +74,7 @@ const AboutPage = () => {
             </Link>
 
             {/* Job Search & Matching - Clickable */}
-            <Link href="/jobs">
+            <Link href="/job">
               <div className="p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-all cursor-pointer transform hover:-translate-y-2 hover:scale-105 duration-300">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="p-2 bg-green-100 rounded-lg">
