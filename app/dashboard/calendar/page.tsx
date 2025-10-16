@@ -2,14 +2,9 @@
 
 import React, { useMemo, useState } from "react";
 import { Calendar as RBCalendar, dateFnsLocalizer, Views, SlotInfo, Event as RBCEvent } from "react-big-calendar";
-import format from "date-fns/format";
-import parse from "date-fns/parse";
-import { startOfWeek } from "date-fns/startOfWeek";
-import { getDay } from "date-fns/getDay";
-import { add } from "date-fns/add";
-import { isSameDay } from "date-fns/isSameDay";
+import { format, parse, startOfWeek, getDay, add, isSameDay } from "date-fns";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Locale } from "date-fns/locale";
+import { Locale } from "date-fns";
 
 export interface CalendarEvent {
 	id: string;

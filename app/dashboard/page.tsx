@@ -30,6 +30,68 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* Quick Actions */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-gray-900">Quick Actions</h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Link href="/create-roadmap" className="group block">
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border border-blue-200">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white text-xl">✨</span>
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                    AI Roadmap Generator
+                  </h3>
+                  <p className="text-sm text-blue-600 font-medium">New Feature!</p>
+                </div>
+              </div>
+              <p className="text-gray-600 text-sm">
+                Create personalized learning paths with AI assistance based on your goals and experience level.
+              </p>
+              <div className="mt-4 flex items-center text-blue-600 text-sm font-medium group-hover:text-blue-700">
+                Create Roadmap 
+                <span className="ml-1 group-hover:translate-x-1 transition-transform">→</span>
+              </div>
+            </div>
+          </Link>
+
+          <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-200">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center">
+                <span className="text-white text-xl">📚</span>
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900">Study Resources</h3>
+                <p className="text-sm text-gray-500">Browse library</p>
+              </div>
+            </div>
+            <p className="text-gray-600 text-sm">
+              Access curated learning materials, tutorials, and documentation.
+            </p>
+          </div>
+
+          <button 
+            onClick={() => setStudyBuddyOpen(true)}
+            className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-200 text-left group"
+          >
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center">
+                <span className="text-white text-xl">🤖</span>
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors">Study Buddy</h3>
+                <p className="text-sm text-gray-500">AI Assistant</p>
+              </div>
+            </div>
+            <p className="text-gray-600 text-sm">
+              Get instant help with coding questions and study guidance.
+            </p>
+          </button>
+        </div>
+      </div>
+
       
       {/* AI Study Buddy Modal (simplified) */}
       {studyBuddyOpen && (
@@ -53,4 +115,3 @@ export default function DashboardPage() {
     </div>
   )
 }
-
