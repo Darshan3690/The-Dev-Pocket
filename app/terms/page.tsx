@@ -13,7 +13,7 @@ export default function TermsPage() {
 
         <section className="mt-6">
           <p style={{ color: '#0F0E0E' }} className="leading-relaxed">
-            These Terms of Service constitute a binding agreement between you ("User") and The-Dev-Pocket governing your use of our educational platform and services.
+            These Terms of Service constitute a binding agreement between you (&quot;User&quot;) and The-Dev-Pocket governing your use of our educational platform and services.
           </p>
         </section>
 
@@ -87,10 +87,10 @@ export default function TermsPage() {
         <section className="mt-6">
           <h2 className="text-xl font-semibold text-blue-600">9. Disclaimers and Limitation of Liability</h2>
           <p style={{ color: '#0F0E0E' }} className="mt-3 leading-relaxed">
-            THE PLATFORM IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND. COMPANY MAKES NO GUARANTEES REGARDING EDUCATIONAL OUTCOMES, SKILL ACQUISITION, OR CAREER ADVANCEMENT.
+            THE PLATFORM IS PROVIDED &quot;AS IS&quot; WITHOUT WARRANTIES OF ANY KIND. COMPANY MAKES NO GUARANTEES REGARDING EDUCATIONAL OUTCOMES, SKILL ACQUISITION, OR CAREER ADVANCEMENT.
           </p>
           <p style={{ color: '#0F0E0E' }} className="mt-3 leading-relaxed">
-            TO THE MAXIMUM EXTENT PERMITTED BY LAW, COMPANY'S LIABILITY SHALL NOT EXCEED THE AMOUNT PAID BY USER IN THE PRECEDING TWELVE (12) MONTHS. WE ARE NOT LIABLE FOR INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES.
+            TO THE MAXIMUM EXTENT PERMITTED BY LAW, COMPANY&apos;S LIABILITY SHALL NOT EXCEED THE AMOUNT PAID BY USER IN THE PRECEDING TWELVE (12) MONTHS. WE ARE NOT LIABLE FOR INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES.
           </p>
         </section>
 

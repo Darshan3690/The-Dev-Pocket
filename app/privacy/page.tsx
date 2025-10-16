@@ -103,7 +103,7 @@ export default function PrivacyPage() {
         </section>
 
         <section className="mt-6">
-          <h2 className="text-xl font-semibold text-blue-600">6. Children's Privacy</h2>
+          <h2 className="text-xl font-semibold text-blue-600">6. Children&apos;s Privacy</h2>
           <p style={{ color: '#0F0E0E' }} className="mt-3 leading-relaxed">
             Our platform is not intended for users under 13 years of age. We do not knowingly collect personal information from children under 13. If we become aware of such collection, we will delete the information promptly.
           </p>
