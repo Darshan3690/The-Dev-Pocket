@@ -149,8 +149,8 @@ npx prisma studio
 ### 5️⃣ Configure Authentication with Clerk
 
 1. 🔐 Go to [Clerk Dashboard](https://dashboard.clerk.com)
-2. ➕ Create a new application
-3. 🔑 Copy your API keys
+2. ➕ Create a new application.
+3. 🔑 Copy your API keys.
 4. 📝 Add to `.env.local`:
 
 ```env
@@ -193,7 +193,7 @@ Show some love to the project
 <td align="center" width="33%">
 
 ### 🍴 Fork
-Create your own copy
+Create your own copy.
 
 </td>
 <td align="center" width="33%">
