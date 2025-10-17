@@ -1,19 +1,16 @@
 # Code of Conduct
 
 ## Our Pledge
-
 We as members, contributors, and leaders pledge to make participation in our project and community a harassment-free experience for everyone, regardless of:
 
 - Age, body size, visible or invisible disability
 - Ethnicity, sex characteristics, gender identity and expression
 - Level of experience, education, socio-economic status
 - Nationality, personal appearance, race, religion
-- Sexual identity and orientation
 
 We pledge to act and interact in ways that contribute to an **open, welcoming, diverse, inclusive, and healthy community**.
 
 ## Our Standards
-
 Examples of behavior that contributes to a positive environment include:
 
 - Demonstrating empathy and kindness toward other people
