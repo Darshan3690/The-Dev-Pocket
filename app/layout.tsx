@@ -24,6 +24,7 @@ import { AccessibilityAnnouncer, SkipLink, useAccessibility } from "../lib/acces
 import { usePerformanceMonitoring } from "../lib/performance";
 import { ErrorBoundary, useErrorHandling } from "../lib/error-handling";
 import GlobalSearch from "./components/GlobalSearch";
+import ToastProvider from "./components/ToastProvider";
 
 export default function RootLayout({
   children,
@@ -76,6 +77,9 @@ export default function RootLayout({
             disableTransitionOnChange={false}
           >
             <ErrorBoundary>
+              {/* Toast Notifications */}
+              <ToastProvider />
+              
               {/* Accessibility announcements */}
               <AccessibilityAnnouncer />
               
