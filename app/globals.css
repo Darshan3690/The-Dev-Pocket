@@ -194,12 +194,15 @@ body {
 ---break--- */
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--border);
+    outline-color: hsl(var(--ring) / 0.5);
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--foreground);
   }
 }
+
 
 @keyframes spin-slow {
   0% { transform: rotate(0deg); }
