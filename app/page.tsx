@@ -14,8 +14,8 @@ const App = () => {
   const [isYearly, setIsYearly] = useState(false);
 
   // Hook to detect when element appears on screen
-  const useOnScreen = (options: IntersectionObserverInit): [React.RefObject<HTMLElement>, boolean] => {
-    const ref = useRef<HTMLElement>(null);
+  const useOnScreen = (options: IntersectionObserverInit): [React.RefObject<HTMLElement | null>, boolean] => {
+    const ref = useRef<HTMLElement | null>(null);
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {

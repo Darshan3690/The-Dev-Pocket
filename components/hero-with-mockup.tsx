@@ -52,18 +52,20 @@ export function HeroWithMockup({
       <div className="relative mx-auto max-w-[1280px] flex flex-col gap-12 lg:gap-24">
         <div className="relative z-10 flex flex-col items-center gap-6 pt-8 md:pt-16 text-center lg:gap-12">
           {/* Heading */}
-          <h1
-            className={cn(
-              "inline-block animate-appear",
-              "bg-gradient-to-b from-foreground via-foreground/90 to-muted-foreground",
-              "bg-clip-text text-transparent",
-              "text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl",
-              "leading-[1.1] sm:leading-[1.1]",
-              "drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]",
-            )}
-          >
-            {title}
-          </h1>
+        <h1
+  className={cn(
+    "inline-block animate-appear",
+    "bg-gradient-to-b from-foreground via-foreground/90 to-muted-foreground",
+    "bg-clip-text text-black", // required
+    "text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl",
+    "leading-[1.1] sm:leading-[1.1]",
+    "drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+  )}
+>
+  {title}
+</h1>
+
+
 
           {/* Description */}
           <p
