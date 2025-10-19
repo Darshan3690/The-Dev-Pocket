@@ -143,19 +143,14 @@ html {
 /* === BASE STYLES === */
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--border);
+    outline-color: hsl(var(--ring) / 0.5);
   }
   body {
     @apply bg-background text-foreground;
-    background-color: #f9fafb;
-    color: #111827;
-  }
-
-  .dark body {
-    background-color: #111827;
-    color: #f9fafb;
   }
 }
+
 
 /* === ANIMATIONS === */
 @keyframes spin-slow {
