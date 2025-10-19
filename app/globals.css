@@ -152,11 +152,7 @@ html {
   }
 }
 
-
-<<<<<<< HEAD
 /* === ANIMATIONS === */
-=======
->>>>>>> 30f209c4565f4df1f1201d11ef3117c17ad78144
 @keyframes spin-slow {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
