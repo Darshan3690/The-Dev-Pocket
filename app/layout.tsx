@@ -23,6 +23,8 @@ import {
 import { AccessibilityAnnouncer, SkipLink, useAccessibility } from "../lib/accessibility";
 import { usePerformanceMonitoring } from "../lib/performance";
 import { ErrorBoundary, useErrorHandling } from "../lib/error-handling";
+import GlobalSearch from "./components/GlobalSearch";
+import ToastProvider from "./components/ToastProvider";
 
 export default function RootLayout({
   children,
@@ -75,6 +77,9 @@ export default function RootLayout({
             disableTransitionOnChange={false}
           >
             <ErrorBoundary>
+              {/* Toast Notifications */}
+              <ToastProvider />
+              
               {/* Accessibility announcements */}
               <AccessibilityAnnouncer />
               
@@ -154,7 +159,10 @@ export default function RootLayout({
                       Pricing
                     </Link>
 
-                    {/* 👇 Theme Switcher Added */}
+                    {/* Global Search */}
+                    <GlobalSearch />
+
+                    {/* Theme Switcher */}
                     <ThemeSwitcher />
                   </nav>
 
@@ -199,6 +207,11 @@ export default function RootLayout({
                     id="mobile-menu"
                   >
                     <div className="p-4 space-y-3">
+                      {/* Mobile Search */}
+                      <div className="pb-2 border-b border-gray-200">
+                        <GlobalSearch />
+                      </div>
+                      
                       <Link
                         href="/#features"
                         className={`block rounded-lg px-4 py-2 text-center transition-colors ${hash === '#features' && pathname === '/' ? 'text-blue-700 bg-blue-50' : 'text-gray-700 hover:bg-gray-100'}`}
