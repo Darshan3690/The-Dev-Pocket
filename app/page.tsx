@@ -25,19 +25,43 @@ const Icon = ({ children, ariaLabel }: { children: React.ReactNode; ariaLabel: s
   </div>
 );
 
-// Feature Card Component
+// Updated Feature Card Component with clickable functionality
 interface FeatureCardProps {
   icon: React.ReactNode;
   iconLabel: string;
   title: string;
   children: React.ReactNode;
+  href: string;
 }
-const FeatureCard = ({ icon, iconLabel, title, children }: FeatureCardProps) => (
-  <article className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform">
-    <Icon ariaLabel={iconLabel}>{icon}</Icon>
-    <h3 className="text-xl font-bold text-gray-800 mb-2">{title}</h3>
-    <p className="text-gray-500 leading-relaxed">{children}</p>
-  </article>
+
+const FeatureCard = ({ icon, iconLabel, title, children, href }: FeatureCardProps) => (
+  <Link href={href}>
+    <article className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group">
+      <div 
+        className="flex-shrink-0 w-12 h-12 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-sky-200 transition-all"
+        role="img"
+        aria-label={iconLabel}
+      >
+        {icon}
+      </div>
+      <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-sky-600 transition-colors">{title}</h3>
+      <p className="text-gray-500 leading-relaxed mb-3">{children}</p>
+      
+      {/* Learn More indicator - appears on hover */}
+      <div className="flex items-center text-sky-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+        <span className="text-sm">Learn more</span>
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          className="h-4 w-4 ml-1 transform group-hover:translate-x-2 transition-transform" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+      </div>
+    </article>
+  </Link>
 );
 
 
@@ -197,7 +221,7 @@ const App = () => {
          </div>
        </section>
 
-       {/* Features */}
+       {/* Features - NOW WITH CLICKABLE CARDS */}
        <section
         ref={featuresRef}
         id="features"
@@ -216,34 +240,35 @@ const App = () => {
            together to accelerate your growth.
          </p>
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left" role="list">
-           <Link href="/create-roadmap" className="group block">
-             <FeatureCard
-               title="Personalized Roadmaps"
-               iconLabel="Lightning bolt icon representing personalized roadmaps"
-               icon={
-                 <svg
-                   xmlns="http://www.w3.org/2000/svg"
-                   className="h-6 w-6"
-                   fill="none"
-                   viewBox="0 0 24 24"
-                   stroke="currentColor"
-                   aria-hidden="true"
-                 >
-                   <path
-                     strokeLinecap="round"
-                     strokeLinejoin="round"
-                     strokeWidth={2}
-                     d="M13 10V3L4 14h7v7l9-11h-7z"
-                   />
-                 </svg>
-               }
-             >
-              Our AI crafts a custom learning path based on your goals and skill
-              level. <span className="inline-block ml-1 text-sky-600 group-hover:translate-x-1 transition-transform">→</span>
-             </FeatureCard>
-           </Link>
+           <FeatureCard
+             title="Personalized Roadmaps"
+             href="/create-roadmap"
+             iconLabel="Lightning bolt icon representing personalized roadmaps"
+             icon={
+               <svg
+                 xmlns="http://www.w3.org/2000/svg"
+                 className="h-6 w-6"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor"
+                 aria-hidden="true"
+               >
+                 <path
+                   strokeLinecap="round"
+                   strokeLinejoin="round"
+                   strokeWidth={2}
+                   d="M13 10V3L4 14h7v7l9-11h-7z"
+                 />
+               </svg>
+             }
+           >
+            Our AI crafts a custom learning path based on your goals and skill
+            level.
+           </FeatureCard>
+           
            <FeatureCard
              title="Curated Learning"
+             href="/dashboard"
              iconLabel="Academic cap icon representing curated learning"
              icon={
                <svg
@@ -277,10 +302,13 @@ const App = () => {
            >
              Access top-tier courses, tutorials, and articles all in one place.
            </FeatureCard>
+           
            <FeatureCard
             title="Job Search & Matching"
+            href="/job"
             iconLabel="Search icon representing job search and matching"
-            icon={
+            icon={ 
+              
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -300,8 +328,10 @@ const App = () => {
           >
             Find roles perfectly matched to your skills and interests.
           </FeatureCard>
+          
           <FeatureCard
             title="Resume & Portfolio Tools"
+            href="/dashboard/resume"
             iconLabel="Document icon representing resume and portfolio tools"
             icon={
               <svg
@@ -502,7 +532,7 @@ const App = () => {
                For professionals ready to accelerate.
              </p>
              <p className="text-4xl font-extrabold mb-5">
-               <span aria-label={`${isYearly ? "12" : "15"} dollars`}> {/* FIX: Add screen reader-friendly price */}
+               <span aria-label={`${isYearly ? "12" : "15"} dollars`}>
                  ${isYearly ? "12" : "15"}
                </span>
                <span className="text-base font-medium text-gray-500">/mo</span>
