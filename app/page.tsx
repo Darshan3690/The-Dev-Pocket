@@ -3,17 +3,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { HeroWithMockup } from "@/components/hero-with-mockup";
-import FeaturesSectionWithHoverEffects from "./components/FeaturedSection";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { HeroWithMockup } from "@/components/hero-with-mockup";
+import FeaturesSectionWithHoverEffects from "./components/FeaturedSection";
 import HowItWorks from "./components/HowItWorks";
 import Testimonials from "./components/Testimonials";
 
 const App = () => {
   const [isYearly, setIsYearly] = useState(false);
 
-  // Hook to detect when element appears on screen
+  // Intersection Observer Hook
   const useOnScreen = (options: IntersectionObserverInit): [React.RefObject<HTMLElement | null>, boolean] => {
     const ref = useRef<HTMLElement | null>(null);
     const [isVisible, setIsVisible] = useState(false);
@@ -38,15 +38,14 @@ const App = () => {
   // Refs for sections
   const [heroRef, heroVisible] = useOnScreen({ threshold: 0.3 });
   const [featuresRef, featuresVisible] = useOnScreen({ threshold: 0.2 });
-  const [pricingRef, pricingVisible] = useOnScreen({ threshold: 0.2 });
   const [ctaRef, ctaVisible] = useOnScreen({ threshold: 0.3 });
 
-  // ✅ Add date example
+  // Current Date
   const [currentDate, setCurrentDate] = useState<string>("");
 
   useEffect(() => {
     const today = new Date();
-    setCurrentDate(today.toDateString()); // e.g., "Sun Oct 19 2025"
+    setCurrentDate(today.toDateString());
   }, []);
 
   return (
@@ -94,15 +93,20 @@ const App = () => {
         <p>📅 Today’s Date: {currentDate}</p>
       </div>
 
-      {/* CTA */}
+      {/* CTA Section */}
       <section
         ref={ctaRef}
         className={`text-center py-20 transition-all duration-700 ease-out ${
           ctaVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
-        <Button className="bg-sky-600 text-white px-8 py-4 rounded-full hover:bg-sky-700 transition">
-          <Link href="#pricing">Start Your Free Trial</Link>
+        <Button
+          asChild
+          className="bg-sky-600 text-white px-8 py-4 rounded-full hover:bg-sky-700 transition text-lg sm:text-xl whitespace-nowrap"
+        >
+          <Link href="#demo">
+            Schedule My Free <span className="hidden sm:inline">Discovery</span> Demo Now
+          </Link>
         </Button>
       </section>
     </main>
