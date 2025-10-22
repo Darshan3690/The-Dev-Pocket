@@ -5,12 +5,14 @@ import Image from "next/image";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import Particles from "./components/ui/Particle";
+import { useTheme } from "next-themes";
 
 // Import enhanced utilities
 import { useAccessibility } from "../lib/accessibility";
 import { usePerformanceMonitoring } from "../lib/performance";
 import { useErrorHandling } from "../lib/error-handling";
 
+ 
 
 // Page components — authentication UI is provided by root `ClerkProvider` and header.
 
@@ -36,25 +38,41 @@ interface FeatureCardProps {
 
 const FeatureCard = ({ icon, iconLabel, title, children, href }: FeatureCardProps) => (
   <Link href={href}>
-    <article className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group">
-      <div 
-        className="flex-shrink-0 w-12 h-12 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-sky-200 transition-all"
-        role="img"
-        aria-label={iconLabel}
-      >
-        {icon}
+    <article
+      className="h-full flex flex-col justify-between bg-white dark:bg-gray-800 p-6 rounded-2xl 
+                 shadow-lg border border-gray-100 dark:border-gray-700 
+                 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 
+                 transform cursor-pointer group"
+    >
+      {/* Top content */}
+      <div>
+        <div
+          className="flex-shrink-0 w-12 h-12 bg-sky-100 dark:bg-sky-900 text-sky-600 
+                     rounded-full flex items-center justify-center mb-4 
+                     group-hover:scale-110 group-hover:bg-sky-200 transition-all"
+          role="img"
+          aria-label={iconLabel}
+        >
+          {icon}
+        </div>
+
+        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2 group-hover:text-sky-600 transition-colors">
+          {title}
+        </h3>
+
+        <p className="text-gray-500 dark:text-gray-400 leading-relaxed mb-3">
+          {children}
+        </p>
       </div>
-      <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-sky-600 transition-colors">{title}</h3>
-      <p className="text-gray-500 leading-relaxed mb-3">{children}</p>
-      
-      {/* Learn More indicator - appears on hover */}
-      <div className="flex items-center text-sky-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+
+      {/* Bottom “Learn more” */}
+      <div className="flex items-center text-sky-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity mt-auto">
         <span className="text-sm">Learn more</span>
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          className="h-4 w-4 ml-1 transform group-hover:translate-x-2 transition-transform" 
-          fill="none" 
-          viewBox="0 0 24 24" 
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-4 w-4 ml-1 transform group-hover:translate-x-2 transition-transform"
+          fill="none"
+          viewBox="0 0 24 24"
           stroke="currentColor"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -98,6 +116,8 @@ const TestimonialCard = ({
 );
 
 const App = () => {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
   const [isYearly, setIsYearly] = useState(false);
 
   // Initialize enhanced utilities
@@ -232,128 +252,123 @@ const App = () => {
             : "opacity-0 translate-y-10"
         }`}
       >
-         <h2 id="features-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-400 mb-4">
-           All the Tools You Need, in One Place
-         </h2>
-         <p className="text-base sm:text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
+<h2
+  className={`text-3xl sm:text-4xl font-bold mb-4 ${
+    isDark ? "text-white" : "text-gray-900"
+  }`}
+>
+  All the Tools You Need, in One Place
+</h2>
+
+         <p className={`text-base sm:text-lg mb-8 max-w-3xl mx-auto ${isDark ? "text-gray-400" : "text-gray-600"}`}>
            Stop juggling multiple platforms. Dev Pocket brings everything
            together to accelerate your growth.
          </p>
-         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left" role="list">
-           <FeatureCard
-             title="Personalized Roadmaps"
-             href="/create-roadmap"
-             iconLabel="Lightning bolt icon representing personalized roadmaps"
-             icon={
-               <svg
-                 xmlns="http://www.w3.org/2000/svg"
-                 className="h-6 w-6"
-                 fill="none"
-                 viewBox="0 0 24 24"
-                 stroke="currentColor"
-                 aria-hidden="true"
-               >
-                 <path
-                   strokeLinecap="round"
-                   strokeLinejoin="round"
-                   strokeWidth={2}
-                   d="M13 10V3L4 14h7v7l9-11h-7z"
-                 />
-               </svg>
-             }
-           >
-            Our AI crafts a custom learning path based on your goals and skill
-            level.
-           </FeatureCard>
-           
-           <FeatureCard
-             title="Curated Learning"
-             href="/dashboard"
-             iconLabel="Academic cap icon representing curated learning"
-             icon={
-               <svg
-                 xmlns="http://www.w3.org/2000/svg"
-                 className="h-6 w-6"
-                 fill="none"
-                 viewBox="0 0 24 24"
-                 stroke="currentColor"
-                 aria-hidden="true"
-               >
-                 <path
-                   strokeLinecap="round"
-                   strokeLinejoin="round"
-                   strokeWidth={2}
-                   d="M12 6.253v11.494m-5.22-8.485l10.44 0M17.22 6.253L6.78 17.747M6.78 6.253l10.44 11.494"
-                 />
-                 <path
-                   strokeLinecap="round"
-                   strokeLinejoin="round"
-                   strokeWidth={2}
-                   d="M9.5 4L14.5 4"
-                 />
-                 <path
-                   strokeLinecap="round"
-                   strokeLinejoin="round"
-                   strokeWidth={2}
-                   d="M6.5 7.5L17.5 7.5"
-                 />
-               </svg>
-             }
-           >
-             Access top-tier courses, tutorials, and articles all in one place.
-           </FeatureCard>
-           
-           <FeatureCard
-            title="Job Search & Matching"
-            href="/job"
-            iconLabel="Search icon representing job search and matching"
-            icon={ 
-              
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            }
-          >
-            Find roles perfectly matched to your skills and interests.
-          </FeatureCard>
-          
-          <FeatureCard
-            title="Resume & Portfolio Tools"
-            href="/dashboard/resume"
-            iconLabel="Document icon representing resume and portfolio tools"
-            icon={
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-            }
-          >
-            Build professional resumes and portfolios with AI-powered templates.
-          </FeatureCard>
-        </div>
+        <div
+  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left items-stretch"
+  role="list"
+>
+  <FeatureCard
+    title="Personalized Roadmaps"
+    href="/create-roadmap"
+    iconLabel="Lightning bolt icon representing personalized roadmaps"
+    icon={
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-10 w-10"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M13 10V3L4 14h7v7l9-11h-7z"
+        />
+      </svg>
+    }
+  >
+    Our AI crafts a custom learning path based on your goals and skill level.
+  </FeatureCard>
+
+  <FeatureCard
+    title="Curated Learning"
+    href="/dashboard"
+    iconLabel="Academic cap icon representing curated learning"
+    icon={
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-10 w-10"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M12 6.253v11.494m-5.22-8.485l10.44 0M17.22 6.253L6.78 17.747M6.78 6.253l10.44 11.494"
+        />
+      </svg>
+    }
+  >
+    Access top-tier courses, tutorials, and articles all in one place.
+  </FeatureCard>
+
+  <FeatureCard
+    title="Job Search & Matching"
+    href="/job"
+    iconLabel="Search icon representing job search and matching"
+    icon={
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-10 w-10"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
+      </svg>
+    }
+  >
+    Find roles perfectly matched to your skills and interests.
+  </FeatureCard>
+
+  <FeatureCard
+    title="Resume & Portfolio Tools"
+    href="/dashboard/resume"
+    iconLabel="Document icon representing resume and portfolio tools"
+    icon={
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-10 w-10"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+        />
+      </svg>
+    }
+  >
+    Build professional resumes and portfolios with AI-powered templates.
+  </FeatureCard>
+</div>
+
       </section>
 
       {/* How It Works */}
@@ -367,7 +382,9 @@ const App = () => {
             : "opacity-0 translate-y-10"
         }`}
       >
-        <h2 id="how-it-works-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-400 mb-4">
+        <h2 id="how-it-works-heading" className={`text-3xl sm:text-4xl font-bold mb-4 ${
+    isDark ? "text-white" : "text-gray-900"
+  }`}>
           Get Started in 3 Simple Steps
         </h2>
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 relative">
@@ -460,7 +477,9 @@ const App = () => {
             : "opacity-0 translate-y-10"
         }`}
       >
-         <h2 id="pricing-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-400 mb-4">
+         <h2 id="pricing-heading" className={`text-3xl sm:text-4xl font-bold mb-4 ${
+    isDark ? "text-white" : "text-gray-900"
+  }`}>
            Simple, Transparent Pricing
          </h2>
          <p className="text-base sm:text-lg text-gray-600 mb-6">
