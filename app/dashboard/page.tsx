@@ -1,32 +1,167 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useUser } from "@clerk/nextjs"
 import Link from "next/link";
+
+interface UserStats {
+  points: number;
+  currentStreak: number;
+  dailyGoalProgress: number;
+  dailyGoalTarget: number;
+  tasksCompleted: number;
+  tasksTotal: number;
+}
 
 export default function DashboardPage() {
   const [studyBuddyOpen, setStudyBuddyOpen] = useState(false)
+  const { isLoaded, user } = useUser()
+  const [stats, setStats] = useState<UserStats | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (isLoaded && user) {
+      fetchUserStats()
+    }
+  }, [isLoaded, user])
+
+  const fetchUserStats = async () => {
+    try {
+      const response = await fetch('/api/user-stats')
+      const data = await response.json()
+      if (data.stats) {
+        setStats(data.stats)
+      } else {
+        // Set default stats if API returns nothing
+        setStats({
+          points: 0,
+          currentStreak: 0,
+          dailyGoalProgress: 0,
+          dailyGoalTarget: 100,
+          tasksCompleted: 0,
+          tasksTotal: 0,
+        })
+      }
+    } catch (error) {
+      console.error('Error fetching stats:', error)
+      // Set default stats on error
+      setStats({
+        points: 0,
+        currentStreak: 0,
+        dailyGoalProgress: 0,
+        dailyGoalTarget: 100,
+        tasksCompleted: 0,
+        tasksTotal: 0,
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const dailyGoalPercentage = stats 
+    ? Math.min(100, Math.round((stats.dailyGoalProgress / stats.dailyGoalTarget) * 100))
+    : 0
 
   return (
     <div className="space-y-8">
       {/* Stat Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="bg-white p-4 rounded-lg shadow">
-          <p className="text-sm text-gray-500">Points</p>
-          <h3 className="text-2xl font-bold">1,240</h3>
+        <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+          <p className="text-sm text-gray-500 font-medium mb-2">Points</p>
+          {loading ? (
+            <div className="h-8 bg-gray-200 rounded animate-pulse mt-1"></div>
+          ) : (
+            <h3 className="text-3xl font-bold text-gray-900">
+              {stats?.points.toLocaleString() || 0}
+            </h3>
+          )}
+          {!loading && stats?.points === 0 && (
+            <p className="text-xs text-gray-400 mt-1">Complete tasks to earn points</p>
+          )}
         </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <p className="text-sm text-gray-500">Streak</p>
-          <h3 className="text-2xl font-bold">7 Days 🔥</h3>
+        
+        <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+          <p className="text-sm text-gray-500 font-medium mb-2">Streak</p>
+          {loading ? (
+            <div className="h-8 bg-gray-200 rounded animate-pulse mt-1"></div>
+          ) : (
+            <>
+              {(stats?.currentStreak || 0) === 0 ? (
+                <>
+                  <h3 className="text-2xl font-bold text-orange-500">
+                    Start today! 🚀
+                  </h3>
+                  <p className="text-xs text-gray-400 mt-1">Begin your learning streak</p>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-3xl font-bold text-orange-500">
+                    {stats?.currentStreak || 0} Days 🔥
+                  </h3>
+                  <p className="text-xs text-gray-400 mt-1">Keep it going!</p>
+                </>
+              )}
+            </>
+          )}
         </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <p className="text-sm text-gray-500">Daily Goal</p>
-          <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-            <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "60%" }}></div>
-          </div>
+        
+        <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+          <p className="text-sm text-gray-500 font-medium mb-2">Daily Goal</p>
+          {loading ? (
+            <div className="h-2.5 bg-gray-200 rounded-full animate-pulse mt-2"></div>
+          ) : (
+            <>
+              {dailyGoalPercentage === 0 ? (
+                <>
+                  <h3 className="text-xl font-bold text-blue-500">
+                    Set your first goal
+                  </h3>
+                  <p className="text-xs text-gray-400 mt-1">Start your journey today</p>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-3xl font-bold text-blue-600 mb-2">
+                    {dailyGoalPercentage}%
+                  </h3>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div 
+                      className="bg-blue-600 h-2.5 rounded-full transition-all duration-500" 
+                      style={{ width: `${dailyGoalPercentage}%` }}
+                    ></div>
+                  </div>
+                </>
+              )}
+            </>
+          )}
         </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <p className="text-sm text-gray-500">Tasks Done</p>
-          <h3 className="text-2xl font-bold">12/20</h3>
+        
+        <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+          <p className="text-sm text-gray-500 font-medium mb-2">Tasks Done</p>
+          {loading ? (
+            <div className="h-8 bg-gray-200 rounded animate-pulse mt-1"></div>
+          ) : (
+            <>
+              {(stats?.tasksTotal || 0) === 0 ? (
+                <>
+                  <h3 className="text-xl font-bold text-green-500">
+                    Create your first task
+                  </h3>
+                  <p className="text-xs text-gray-400 mt-1">Get organized today</p>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-3xl font-bold text-green-600">
+                    {stats?.tasksCompleted || 0}/{stats?.tasksTotal || 0}
+                  </h3>
+                  <p className="text-xs text-gray-400 mt-1">
+                    {stats?.tasksCompleted === stats?.tasksTotal 
+                      ? "All done! 🎉" 
+                      : `${(stats?.tasksTotal || 0) - (stats?.tasksCompleted || 0)} remaining`}
+                  </p>
+                </>
+              )}
+            </>
+          )}
         </div>
       </div>
 
