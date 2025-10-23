@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { useUser } from "@clerk/nextjs";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import Particles from "./components/ui/Particle";
 import { useTheme } from "next-themes";
@@ -114,21 +114,19 @@ const TestimonialCard = ({
     </footer>
   </blockquote>
 );
+import { Button } from "@/components/ui/button";
+import { HeroWithMockup } from "@/components/hero-with-mockup";
+import FeaturesSectionWithHoverEffects from "./components/FeaturedSection";
+import HowItWorks from "./components/HowItWorks";
+import Testimonials from "./components/Testimonials";
 
 const App = () => {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
   const [isYearly, setIsYearly] = useState(false);
 
-  // Initialize enhanced utilities
-  const { announce, announceSuccess, announceError } = useAccessibility();
-  const { startTimer, endTimer, measureAsync } = usePerformanceMonitoring();
-  const { handleError, wrapAsync } = useErrorHandling();
-
-  // Animation on scroll hook
-  const useOnScreen = (
-    options: IntersectionObserverInit
-  ): [React.RefObject<HTMLElement | null>, boolean] => {
+  // Intersection Observer Hook
+  const useOnScreen = (options: IntersectionObserverInit): [React.RefObject<HTMLElement | null>, boolean] => {
     const ref = useRef<HTMLElement | null>(null);
     const [isVisible, setIsVisible] = useState(false);
 
@@ -140,117 +138,58 @@ const App = () => {
         }
       }, options);
 
-      const currentRef = ref.current;
-      if (currentRef) {
-        observer.observe(currentRef);
-      }
-
+      if (ref.current) observer.observe(ref.current);
       return () => {
-        if (currentRef) {
-          observer.unobserve(currentRef);
-        }
+        if (ref.current) observer.unobserve(ref.current);
       };
     }, [ref, options]);
 
     return [ref, isVisible];
   };
 
+  // Refs for sections
   const [heroRef, heroVisible] = useOnScreen({ threshold: 0.3 });
   const [featuresRef, featuresVisible] = useOnScreen({ threshold: 0.2 });
-  const [howItWorksRef, howItWorksVisible] = useOnScreen({ threshold: 0.2 });
-  const [testimonialsRef, testimonialsVisible] = useOnScreen({
-    threshold: 0.1,
-  });
-  const [pricingRef, pricingVisible] = useOnScreen({ threshold: 0.2 });
   const [ctaRef, ctaVisible] = useOnScreen({ threshold: 0.3 });
-  const {isSignedIn}=useUser();
 
-  // Enhanced error handling for component initialization
+  // Current Date
+  const [currentDate, setCurrentDate] = useState<string>("");
+
   useEffect(() => {
-    startTimer('page-initialization');
-    
-    const initializePage = wrapAsync(async () => {
-      try {
-        // Simulate any async initialization
-        await new Promise(resolve => setTimeout(resolve, 100));
-        announceSuccess('Dev Pocket homepage loaded successfully');
-      } catch (error) {
-        announceError('Failed to initialize homepage');
-        handleError(error as Error, 'error', 'Page Initialization');
-      }
-    }, 'Page Initialization');
-
-    initializePage();
-    endTimer('page-initialization');
-  }, [startTimer, endTimer, announceSuccess, announceError, handleError, wrapAsync]);
+    const today = new Date();
+    setCurrentDate(today.toDateString());
+  }, []);
 
   return (
     <main>
-      {/* Skip to main content link for keyboard navigation */}
-      <a 
-        href="#main-content" 
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-sky-600 text-white px-4 py-2 rounded-md z-50"
-      >
-        Skip to main content
-      </a>
-      
       {/* Hero Section */}
       <section
-        id="main-content"
         ref={heroRef}
-        aria-labelledby="hero-heading"
-        className={`transition-all duration-700 ease-out ${
+        className={`transition-all duration-700 ease-out max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${
           heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
-       <div className="relative bg-gradient-to-b from-sky-100 to-white py-20 sm:py-28 px-6 sm:px-10 lg:px-16 text-center overflow-hidden mt-10 mb-10">
+        <HeroWithMockup
+          title="The AI-Powered Platform for Your Dev Career"
+          description="Dev Pocket centralizes learning, personalized roadmaps, job updates, and powerful resume tools—all in one smart dashboard."
+          primaryCta={{ text: "Get Started Free", href: "#pricing" }}
+          mockupImage={{
+            alt: "Dev Pocket Dashboard Mockup",
+            width: 1000,
+            height: 600,
+            src: "https://placehold.co/1000x600/e0f2fe/0c4a6e?text=Dev+Pocket+UI",
+          }}
+        />
+      </section>
 
-
-          <div className="absolute inset-0 z-0">
-            <Particles
-              particleColors={["#000000", "#000000"]}
-              particleCount={500}
-              particleSpread={7}
-              speed={0.2}
-              particleBaseSize={50}
-              moveParticlesOnHover={false}
-              alphaParticles={false}
-              disableRotation={false}
-              className="w-full h-full"
-            />
-          </div>
-          <div className="relative z-10 max-w-4xl mx-auto">
-             <h1 id="hero-heading" className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-800 leading-tight mb-3">
-               The AI-Powered Platform for Your Dev Career
-             </h1>
-             <p className="text-base sm:text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
-               Dev Pocket centralizes learning, personalized roadmaps, job
-               updates, and powerful resume tools—all in one smart dashboard.
-             </p>
-             <a
-              href="/sign-in"
-              className="inline-block bg-sky-600 text-white text-base font-semibold py-2.5 px-6 rounded-full shadow-2xl hover:bg-sky-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-sky-300 focus:ring-opacity-50"
-              aria-describedby="pricing-section"
-             >
-               Get Started Free
-             </a>
-           </div>
-          <div className="mt-8 sm:mt-12 relative w-full max-w-4xl mx-auto">
-             
-           </div>
-         </div>
-       </section>
-
-       {/* Features - NOW WITH CLICKABLE CARDS */}
-       <section
+      {/* Features */}
+      <motion.section
         ref={featuresRef}
         id="features"
-        aria-labelledby="features-heading"
-        className={`py-12 sm:py-16 text-center transition-all duration-700 ease-out ${
-          featuresVisible
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-10"
-        }`}
+        initial={{ opacity: 0, y: 40 }}
+        animate={featuresVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="py-16 sm:py-24 text-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
 <h2
   className={`text-3xl sm:text-4xl font-bold mb-4 ${
@@ -423,48 +362,14 @@ const App = () => {
            </div>
          </div>
        </section>
+        <FeaturesSectionWithHoverEffects />
+      </motion.section>
 
-       {/* Testimonials */}
-       <section
-        ref={testimonialsRef}
-        id="testimonials"
-        aria-labelledby="testimonials-heading"
-        className={`py-12 sm:py-16 bg-sky-50/70 rounded-3xl transition-all duration-700 ease-out ${
-          testimonialsVisible
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-10"
-        }`}
-      >
-         <div className="max-w-6xl mx-auto text-center">
-           <h2 id="testimonials-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
-             Loved by Developers Worldwide
-           </h2>
-           <p className="text-base sm:text-lg text-gray-600 mb-8">
-             Don&apos;t just take our word for it. Here&apos;s what our users are
-             saying.
-           </p>
-           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-             <TestimonialCard
-              quote="Dev Pocket completely changed how I approach learning. The personalized roadmap was a game-changer for me."
-              name="Sarah Johnson"
-              title="Frontend Developer"
-              avatar="https://placehold.co/100x100/E2E8F0/4A5568?text=SJ"
-            />
-            <TestimonialCard
-              quote="The job matching feature is incredible. I found a role that was a perfect fit in less than a month."
-              name="Michael Chen"
-              title="Backend Engineer"
-              avatar="https://placehold.co/100x100/CBD5E0/4A5568?text=MC"
-            />
-            <TestimonialCard
-              quote="As a recent bootcamp grad, Dev Pocket gave me the structure and confidence I needed to land my first tech job."
-              name="Jessica Rodriguez"
-              title="Junior Full-Stack Developer"
-              avatar="https://placehold.co/100x100/BEE3F8/2C5282?text=JR"
-            />
-          </div>
-        </div>
-      </section>
+      {/* How It Works */}
+      <HowItWorks />
+
+      {/* Testimonials */}
+      <Testimonials />
 
        {/* Pricing */}
        <section
@@ -586,30 +491,26 @@ const App = () => {
           </div>
         </div>
       </section>
+      {/* Current Date */}
+      <div className="text-center text-gray-600 mt-10">
+        <p>📅 Today’s Date: {currentDate}</p>
+      </div>
 
-       {/* Call to Action */}
-       <section
+      {/* CTA Section */}
+      <section
         ref={ctaRef}
-        aria-labelledby="cta-heading"
-        className={`bg-gradient-to-r from-sky-600 to-indigo-600 text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 text-center rounded-3xl mx-auto max-w-7xl mb-12 shadow-xl transition-all duration-700 ease-out ${
+        className={`text-center py-20 transition-all duration-700 ease-out ${
           ctaVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
-        <div className="max-w-3xl mx-auto">
-          <h2 id="cta-heading" className="text-3xl sm:text-4xl font-extrabold mb-3">
-            Ready to Level Up Your Career?
-          </h2>
-          <p className="text-base sm:text-lg font-light mb-6 opacity-90">
-            Join thousands of developers already using Dev Pocket to achieve
-            their goals.
-          </p>
-          <Link href={isSignedIn ? "/dashboard" : "/sign-in?redirect_url=/dashboard"}>
-            <button className="inline-block bg-white text-sky-600 font-bold text-base py-2.5 px-6 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50">
-              Start Your Free Trial
-            </button>
-        </Link>
-
-        </div>
+        <Button
+          asChild
+          className="bg-sky-600 text-white px-8 py-4 rounded-full hover:bg-sky-700 transition text-lg sm:text-xl whitespace-nowrap"
+        >
+          <Link href="#demo">
+            Schedule My Free <span className="hidden sm:inline">Discovery</span> Demo Now
+          </Link>
+        </Button>
       </section>
     </main>
   );
