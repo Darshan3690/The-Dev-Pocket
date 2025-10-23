@@ -38,14 +38,17 @@ export default function RootLayout({
 
   // Initialize enhanced utilities
   const { announce, announceSuccess, announceError } = useAccessibility();
-  const { startTimer, endTimer } = usePerformanceMonitoring();
-  const { handleError, wrapAsync } = useErrorHandling();
+  const performanceMonitoring = usePerformanceMonitoring();
+  const { handleError } = useErrorHandling();
 
   useEffect(() => {
-    startTimer('layout-initialization');
+    if (performanceMonitoring && typeof performanceMonitoring !== 'object') return;
     
-    const onScroll = wrapAsync(() => setScrolled(window.scrollY > 8), 'Scroll Handler');
-    const onHashChange = wrapAsync(() => setHash(window.location.hash), 'Hash Change Handler');
+    const monitoring = performanceMonitoring as any;
+    monitoring?.startTimer?.('layout-initialization');
+    
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onHashChange = () => setHash(window.location.hash);
     
     onScroll();
     setHash(window.location.hash);
@@ -55,13 +58,13 @@ export default function RootLayout({
     
     // Announce successful layout initialization
     announceSuccess('Dev Pocket application loaded successfully');
-    endTimer('layout-initialization');
+    monitoring?.endTimer?.('layout-initialization');
     
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("hashchange", onHashChange);
     };
-  }, [startTimer, endTimer, announceSuccess, wrapAsync]);
+  }, [announceSuccess, performanceMonitoring]);
 
   const isDashboard = pathname.startsWith("/dashboard");
 
@@ -94,8 +97,8 @@ export default function RootLayout({
                 <>
                   {/* Header */}
                   <header
-                    className={`w-full max-w-7xl mx-auto py-4 sm:py-5 px-4 sm:px-6 lg:px-8 flex justify-between items-center z-10 sticky top-0 ${scrolled ? "bg-white/90 shadow-md" : "bg-white/90 shadow-sm"
-                      } backdrop-blur-sm rounded-b-xl border-b border-gray-200 transition-colors`}
+                    className={`w-full max-w-7xl mx-auto py-4 sm:py-5 px-4 sm:px-6 lg:px-8 flex justify-between items-center z-10 sticky top-0 ${scrolled ? "bg-background/90 shadow-md" : "bg-background/90 shadow-sm"
+                      } backdrop-blur-sm rounded-b-xl border-b border-border transition-colors`}
                     role="banner"
                     aria-label="Main navigation"
                   >
@@ -134,8 +137,8 @@ export default function RootLayout({
                     <Link
                       href="/#features"
                       className={`rounded-full px-3 py-1 transition-colors ${hash === "#features" && pathname === "/"
-                        ? "text-blue-700 bg-blue-50"
-                        : "text-gray-700 hover:text-blue-600"
+                        ? "text-blue-700 bg-blue-50 dark:text-blue-400 dark:bg-blue-950"
+                        : "text-foreground hover:text-primary"
                         }`}
                     >
                       Features
@@ -143,8 +146,8 @@ export default function RootLayout({
                     <Link
                       href="/about"
                       className={`rounded-full px-3 py-1 transition-colors ${pathname.startsWith("/about")
-                        ? "text-blue-700 bg-blue-50"
-                        : "text-gray-700 hover:text-blue-600"
+                        ? "text-blue-700 bg-blue-50 dark:text-blue-400 dark:bg-blue-950"
+                        : "text-foreground hover:text-primary"
                         }`}
                     >
                       About
@@ -152,8 +155,8 @@ export default function RootLayout({
                     <Link
                       href="/#pricing"
                       className={`rounded-full px-3 py-1 transition-colors ${hash === "#pricing" && pathname === "/"
-                        ? "text-blue-700 bg-blue-50"
-                        : "text-gray-700 hover:text-blue-600"
+                        ? "text-blue-700 bg-blue-50 dark:text-blue-400 dark:bg-blue-950"
+                        : "text-foreground hover:text-primary"
                         }`}
                     >
                       Pricing
@@ -203,32 +206,32 @@ export default function RootLayout({
 
                   {/* Mobile menu */}
                   <div
-                    className={`absolute top-full left-0 right-0 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-lg transition-all duration-300 ${mobileOpen ? 'block' : 'hidden'} md:hidden`}
+                    className={`absolute top-full left-0 right-0 bg-background/95 backdrop-blur-sm border-b border-border shadow-lg transition-all duration-300 ${mobileOpen ? 'block' : 'hidden'} md:hidden`}
                     id="mobile-menu"
                   >
                     <div className="p-4 space-y-3">
                       {/* Mobile Search */}
-                      <div className="pb-2 border-b border-gray-200">
+                      <div className="pb-2 border-b border-border">
                         <GlobalSearch />
                       </div>
                       
                       <Link
                         href="/#features"
-                        className={`block rounded-lg px-4 py-2 text-center transition-colors ${hash === '#features' && pathname === '/' ? 'text-blue-700 bg-blue-50' : 'text-gray-700 hover:bg-gray-100'}`}
+                        className={`block rounded-lg px-4 py-2 text-center transition-colors ${hash === '#features' && pathname === '/' ? 'text-blue-700 bg-blue-50 dark:text-blue-400 dark:bg-blue-950' : 'text-foreground hover:bg-accent'}`}
                         onClick={() => setMobileOpen(false)}
                       >
                         Features
                       </Link>
                       <Link
                         href="/about"
-                        className={`block rounded-lg px-4 py-2 text-center transition-colors ${pathname.startsWith('/about') ? 'text-blue-700 bg-blue-50' : 'text-gray-700 hover:bg-gray-100'}`}
+                        className={`block rounded-lg px-4 py-2 text-center transition-colors ${pathname.startsWith('/about') ? 'text-blue-700 bg-blue-50 dark:text-blue-400 dark:bg-blue-950' : 'text-foreground hover:bg-accent'}`}
                         onClick={() => setMobileOpen(false)}
                       >
                         About
                       </Link>
                       <Link
                         href="/#pricing"
-                        className={`block rounded-lg px-4 py-2 text-center transition-colors ${hash === '#pricing' && pathname === '/' ? 'text-blue-700 bg-blue-50' : 'text-gray-700 hover:bg-gray-100'}`}
+                        className={`block rounded-lg px-4 py-2 text-center transition-colors ${hash === '#pricing' && pathname === '/' ? 'text-blue-700 bg-blue-50 dark:text-blue-400 dark:bg-blue-950' : 'text-foreground hover:bg-accent'}`}
                         onClick={() => setMobileOpen(false)}
                       >
                         Pricing
