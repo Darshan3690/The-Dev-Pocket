@@ -8,6 +8,7 @@ interface AccordionItem {
   answer: React.ReactNode;
 }
 
+export default function Accordion({ items }: { items: AccordionItem[] }) {
   const [openId, setOpenId] = useState<string | null>(items[0]?.id || null);
   const refs = useRef<Record<string, HTMLButtonElement | null>>({});
 
