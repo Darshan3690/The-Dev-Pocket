@@ -152,6 +152,10 @@ const App = () => {
   const [featuresRef, featuresVisible] = useOnScreen({ threshold: 0.2 });
   const [ctaRef, ctaVisible] = useOnScreen({ threshold: 0.3 });
 
+  // ✅ ADD THESE (they were missing)
+  const [howItWorksRef, howItWorksVisible] = useOnScreen({ threshold: 0.25 });
+  const [pricingRef, pricingVisible] = useOnScreen({ threshold: 0.25 });
+
   // Current Date
   const [currentDate, setCurrentDate] = useState<string>("");
 
