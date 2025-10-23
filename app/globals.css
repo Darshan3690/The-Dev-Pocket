@@ -52,12 +52,25 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 } */
 /* globals.css */
-body {
-  background-color: #f9fafb; /* light bg */
-  color: #111827; /* light text */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --border: 0 0% 89.8%;
+    --accent: 0 0% 96.1%;
+    --primary: 221.2 83.2% 53.3%;
+  }
+
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --accent: 0 0% 14.9%;
+    --primary: 217.2 91.2% 59.8%;
+  }
 }
 
-.dark body {
-  background-color: #111827; /* dark bg */
-  color: #f9fafb; /* dark text */
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
 }
