@@ -308,7 +308,7 @@ const App = () => {
   </FeatureCard>
 </div>
 
-      </section>
+      </motion.section>
 
       {/* How It Works */}
       <section
@@ -363,8 +363,7 @@ const App = () => {
          </div>
        </section>
         <FeaturesSectionWithHoverEffects />
-      </motion.section>
-
+      
       {/* How It Works */}
       <HowItWorks />
 
@@ -378,8 +377,7 @@ const App = () => {
         aria-labelledby="pricing-heading"
         className={`py-12 sm:py-16 text-center transition-all duration-700 ease-out ${
           pricingVisible
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-10"
+            ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
          <h2 id="pricing-heading" className={`text-3xl sm:text-4xl font-bold mb-4 ${
