@@ -6,17 +6,12 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Particles from "./components/ui/Particle";
 import { useTheme } from "next-themes";
+import { useUser } from "@clerk/nextjs";
 
-// Import enhanced utilities
 import { useAccessibility } from "../lib/accessibility";
 import { usePerformanceMonitoring } from "../lib/performance";
 import { useErrorHandling } from "../lib/error-handling";
 
- 
-
-// Page components — authentication UI is provided by root `ClerkProvider` and header.
-
-// Helper component for Icons
 const Icon = ({ children, ariaLabel }: { children: React.ReactNode; ariaLabel: string }) => (
   <div 
     className="flex-shrink-0 w-12 h-12 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mb-4"
@@ -27,7 +22,6 @@ const Icon = ({ children, ariaLabel }: { children: React.ReactNode; ariaLabel: s
   </div>
 );
 
-// Updated Feature Card Component with clickable functionality
 interface FeatureCardProps {
   icon: React.ReactNode;
   iconLabel: string;
@@ -44,7 +38,6 @@ const FeatureCard = ({ icon, iconLabel, title, children, href }: FeatureCardProp
                  transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 
                  transform cursor-pointer group"
     >
-      {/* Top content */}
       <div>
         <div
           className="flex-shrink-0 w-12 h-12 bg-sky-100 dark:bg-sky-900 text-sky-600 
@@ -65,7 +58,6 @@ const FeatureCard = ({ icon, iconLabel, title, children, href }: FeatureCardProp
         </p>
       </div>
 
-      {/* Bottom “Learn more” */}
       <div className="flex items-center text-sky-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity mt-auto">
         <span className="text-sm">Learn more</span>
         <svg
@@ -82,8 +74,6 @@ const FeatureCard = ({ icon, iconLabel, title, children, href }: FeatureCardProp
   </Link>
 );
 
-
-// Testimonial Card Component
 interface TestimonialCardProps {
   quote: string;
   name: string;
@@ -124,8 +114,8 @@ const App = () => {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
   const [isYearly, setIsYearly] = useState(false);
+  const { isSignedIn } = useUser();
 
-  // Intersection Observer Hook
   const useOnScreen = (options: IntersectionObserverInit): [React.RefObject<HTMLElement | null>, boolean] => {
     const ref = useRef<HTMLElement | null>(null);
     const [isVisible, setIsVisible] = useState(false);
@@ -147,16 +137,12 @@ const App = () => {
     return [ref, isVisible];
   };
 
-  // Refs for sections
   const [heroRef, heroVisible] = useOnScreen({ threshold: 0.3 });
   const [featuresRef, featuresVisible] = useOnScreen({ threshold: 0.2 });
   const [ctaRef, ctaVisible] = useOnScreen({ threshold: 0.3 });
-
-  // ✅ ADD THESE (they were missing)
   const [howItWorksRef, howItWorksVisible] = useOnScreen({ threshold: 0.25 });
   const [pricingRef, pricingVisible] = useOnScreen({ threshold: 0.25 });
 
-  // Current Date
   const [currentDate, setCurrentDate] = useState<string>("");
 
   useEffect(() => {
@@ -166,7 +152,6 @@ const App = () => {
 
   return (
     <main>
-      {/* Hero Section */}
       <section
         ref={heroRef}
         className={`transition-all duration-700 ease-out max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${
@@ -186,7 +171,6 @@ const App = () => {
         />
       </section>
 
-      {/* Features */}
       <motion.section
         ref={featuresRef}
         id="features"
@@ -314,7 +298,6 @@ const App = () => {
 
       </motion.section>
 
-      {/* How It Works */}
       <section
         ref={howItWorksRef}
         id="how-it-works"
@@ -368,13 +351,9 @@ const App = () => {
        </section>
         <FeaturesSectionWithHoverEffects />
       
-      {/* How It Works */}
       <HowItWorks />
-
-      {/* Testimonials */}
       <Testimonials />
 
-       {/* Pricing */}
        <section
         ref={pricingRef}
         id="pricing"
@@ -428,9 +407,7 @@ const App = () => {
             </span>
           </span>
         </div>
-         {/* Pricing Cards */}
          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-           {/* Free Plan */}
            <div className="border border-gray-200 rounded-2xl p-6" role="article" aria-labelledby="hobby-plan">
              <h3 id="hobby-plan" className="text-xl font-bold mb-2">Hobby</h3>
              <p className="text-gray-500 mb-6">
@@ -448,7 +425,6 @@ const App = () => {
               Get Started
             </a>
           </div>
-           {/* Pro Plan */}
            <div className="border-2 border-sky-500 rounded-2xl p-6 relative shadow-2xl" role="article" aria-labelledby="pro-plan">
              <span className="absolute top-0 -translate-y-1/2 bg-sky-500 text-white text-xs font-bold px-3 py-1 rounded-full" aria-label="Most popular plan">
                MOST POPULAR
@@ -478,7 +454,6 @@ const App = () => {
                 </Link>
             )}
           </div>
-           {/* Teams Plan */}
            <div className="border border-gray-200 rounded-2xl p-6" role="article" aria-labelledby="teams-plan">
              <h3 id="teams-plan" className="text-xl font-bold mb-2">Teams</h3>
              <p className="text-gray-500 mb-6">For organizations and groups.</p>
@@ -493,12 +468,10 @@ const App = () => {
           </div>
         </div>
       </section>
-      {/* Current Date */}
       <div className="text-center text-gray-600 mt-10">
         <p>📅 Today’s Date: {currentDate}</p>
       </div>
 
-      {/* CTA Section */}
       <section
         ref={ctaRef}
         className={`text-center py-20 transition-all duration-700 ease-out ${
