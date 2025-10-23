@@ -381,6 +381,9 @@ export default function RootLayout({
                       <Link href="/terms" className="hover:text-blue-500">
                         Terms of Service
                       </Link>
+                      <Link href="/faq" className="hover:text-blue-500">
+                        FAQ
+                      </Link>
                       <Link
                         href="https://bento.me/darshan3690"
                         target="_blank"
