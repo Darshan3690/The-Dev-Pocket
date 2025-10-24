@@ -384,13 +384,16 @@ export default function RootLayout({
                       <Link href="/faq" className="hover:text-blue-500">
                         FAQ
                       </Link>
+                      <Link href="/contact" className="hover:text-blue-500">
+                        Contact
+                      </Link>
                       <Link
                         href="https://bento.me/darshan3690"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="hover:text-blue-500"
                       >
-                        Contact
+                        Developer
                       </Link>
                     </div>
                   </div>
