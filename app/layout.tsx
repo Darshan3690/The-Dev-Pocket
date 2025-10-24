@@ -60,7 +60,7 @@ export default function RootLayout({
     };
   }, [startTimer, endTimer, announceSuccess, wrapAsync]);
 
-  const isDashboard = pathname.startsWith("/dashboard");
+   const isDashboard = pathname.startsWith("/dashboard");
 
   return (
     <html lang="en" suppressHydrationWarning>
