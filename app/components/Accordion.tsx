@@ -52,7 +52,7 @@ export default function Accordion({ items }: { items: AccordionItem[] }) {
           <div key={item.id} className={`${i !== 0 ? "border-t border-gray-200 dark:border-gray-700" : ""}`}>
             <h3>
               <button
-                ref={(el) => { refs.current[item.id] = el; return; }}
+                ref={(el) => { refs.current[item.id] = el; }}
                 id={`accordion-button-${item.id}`}
                 aria-controls={`accordion-panel-${item.id}`}
                 aria-expanded={isOpen}
@@ -72,7 +72,7 @@ export default function Accordion({ items }: { items: AccordionItem[] }) {
                   {item.question}
                 </span>
                 <span 
-                  aria-hidden 
+                  aria-hidden={true}
                   className={`transform transition-all duration-300 ${
                     isOpen ? "rotate-180 text-blue-600 dark:text-blue-400" : "rotate-0 text-gray-500 dark:text-gray-400"
                   }`}
