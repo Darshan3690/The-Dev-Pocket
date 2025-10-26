@@ -56,3 +56,21 @@ model ContactSubmission {
   @@index([status])
   @@index([createdAt])
 }
+
+model NewsletterSubscriber {
+  id             String    @id @default(uuid())
+  email          String    @unique
+  name           String?
+  status         String    @default("active") // active, unsubscribed, bounced
+  subscribedAt   DateTime  @default(now())
+  unsubscribedAt DateTime?
+  source         String?   // website, referral, etc.
+  preferences    Json?     // JSON object for email preferences
+  verifiedAt     DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([subscribedAt])
+}

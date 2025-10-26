@@ -368,7 +368,7 @@ const App = () => {
             Get quick answers or reach out to our support team
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
             {/* FAQ Card */}
             <Link href="/faq">
               <article className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 p-8 rounded-2xl shadow-lg border-2 border-blue-200 dark:border-blue-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group">
@@ -431,6 +431,29 @@ const App = () => {
                 </p>
                 <div className="flex items-center justify-center text-orange-600 dark:text-orange-400 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
                   <span className="text-sm">View Demo</span>
+                  <svg className="h-4 w-4 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </div>
+              </article>
+            </Link>
+
+            {/* Keyboard Shortcuts Card */}
+            <Link href="/shortcuts">
+              <article className="bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-950/30 dark:to-pink-950/30 p-8 rounded-2xl shadow-lg border-2 border-rose-200 dark:border-rose-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group">
+                <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-rose-500 to-pink-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-3 group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">
+                  Shortcuts
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-4">
+                  Master keyboard shortcuts to navigate like a pro
+                </p>
+                <div className="flex items-center justify-center text-rose-600 dark:text-rose-400 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="text-sm">View Shortcuts</span>
                   <svg className="h-4 w-4 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
