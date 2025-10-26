@@ -24,11 +24,11 @@ Click the **Fork** button in the top-right of the repository page.
 
 ```bash
 # HTTPS
-git clone https://github.com/<your-username>/The-Dev-Pocket.git
+git clone https://github.com/mr-baraiya/The-Dev-Pocket.git
 cd The-Dev-Pocket
 
 # or SSH
-git clone git@github.com:<your-username>/The-Dev-Pocket.git
+git clone git@github.com:mr-baraiya/The-Dev-Pocket.git
 cd The-Dev-Pocket
 ```
 
