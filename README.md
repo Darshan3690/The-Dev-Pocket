@@ -5,7 +5,14 @@
 ### 🚀 Your Gateway to Mastering Web Development & Beyond
 
 <p align="center">
-  <i>Curated resources, interactive tools, and step-by-step roadmaps for learners, students, and developers</i>
+ <p class="tagline">
+  Curated resources, interactive tools, and step-by-step roadmaps 
+  for <span>learners</span>, <span>students</span>, and <span>developers</span>.
+</p>
+
+
+
+
 </p>
 
 <br/>

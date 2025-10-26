@@ -13,7 +13,23 @@ model User {
   email     String   @unique
   name      String?
   projects  Project[]
+  stats     UserStats?
   createdAt DateTime @default(now())
+}
+
+model UserStats {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  points          Int      @default(0)
+  currentStreak   Int      @default(0)
+  lastActiveDate  DateTime?
+  dailyGoalTarget Int      @default(100)
+  dailyGoalProgress Int    @default(0)
+  tasksCompleted  Int      @default(0)
+  tasksTotal      Int      @default(0)
+  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now())
 }
 
 model Project {

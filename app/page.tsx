@@ -2,19 +2,16 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { useUser } from "@clerk/nextjs";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import Particles from "./components/ui/Particle";
+import { useTheme } from "next-themes";
+import { useUser } from "@clerk/nextjs";
 
-// Import enhanced utilities
 import { useAccessibility } from "../lib/accessibility";
 import { usePerformanceMonitoring } from "../lib/performance";
 import { useErrorHandling } from "../lib/error-handling";
 
-
-// Page components — authentication UI is provided by root `ClerkProvider` and header.
-
-// Helper component for Icons
 const Icon = ({ children, ariaLabel }: { children: React.ReactNode; ariaLabel: string }) => (
   <div 
     className="flex-shrink-0 w-12 h-12 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mb-4"
@@ -25,7 +22,6 @@ const Icon = ({ children, ariaLabel }: { children: React.ReactNode; ariaLabel: s
   </div>
 );
 
-// Updated Feature Card Component with clickable functionality
 interface FeatureCardProps {
   icon: React.ReactNode;
   iconLabel: string;
@@ -36,25 +32,39 @@ interface FeatureCardProps {
 
 const FeatureCard = ({ icon, iconLabel, title, children, href }: FeatureCardProps) => (
   <Link href={href}>
-    <article className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group">
-      <div 
-        className="flex-shrink-0 w-12 h-12 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-sky-200 transition-all"
-        role="img"
-        aria-label={iconLabel}
-      >
-        {icon}
+    <article
+      className="h-full flex flex-col justify-between bg-white dark:bg-gray-800 p-6 rounded-2xl 
+                 shadow-lg border border-gray-100 dark:border-gray-700 
+                 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 
+                 transform cursor-pointer group"
+    >
+      <div>
+        <div
+          className="flex-shrink-0 w-12 h-12 bg-sky-100 dark:bg-sky-900 text-sky-600 
+                     rounded-full flex items-center justify-center mb-4 
+                     group-hover:scale-110 group-hover:bg-sky-200 transition-all"
+          role="img"
+          aria-label={iconLabel}
+        >
+          {icon}
+        </div>
+
+        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2 group-hover:text-sky-600 transition-colors">
+          {title}
+        </h3>
+
+        <p className="text-gray-500 dark:text-gray-400 leading-relaxed mb-3">
+          {children}
+        </p>
       </div>
-      <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-sky-600 transition-colors">{title}</h3>
-      <p className="text-gray-500 leading-relaxed mb-3">{children}</p>
-      
-      {/* Learn More indicator - appears on hover */}
-      <div className="flex items-center text-sky-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+
+      <div className="flex items-center text-sky-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity mt-auto">
         <span className="text-sm">Learn more</span>
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          className="h-4 w-4 ml-1 transform group-hover:translate-x-2 transition-transform" 
-          fill="none" 
-          viewBox="0 0 24 24" 
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-4 w-4 ml-1 transform group-hover:translate-x-2 transition-transform"
+          fill="none"
+          viewBox="0 0 24 24"
           stroke="currentColor"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -64,8 +74,6 @@ const FeatureCard = ({ icon, iconLabel, title, children, href }: FeatureCardProp
   </Link>
 );
 
-
-// Testimonial Card Component
 interface TestimonialCardProps {
   quote: string;
   name: string;
@@ -96,19 +104,19 @@ const TestimonialCard = ({
     </footer>
   </blockquote>
 );
+import { Button } from "@/components/ui/button";
+import { HeroWithMockup } from "@/components/hero-with-mockup";
+import FeaturesSectionWithHoverEffects from "./components/FeaturedSection";
+import HowItWorks from "./components/HowItWorks";
+import Testimonials from "./components/Testimonials";
 
 const App = () => {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
   const [isYearly, setIsYearly] = useState(false);
+  const { isSignedIn } = useUser();
 
-  // Initialize enhanced utilities
-  const { announce, announceSuccess, announceError } = useAccessibility();
-  const { startTimer, endTimer, measureAsync } = usePerformanceMonitoring();
-  const { handleError, wrapAsync } = useErrorHandling();
-
-  // Animation on scroll hook
-  const useOnScreen = (
-    options: IntersectionObserverInit
-  ): [React.RefObject<HTMLElement | null>, boolean] => {
+  const useOnScreen = (options: IntersectionObserverInit): [React.RefObject<HTMLElement | null>, boolean] => {
     const ref = useRef<HTMLElement | null>(null);
     const [isVisible, setIsVisible] = useState(false);
 
@@ -120,15 +128,9 @@ const App = () => {
         }
       }, options);
 
-      const currentRef = ref.current;
-      if (currentRef) {
-        observer.observe(currentRef);
-      }
-
+      if (ref.current) observer.observe(ref.current);
       return () => {
-        if (currentRef) {
-          observer.unobserve(currentRef);
-        }
+        if (ref.current) observer.unobserve(ref.current);
       };
     }, [ref, options]);
 
@@ -137,226 +139,165 @@ const App = () => {
 
   const [heroRef, heroVisible] = useOnScreen({ threshold: 0.3 });
   const [featuresRef, featuresVisible] = useOnScreen({ threshold: 0.2 });
-  const [howItWorksRef, howItWorksVisible] = useOnScreen({ threshold: 0.2 });
-  const [testimonialsRef, testimonialsVisible] = useOnScreen({
-    threshold: 0.1,
-  });
-  const [pricingRef, pricingVisible] = useOnScreen({ threshold: 0.2 });
   const [ctaRef, ctaVisible] = useOnScreen({ threshold: 0.3 });
-  const {isSignedIn}=useUser();
+  const [howItWorksRef, howItWorksVisible] = useOnScreen({ threshold: 0.25 });
+  const [pricingRef, pricingVisible] = useOnScreen({ threshold: 0.25 });
 
-  // Enhanced error handling for component initialization
+  const [currentDate, setCurrentDate] = useState<string>("");
+
   useEffect(() => {
-    startTimer('page-initialization');
-    
-    const initializePage = wrapAsync(async () => {
-      try {
-        // Simulate any async initialization
-        await new Promise(resolve => setTimeout(resolve, 100));
-        announceSuccess('Dev Pocket homepage loaded successfully');
-      } catch (error) {
-        announceError('Failed to initialize homepage');
-        handleError(error as Error, 'error', 'Page Initialization');
-      }
-    }, 'Page Initialization');
-
-    initializePage();
-    endTimer('page-initialization');
-  }, [startTimer, endTimer, announceSuccess, announceError, handleError, wrapAsync]);
+    const today = new Date();
+    setCurrentDate(today.toDateString());
+  }, []);
 
   return (
     <main>
-      {/* Skip to main content link for keyboard navigation */}
-      <a 
-        href="#main-content" 
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-sky-600 text-white px-4 py-2 rounded-md z-50"
-      >
-        Skip to main content
-      </a>
-      
-      {/* Hero Section */}
       <section
-        id="main-content"
         ref={heroRef}
-        aria-labelledby="hero-heading"
-        className={`transition-all duration-700 ease-out ${
+        className={`transition-all duration-700 ease-out max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${
           heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
-       <div className="relative bg-gradient-to-b from-sky-100 to-white py-20 sm:py-28 px-6 sm:px-10 lg:px-16 text-center overflow-hidden mt-10 mb-10">
+        <HeroWithMockup
+          title="The AI-Powered Platform for Your Dev Career"
+          description="Dev Pocket centralizes learning, personalized roadmaps, job updates, and powerful resume tools—all in one smart dashboard."
+          primaryCta={{ text: "Get Started Free", href: "#pricing" }}
+          mockupImage={{
+            alt: "Dev Pocket Dashboard Mockup",
+            width: 1000,
+            height: 600,
+            src: "https://placehold.co/1000x600/e0f2fe/0c4a6e?text=Dev+Pocket+UI",
+          }}
+        />
+      </section>
 
-
-          <div className="absolute inset-0 z-0">
-            <Particles
-              particleColors={["#000000", "#000000"]}
-              particleCount={500}
-              particleSpread={7}
-              speed={0.2}
-              particleBaseSize={50}
-              moveParticlesOnHover={false}
-              alphaParticles={false}
-              disableRotation={false}
-              className="w-full h-full"
-            />
-          </div>
-          <div className="relative z-10 max-w-4xl mx-auto">
-             <h1 id="hero-heading" className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-800 leading-tight mb-3">
-               The AI-Powered Platform for Your Dev Career
-             </h1>
-             <p className="text-base sm:text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
-               Dev Pocket centralizes learning, personalized roadmaps, job
-               updates, and powerful resume tools—all in one smart dashboard.
-             </p>
-             <a
-              href="/sign-in"
-              className="inline-block bg-sky-600 text-white text-base font-semibold py-2.5 px-6 rounded-full shadow-2xl hover:bg-sky-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-sky-300 focus:ring-opacity-50"
-              aria-describedby="pricing-section"
-             >
-               Get Started Free
-             </a>
-           </div>
-          <div className="mt-8 sm:mt-12 relative w-full max-w-4xl mx-auto">
-             
-           </div>
-         </div>
-       </section>
-
-       {/* Features - NOW WITH CLICKABLE CARDS */}
-       <section
+      <motion.section
         ref={featuresRef}
         id="features"
-        aria-labelledby="features-heading"
-        className={`py-12 sm:py-16 text-center transition-all duration-700 ease-out ${
-          featuresVisible
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-10"
-        }`}
+        initial={{ opacity: 0, y: 40 }}
+        animate={featuresVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="py-16 sm:py-24 text-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
-         <h2 id="features-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-400 mb-4">
-           All the Tools You Need, in One Place
-         </h2>
-         <p className="text-base sm:text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
+<h2
+  className={`text-3xl sm:text-4xl font-bold mb-4 ${
+    isDark ? "text-white" : "text-gray-900"
+  }`}
+>
+  All the Tools You Need, in One Place
+</h2>
+
+         <p className={`text-base sm:text-lg mb-8 max-w-3xl mx-auto ${isDark ? "text-gray-400" : "text-gray-600"}`}>
            Stop juggling multiple platforms. Dev Pocket brings everything
            together to accelerate your growth.
          </p>
-         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left" role="list">
-           <FeatureCard
-             title="Personalized Roadmaps"
-             href="/create-roadmap"
-             iconLabel="Lightning bolt icon representing personalized roadmaps"
-             icon={
-               <svg
-                 xmlns="http://www.w3.org/2000/svg"
-                 className="h-6 w-6"
-                 fill="none"
-                 viewBox="0 0 24 24"
-                 stroke="currentColor"
-                 aria-hidden="true"
-               >
-                 <path
-                   strokeLinecap="round"
-                   strokeLinejoin="round"
-                   strokeWidth={2}
-                   d="M13 10V3L4 14h7v7l9-11h-7z"
-                 />
-               </svg>
-             }
-           >
-            Our AI crafts a custom learning path based on your goals and skill
-            level.
-           </FeatureCard>
-           
-           <FeatureCard
-             title="Curated Learning"
-             href="/dashboard"
-             iconLabel="Academic cap icon representing curated learning"
-             icon={
-               <svg
-                 xmlns="http://www.w3.org/2000/svg"
-                 className="h-6 w-6"
-                 fill="none"
-                 viewBox="0 0 24 24"
-                 stroke="currentColor"
-                 aria-hidden="true"
-               >
-                 <path
-                   strokeLinecap="round"
-                   strokeLinejoin="round"
-                   strokeWidth={2}
-                   d="M12 6.253v11.494m-5.22-8.485l10.44 0M17.22 6.253L6.78 17.747M6.78 6.253l10.44 11.494"
-                 />
-                 <path
-                   strokeLinecap="round"
-                   strokeLinejoin="round"
-                   strokeWidth={2}
-                   d="M9.5 4L14.5 4"
-                 />
-                 <path
-                   strokeLinecap="round"
-                   strokeLinejoin="round"
-                   strokeWidth={2}
-                   d="M6.5 7.5L17.5 7.5"
-                 />
-               </svg>
-             }
-           >
-             Access top-tier courses, tutorials, and articles all in one place.
-           </FeatureCard>
-           
-           <FeatureCard
-            title="Job Search & Matching"
-            href="/job"
-            iconLabel="Search icon representing job search and matching"
-            icon={ 
-              
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            }
-          >
-            Find roles perfectly matched to your skills and interests.
-          </FeatureCard>
-          
-          <FeatureCard
-            title="Resume & Portfolio Tools"
-            href="/dashboard/resume"
-            iconLabel="Document icon representing resume and portfolio tools"
-            icon={
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-            }
-          >
-            Build professional resumes and portfolios with AI-powered templates.
-          </FeatureCard>
-        </div>
-      </section>
+        <div
+  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left items-stretch"
+  role="list"
+>
+  <FeatureCard
+    title="Personalized Roadmaps"
+    href="/create-roadmap"
+    iconLabel="Lightning bolt icon representing personalized roadmaps"
+    icon={
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-10 w-10"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M13 10V3L4 14h7v7l9-11h-7z"
+        />
+      </svg>
+    }
+  >
+    Our AI crafts a custom learning path based on your goals and skill level.
+  </FeatureCard>
 
-      {/* How It Works */}
+  <FeatureCard
+    title="Curated Learning"
+    href="/dashboard"
+    iconLabel="Academic cap icon representing curated learning"
+    icon={
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-10 w-10"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M12 6.253v11.494m-5.22-8.485l10.44 0M17.22 6.253L6.78 17.747M6.78 6.253l10.44 11.494"
+        />
+      </svg>
+    }
+  >
+    Access top-tier courses, tutorials, and articles all in one place.
+  </FeatureCard>
+
+  <FeatureCard
+    title="Job Search & Matching"
+    href="/job"
+    iconLabel="Search icon representing job search and matching"
+    icon={
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-10 w-10"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
+      </svg>
+    }
+  >
+    Find roles perfectly matched to your skills and interests.
+  </FeatureCard>
+
+  <FeatureCard
+    title="Resume & Portfolio Tools"
+    href="/dashboard/resume"
+    iconLabel="Document icon representing resume and portfolio tools"
+    icon={
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-10 w-10"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+        />
+      </svg>
+    }
+  >
+    Build professional resumes and portfolios with AI-powered templates.
+  </FeatureCard>
+</div>
+
+      </motion.section>
+
       <section
         ref={howItWorksRef}
         id="how-it-works"
@@ -367,7 +308,9 @@ const App = () => {
             : "opacity-0 translate-y-10"
         }`}
       >
-        <h2 id="how-it-works-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-400 mb-4">
+        <h2 id="how-it-works-heading" className={`text-3xl sm:text-4xl font-bold mb-4 ${
+    isDark ? "text-white" : "text-gray-900"
+  }`}>
           Get Started in 3 Simple Steps
         </h2>
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 relative">
@@ -406,6 +349,10 @@ const App = () => {
            </div>
          </div>
        </section>
+        <FeaturesSectionWithHoverEffects />
+      
+      <HowItWorks />
+      <Testimonials />
 
        {/* Testimonials */}
        <section
@@ -543,11 +490,12 @@ const App = () => {
         aria-labelledby="pricing-heading"
         className={`py-12 sm:py-16 text-center transition-all duration-700 ease-out ${
           pricingVisible
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-10"
+            ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
-         <h2 id="pricing-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-400 mb-4">
+         <h2 id="pricing-heading" className={`text-3xl sm:text-4xl font-bold mb-4 ${
+    isDark ? "text-white" : "text-gray-900"
+  }`}>
            Simple, Transparent Pricing
          </h2>
          <p className="text-base sm:text-lg text-gray-600 mb-6">
@@ -589,9 +537,7 @@ const App = () => {
             </span>
           </span>
         </div>
-         {/* Pricing Cards */}
          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-           {/* Free Plan */}
            <div className="border border-gray-200 rounded-2xl p-6" role="article" aria-labelledby="hobby-plan">
              <h3 id="hobby-plan" className="text-xl font-bold mb-2">Hobby</h3>
              <p className="text-gray-500 mb-6">
@@ -609,7 +555,6 @@ const App = () => {
               Get Started
             </a>
           </div>
-           {/* Pro Plan */}
            <div className="border-2 border-sky-500 rounded-2xl p-6 relative shadow-2xl" role="article" aria-labelledby="pro-plan">
              <span className="absolute top-0 -translate-y-1/2 bg-sky-500 text-white text-xs font-bold px-3 py-1 rounded-full" aria-label="Most popular plan">
                MOST POPULAR
@@ -639,7 +584,6 @@ const App = () => {
                 </Link>
             )}
           </div>
-           {/* Teams Plan */}
            <div className="border border-gray-200 rounded-2xl p-6" role="article" aria-labelledby="teams-plan">
              <h3 id="teams-plan" className="text-xl font-bold mb-2">Teams</h3>
              <p className="text-gray-500 mb-6">For organizations and groups.</p>
@@ -654,30 +598,24 @@ const App = () => {
           </div>
         </div>
       </section>
+      <div className="text-center text-gray-600 mt-10">
+        <p>📅 Today’s Date: {currentDate}</p>
+      </div>
 
-       {/* Call to Action */}
-       <section
+      <section
         ref={ctaRef}
-        aria-labelledby="cta-heading"
-        className={`bg-gradient-to-r from-sky-600 to-indigo-600 text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 text-center rounded-3xl mx-auto max-w-7xl mb-12 shadow-xl transition-all duration-700 ease-out ${
+        className={`text-center py-20 transition-all duration-700 ease-out ${
           ctaVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
-        <div className="max-w-3xl mx-auto">
-          <h2 id="cta-heading" className="text-3xl sm:text-4xl font-extrabold mb-3">
-            Ready to Level Up Your Career?
-          </h2>
-          <p className="text-base sm:text-lg font-light mb-6 opacity-90">
-            Join thousands of developers already using Dev Pocket to achieve
-            their goals.
-          </p>
-          <Link href={isSignedIn ? "/dashboard" : "/sign-in?redirect_url=/dashboard"}>
-            <button className="inline-block bg-white text-sky-600 font-bold text-base py-2.5 px-6 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50">
-              Start Your Free Trial
-            </button>
-        </Link>
-
-        </div>
+        <Button
+          asChild
+          className="bg-sky-600 text-white px-8 py-4 rounded-full hover:bg-sky-700 transition text-lg sm:text-xl whitespace-nowrap"
+        >
+          <Link href="#demo">
+            Schedule My Free <span className="hidden sm:inline">Discovery</span> Demo Now
+          </Link>
+        </Button>
       </section>
     </main>
   );
