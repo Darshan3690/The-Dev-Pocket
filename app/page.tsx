@@ -354,48 +354,6 @@ const App = () => {
       <HowItWorks />
       <Testimonials />
 
-       {/* Testimonials */}
-       <section
-        ref={testimonialsRef}
-        id="testimonials"
-        aria-labelledby="testimonials-heading"
-        className={`py-12 sm:py-16 bg-sky-50/70 rounded-3xl transition-all duration-700 ease-out ${
-          testimonialsVisible
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-10"
-        }`}
-      >
-         <div className="max-w-6xl mx-auto text-center">
-           <h2 id="testimonials-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
-             Loved by Developers Worldwide
-           </h2>
-           <p className="text-base sm:text-lg text-gray-600 mb-8">
-             Don&apos;t just take our word for it. Here&apos;s what our users are
-             saying.
-           </p>
-           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-             <TestimonialCard
-              quote="Dev Pocket completely changed how I approach learning. The personalized roadmap was a game-changer for me."
-              name="Sarah Johnson"
-              title="Frontend Developer"
-              avatar="https://placehold.co/100x100/E2E8F0/4A5568?text=SJ"
-            />
-            <TestimonialCard
-              quote="The job matching feature is incredible. I found a role that was a perfect fit in less than a month."
-              name="Michael Chen"
-              title="Backend Engineer"
-              avatar="https://placehold.co/100x100/CBD5E0/4A5568?text=MC"
-            />
-            <TestimonialCard
-              quote="As a recent bootcamp grad, Dev Pocket gave me the structure and confidence I needed to land my first tech job."
-              name="Jessica Rodriguez"
-              title="Junior Full-Stack Developer"
-              avatar="https://placehold.co/100x100/BEE3F8/2C5282?text=JR"
-            />
-          </div>
-        </div>
-      </section>
-
       {/* Support & Help Section - NEW */}
       <section
         id="support"

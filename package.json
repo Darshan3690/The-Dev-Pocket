@@ -12,6 +12,9 @@
   "dependencies": {
     "@clerk/nextjs": "^6.33.4",
     "@prisma/client": "^6.16.2",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@tabler/icons-react": "^3.35.0",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.23.19",
