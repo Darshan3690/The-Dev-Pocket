@@ -54,20 +54,20 @@ export const Navbar = ({ children, className }: NavbarProps) => {
     target: ref,
     offset: ["start start", "end start"],
   });
-  const [visible, setVisible] = useState<boolean>(false);
+  const [visible, setVisible] = useState<boolean>(true); // Changed to true for initial visibility
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     if (latest > 100) {
       setVisible(true);
     } else {
-      setVisible(false);
+      setVisible(true); // Keep visible even at top
     }
   });
 
   return (
     <motion.div
       ref={ref}
-      className={cn("sticky inset-x-0 top-2 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 z-40 w-full", className)}
+      className={cn("sticky inset-x-0 top-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-50 w-full mb-4", className)}
     >
       {React.Children.map(children, (child) =>
         React.isValidElement(child)
@@ -87,9 +87,9 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
       animate={{
         boxShadow: visible
           ? "0 4px 30px rgba(0, 0, 0, 0.1)"
-          : "none",
-        width: visible ? "40%" : "100%",
-        y: visible ? 20 : 0,
+          : "0 2px 10px rgba(0, 0, 0, 0.05)",
+        width: "100%", // Always full width
+        y: 0, // No vertical offset
       }}
       transition={{
         type: "spring",
@@ -97,12 +97,11 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
         damping: 50,
       }}
       style={{
-        minWidth: "800px",
         backdropFilter: "blur(10px)",
-        background: "rgba(255, 255, 255, 0.8)",
+        background: "rgba(255, 255, 255, 0.9)",
       }}
       className={cn(
-        "relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full px-4 py-2 lg:flex dark:bg-neutral-950/80",
+        "relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full px-6 py-3 lg:flex dark:bg-neutral-950/90 shadow-md",
         className,
       )}
     >
