@@ -26,6 +26,20 @@ html {
 .animate-slideDown {
   animation: slideDown 0.3s ease-out;
 }
+
+/* Shimmer animation for skeleton loaders */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+}
 /* 
 :root {
   --background: #ffffff;

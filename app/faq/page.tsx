@@ -62,7 +62,7 @@ const FAQ_ITEMS = [
     answer: (
       <>
         <p>
-          Contributions are welcome! Check out the <Link href="/CONTRIBUTING.md">contributing guide</Link> and open a PR on GitHub.
+          Contributions are welcome! Check out the <Link href="https://github.com/Darshan3690/The-Dev-Pocket/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">contributing guide</Link> and open a PR on GitHub.
         </p>
       </>
     ),
@@ -75,7 +75,8 @@ export default function FAQPage() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return FAQ_ITEMS;
-    return FAQ_ITEMS.filter((it) => it.question.toLowerCase().includes(q) || String(it.answer).toLowerCase().includes(q));
+    // Only search in question text since answer contains JSX elements
+    return FAQ_ITEMS.filter((it) => it.question.toLowerCase().includes(q));
   }, [query]);
 
   return (

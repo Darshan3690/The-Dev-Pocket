@@ -455,7 +455,7 @@ const App = () => {
         aria-labelledby="support-heading"
         className="py-12 sm:py-16 text-center"
       >
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <h2 id="support-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-400 mb-4">
             Need Help? We're Here for You
           </h2>
@@ -463,7 +463,7 @@ const App = () => {
             Get quick answers or reach out to our support team
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {/* FAQ Card */}
             <Link href="/faq">
               <article className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 p-8 rounded-2xl shadow-lg border-2 border-blue-200 dark:border-blue-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group">
@@ -503,6 +503,29 @@ const App = () => {
                 </p>
                 <div className="flex items-center justify-center text-green-600 dark:text-green-400 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
                   <span className="text-sm">Send a Message</span>
+                  <svg className="h-4 w-4 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </div>
+              </article>
+            </Link>
+
+            {/* Loading States Demo Card */}
+            <Link href="/loading-demo">
+              <article className="bg-gradient-to-br from-orange-50 to-pink-50 dark:from-orange-950/30 dark:to-pink-950/30 p-8 rounded-2xl shadow-lg border-2 border-orange-200 dark:border-orange-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group">
+                <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-orange-500 to-pink-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-3 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+                  Loading States
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-4">
+                  Explore our beautiful loading components and skeletons
+                </p>
+                <div className="flex items-center justify-center text-orange-600 dark:text-orange-400 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="text-sm">View Demo</span>
                   <svg className="h-4 w-4 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
