@@ -460,6 +460,29 @@ const App = () => {
                 </div>
               </article>
             </Link>
+
+            {/* 404 Page Demo Card */}
+            <Link href="/this-page-does-not-exist">
+              <article className="bg-gradient-to-br from-violet-50 to-indigo-50 dark:from-violet-950/30 dark:to-indigo-950/30 p-8 rounded-2xl shadow-lg border-2 border-violet-200 dark:border-violet-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group">
+                <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-violet-500 to-indigo-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-3 group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+                  404 Page
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-4">
+                  See our beautiful custom error page design
+                </p>
+                <div className="flex items-center justify-center text-violet-600 dark:text-violet-400 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="text-sm">View Demo</span>
+                  <svg className="h-4 w-4 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </div>
+              </article>
+            </Link>
           </div>
         </div>
       </section>
