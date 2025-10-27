@@ -26,6 +26,7 @@ import { usePerformanceMonitoring } from "../lib/performance";
 import { ErrorBoundary, useErrorHandling } from "../lib/error-handling";
 import GlobalSearch from "./components/GlobalSearch";
 import ToastProvider from "./components/ToastProvider";
+import KeyboardShortcuts from "./components/KeyboardShortcuts";
 
 export default function RootLayout({
   children,
@@ -69,6 +70,7 @@ export default function RootLayout({
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
             <ErrorBoundary>
               <ToastProvider />
+              <KeyboardShortcuts />
               <AccessibilityAnnouncer />
               <SkipLink href="#main-content">Skip to main content</SkipLink>
 
@@ -85,7 +87,36 @@ export default function RootLayout({
                   </main>
 
                   {/* Footer */}
-                  <Footer />
+                  <footer className="border-t border-gray-700 mt-10 pt-6">
+                    <div className="text-center text-sm text-gray-400">
+                      <p className="mb-2">
+                        &copy; {new Date().getFullYear()} Dev Pocket. All rights
+                        reserved.
+                      </p>
+                      <div className="flex justify-center space-x-6">
+                        <Link href="/privacy" className="hover:text-blue-500">
+                          Privacy Policy
+                        </Link>
+                        <Link href="/terms" className="hover:text-blue-500">
+                          Terms of Service
+                        </Link>
+                        <Link href="/faq" className="hover:text-blue-500">
+                          FAQ
+                        </Link>
+                        <Link href="/contact" className="hover:text-blue-500">
+                          Contact
+                        </Link>
+                        <Link
+                          href="https://bento.me/darshan3690"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-blue-500"
+                        >
+                          Developer
+                        </Link>
+                      </div>
+                    </div>
+                  </footer>
                 </>
               )}
             </ErrorBoundary>

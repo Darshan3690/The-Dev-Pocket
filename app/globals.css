@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 
 /* Global enhancements */
 html {
@@ -28,44 +27,20 @@ html {
   animation: slideDown 0.3s ease-out;
 }
 
-/* Custom Variants */
-@custom-variant dark (&:is(.dark *));
-
-/* === THEME VARIABLES === */
-@theme inline {
-  --animate-appear-zoom: appear-zoom 0.8s ease-out forwards;
-  --animate-appear: appear 0.5s ease-out forwards;
-  --color-brand-foreground: var(--brand-foreground);
-  --color-brand: var(--brand);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-
-  @keyframes appear-zoom {
-    0% {
-      opacity: 0;
-      transform: scale(0.98);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
+/* Shimmer animation for skeleton loaders */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
   }
-
-  @keyframes appear {
-    0% {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  100% {
+    background-position: 200% 0;
   }
 }
 
-/* === LIGHT MODE COLORS === */
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+}
+/* 
 :root {
   --radius: 0.625rem;
   --background: hsl(0 0% 100%);
