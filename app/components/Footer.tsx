@@ -1,23 +1,23 @@
 export default function Footer() {
   return (
-    <footer className="w-full bg-white py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-100">
+    <footer className="w-full bg-white dark:bg-white py-16 px-4 sm:px-6 lg:px-8 border-t border-gray-100 dark:border-gray-200">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
         {/* Brand Section */}
         <div className="flex flex-col items-center md:items-start">
-          <h3 className="text-2xl font-bold text-[#0C4A6E] mb-4">Dev Pocket</h3>
-          <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
+          <h3 className="text-2xl font-bold text-[#0C4A6E] dark:text-[#0C4A6E] mb-4">Dev Pocket</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-600 leading-relaxed max-w-xs">
             Empowering your career with AI-driven insights and personalized roadmaps.
           </p>
         </div>
 
         {/* Links Section */}
         <div className="flex flex-col items-center md:items-start">
-          <h4 className="text-lg font-semibold text-[#0C4A6E] mb-4">Quick Links</h4>
+          <h4 className="text-lg font-semibold text-[#0C4A6E] dark:text-[#0C4A6E] mb-4">Quick Links</h4>
           <ul className="space-y-2 text-sm">
             <li>
               <a
                 href="#"
-                className="text-gray-600 hover:text-[#0C4A6E] transition-colors duration-200 ease-in-out"
+                className="text-gray-600 dark:text-gray-700 hover:text-[#0C4A6E] dark:hover:text-[#0C4A6E] transition-colors duration-200 ease-in-out"
               >
                 Privacy Policy
               </a>
@@ -25,7 +25,7 @@ export default function Footer() {
             <li>
               <a
                 href="#"
-                className="text-gray-600 hover:text-[#0C4A6E] transition-colors duration-200 ease-in-out"
+                className="text-gray-600 dark:text-gray-700 hover:text-[#0C4A6E] dark:hover:text-[#0C4A6E] transition-colors duration-200 ease-in-out"
               >
                 Terms of Service
               </a>
@@ -33,7 +33,7 @@ export default function Footer() {
             <li>
               <a
                 href="#"
-                className="text-gray-600 hover:text-[#0C4A6E] transition-colors duration-200 ease-in-out"
+                className="text-gray-600 dark:text-gray-700 hover:text-[#0C4A6E] dark:hover:text-[#0C4A6E] transition-colors duration-200 ease-in-out"
               >
                 Contact Us
               </a>
@@ -43,14 +43,14 @@ export default function Footer() {
 
         {/* Social & Newsletter Section */}
         <div className="flex flex-col items-center md:items-start">
-          <h4 className="text-lg font-semibold text-[#0C4A6E] mb-4">Stay Connected</h4>
-          <p className="text-sm text-gray-500 mb-4">
+          <h4 className="text-lg font-semibold text-[#0C4A6E] dark:text-[#0C4A6E] mb-4">Stay Connected</h4>
+          <p className="text-sm text-gray-500 dark:text-gray-600 mb-4">
             Join our vibrant community and skyrocket your career journey!
           </p>
           <div className="flex space-x-4 mb-4">
             <a
               href="#"
-              className="p-2 bg-gray-100 rounded-full hover:bg-[#0C4A6E] hover:text-white transition-colors duration-200"
+              className="p-2 bg-gray-100 dark:bg-gray-200 rounded-full hover:bg-[#0C4A6E] dark:hover:bg-[#0C4A6E] hover:text-white dark:hover:text-white text-gray-700 dark:text-gray-800 transition-colors duration-200"
               aria-label="Twitter"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -59,7 +59,7 @@ export default function Footer() {
             </a>
             <a
               href="#"
-              className="p-2 bg-gray-100 rounded-full hover:bg-[#0C4A6E] hover:text-white transition-colors duration-200"
+              className="p-2 bg-gray-100 dark:bg-gray-200 rounded-full hover:bg-[#0C4A6E] dark:hover:bg-[#0C4A6E] hover:text-white dark:hover:text-white text-gray-700 dark:text-gray-800 transition-colors duration-200"
               aria-label="LinkedIn"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -69,8 +69,8 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <div className="mt-8 pt-8 border-t border-gray-200 text-center">
-        <p className="text-sm text-gray-500">
+      <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-300 text-center">
+        <p className="text-sm text-gray-500 dark:text-gray-600">
           &copy; {new Date().getFullYear()} Dev Pocket. All rights reserved.
         </p>
       </div>
