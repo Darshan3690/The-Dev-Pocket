@@ -37,7 +37,7 @@ export default function Navbar() {
             {/* If NOT logged in → show Login */}
             <SignedOut>
               <Link href="/sign-in">
-                <NavbarButton variant="primary">Login</NavbarButton>
+                <NavbarButton as="span" variant="primary">Login</NavbarButton>
               </Link>
             </SignedOut>
 
@@ -45,7 +45,7 @@ export default function Navbar() {
             <SignedIn>
               <UserButton afterSignOutUrl="/" />
               <Link href="/dashboard">
-                <NavbarButton variant="primary">Dashboard</NavbarButton>
+                <NavbarButton as="span" variant="primary">Dashboard</NavbarButton>
               </Link>
             </SignedIn>
           </div>
@@ -81,6 +81,7 @@ export default function Navbar() {
               <SignedOut>
                 <Link href="/sign-in">
                   <NavbarButton
+                    as="span"
                     onClick={() => setIsMobileMenuOpen(false)}
                     variant="primary"
                     className="w-full"
@@ -94,6 +95,7 @@ export default function Navbar() {
                 <UserButton afterSignOutUrl="/" />
                 <Link href="/dashboard">
                   <NavbarButton
+                    as="span"
                     onClick={() => setIsMobileMenuOpen(false)}
                     variant="primary"
                     className="w-full"
