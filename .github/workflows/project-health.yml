@@ -21,10 +21,10 @@ jobs:
           --health-retries=5
 
     env:
-      DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/devpocket"
-      DIRECT_URL: "postgresql://postgres:postgres@localhost:5432/devpocket"
-      CLERK_PUBLISHABLE_KEY: dummy
-      CLERK_SECRET_KEY: dummy
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  DIRECT_URL: ${{ secrets.DIRECT_URL }}
+  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
+  CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
 
     steps:
       - name: Checkout
