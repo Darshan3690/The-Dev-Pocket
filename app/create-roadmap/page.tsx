@@ -19,16 +19,16 @@ interface RoadmapNode {
   title: string;
   description: string;
   category: string;
-  duration: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  resources: Resource[];
-  prerequisites: string[];
-  order: number;
-  completed: boolean;
-  progress: number;
-  estimatedHours: number;
-  skills: string[];
-  assessments: Assessment[];
+  duration?: string;
+  difficulty?: 'beginner' | 'intermediate' | 'advanced';
+  resources?: Resource[];
+  prerequisites?: string[];
+  order?: number;
+  completed?: boolean;
+  progress?: number;
+  estimatedHours?: number;
+  skills?: string[];
+  assessments?: Assessment[];
 }
 
 interface Resource {
@@ -36,12 +36,12 @@ interface Resource {
   type: 'course' | 'article' | 'video' | 'book' | 'project' | 'practice' | 'certification';
   url: string;
   platform: string;
-  rating: number;
-  reviews: number;
-  duration: string;
-  level: 'beginner' | 'intermediate' | 'advanced';
-  isFree: boolean;
-  description: string;
+  rating?: number;
+  reviews?: number;
+  duration?: string;
+  level?: 'beginner' | 'intermediate' | 'advanced';
+  isFree?: boolean;
+  description?: string;
 }
 
 interface Assessment {
@@ -325,7 +325,26 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
       );
     }
 
-    return baseNodes;
+    // Ensure every node has the full shape expected by the rest of the UI by
+    // applying sensible defaults for fields that generator variants may omit.
+    const normalized = baseNodes.map((node): RoadmapNode => ({
+      id: node.id,
+      title: node.title,
+      description: node.description,
+      category: node.category,
+      duration: node.duration ?? '4-6 weeks',
+      difficulty: node.difficulty ?? 'beginner',
+      resources: node.resources ?? [],
+      prerequisites: node.prerequisites ?? [],
+      order: node.order ?? 0,
+      completed: node.completed ?? false,
+      progress: node.progress ?? 0,
+      estimatedHours: node.estimatedHours ?? 40,
+      skills: node.skills ?? [],
+      assessments: node.assessments ?? [],
+    } as RoadmapNode));
+
+    return normalized;
   };
 
   const handleInterestToggle = (interest: string) => {
@@ -337,7 +356,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
     }));
   };
 
-  const getDifficultyColor = (difficulty: string) => {
+  const getDifficultyColor = (difficulty?: string) => {
     switch (difficulty) {
       case 'beginner': return 'bg-green-100 text-green-700';
       case 'intermediate': return 'bg-yellow-100 text-yellow-700';
@@ -663,7 +682,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
                       <div>
                         <div className="flex items-center gap-2 mb-2">
                           <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getDifficultyColor(node.difficulty)}`}>
-                            {node.difficulty}
+                            {node.difficulty ?? 'Beginner'}
                           </span>
                           <span className="px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
                             {node.category}
@@ -681,15 +700,15 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
                     </div>
 
                     <div className="flex items-center gap-4 text-sm text-gray-600">
-                      <span className="flex items-center gap-1">
+                        <span className="flex items-center gap-1">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        {node.duration}
+                        {node.duration ?? 'TBD'}
                       </span>
-                      {node.prerequisites.length > 0 && (
+                      {(node.prerequisites?.length ?? 0) > 0 && (
                         <span className="text-xs bg-gray-100 px-2 py-1 rounded">
-                          Requires: {node.prerequisites.length} prerequisite(s)
+                          Requires: {node.prerequisites?.length ?? 0} prerequisite(s)
                         </span>
                       )}
                     </div>
@@ -699,7 +718,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
                       <div className="mt-4 pt-4 border-t border-gray-200">
                         <h4 className="font-semibold text-gray-900 mb-3">Recommended Resources</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                          {node.resources.map((resource, resIdx) => (
+                          {(node.resources ?? []).map((resource, resIdx) => (
                             <a
                               key={resIdx}
                               href={resource.url}
