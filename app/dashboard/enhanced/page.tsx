@@ -72,8 +72,9 @@ const EnhancedDashboard: React.FC = () => {
         };
       }, 'api');
 
-      setStats(data.stats);
-      setProjects(data.projects);
+  setStats(data.stats);
+  // The simulated fetch returns plain objects; assert typing to Project[]
+  setProjects(data.projects as Project[]);
       announceSuccess('Dashboard data loaded successfully');
       
     } catch (err) {
