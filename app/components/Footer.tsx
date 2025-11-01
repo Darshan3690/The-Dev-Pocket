@@ -27,12 +27,37 @@ export default function Footer() {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call - replace with actual newsletter API
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          source: "website-footer",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 409) {
+          showError("This email is already subscribed");
+        } else {
+          showError(data.error || "Failed to subscribe. Please try again.");
+        }
+        return;
+      }
+
+      if (data.resubscribed) {
+        showSuccess("Welcome back! You've been resubscribed to our newsletter! 🎉");
+      } else {
+        showSuccess("Successfully subscribed to newsletter! Check your inbox. 🎉");
+      }
       
-      showSuccess("Successfully subscribed to newsletter! 🎉");
       setEmail("");
     } catch (error) {
+      console.error("Newsletter subscription error:", error);
       showError("Failed to subscribe. Please try again.");
     } finally {
       setIsSubmitting(false);
