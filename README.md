@@ -2,7 +2,6 @@
 
 # 📚 The Dev Pocket
 
-### 🚀 Your Gateway to Mastering Web Development & Beyond
 
 <p align="center">
  <p class="tagline">
