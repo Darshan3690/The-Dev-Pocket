@@ -5,6 +5,22 @@ Thank you for your interest in improving **The Dev Pocket**! Your help is valued
 ---
 
 ## 🧭 Quick overview
+---
+
+## 🟢 New Contributors – Read This First
+
+If you are new to open source, welcome! 🎉  
+You can contribute even if you are a beginner.
+
+**Tips to get started:**
+- Look for issues labeled `good first issue`
+- Make small and focused changes
+- Ask questions in Issues or Discussions if you're stuck
+- Don’t worry about mistakes — maintainers will guide you
+
+Even fixing a typo or improving documentation is a valuable contribution 💙
+
+---
 
 * Fork the repo, create a branch, make small focused changes, and open a PR.
 * See `GOOD_FIRST_ISSUES.md` for bite-sized tasks.
