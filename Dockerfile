@@ -50,4 +50,4 @@ RUN npx prisma generate || true
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start"] or nnpm
