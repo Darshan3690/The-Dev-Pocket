@@ -10,7 +10,7 @@ export interface PerformanceMetric {
   duration: number;
   timestamp: number;
   type: 'navigation' | 'component' | 'interaction' | 'resource' | 'api';
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface WebVitalsMetric {
@@ -37,7 +37,7 @@ class PerformanceMonitor {
   /**
    * End timing an operation and record the metric
    */
-  endTimer(name: string, type: PerformanceMetric['type'] = 'component', metadata?: Record<string, any>): number {
+  endTimer(name: string, type: PerformanceMetric['type'] = 'component', metadata?: Record<string, unknown>): number {
     const startTime = this.timers.get(name);
     if (!startTime) {
       console.warn(`Timer '${name}' was not started`);
@@ -206,13 +206,14 @@ class PerformanceMonitor {
       const observer = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
           if (entry.entryType === 'resource') {
+            const resourceEntry = entry as PerformanceResourceTiming;
             this.metrics.push({
               name: `resource-${entry.name}`,
               duration: entry.duration,
               timestamp: Date.now(),
               type: 'resource',
               metadata: {
-                size: (entry as any).transferSize || 0,
+                size: resourceEntry.transferSize || 0,
                 type: entry.name.split('.').pop()
               }
             });
@@ -237,14 +238,15 @@ class PerformanceMonitor {
       const observer = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
           if (entry.entryType === 'navigation') {
+            const navEntry = entry as PerformanceNavigationTiming;
             this.metrics.push({
               name: 'navigation',
               duration: entry.duration,
               timestamp: Date.now(),
               type: 'navigation',
               metadata: {
-                domContentLoaded: (entry as any).domContentLoadedEventEnd - (entry as any).domContentLoadedEventStart,
-                loadComplete: (entry as any).loadEventEnd - (entry as any).loadEventStart
+                domContentLoaded: navEntry.domContentLoadedEventEnd - navEntry.domContentLoadedEventStart,
+                loadComplete: navEntry.loadEventEnd - navEntry.loadEventStart
               }
             });
           }
@@ -300,7 +302,7 @@ export function usePerformanceMonitoring() {
     performanceMonitor.startTimer(name);
   }, []);
 
-  const endTimer = useCallback((name: string, type: PerformanceMetric['type'] = 'component', metadata?: Record<string, any>) => {
+  const endTimer = useCallback((name: string, type: PerformanceMetric['type'] = 'component', metadata?: Record<string, unknown>) => {
     return performanceMonitor.endTimer(name, type, metadata);
   }, []);
 
