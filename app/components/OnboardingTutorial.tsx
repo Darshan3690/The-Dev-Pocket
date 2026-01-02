@@ -143,7 +143,7 @@ export default function OnboardingTutorial() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[100]"
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-100"
             onClick={handleSkip}
           />
 
@@ -153,7 +153,7 @@ export default function OnboardingTutorial() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed z-[101] pointer-events-none"
+              className="fixed z-101 pointer-events-none"
               style={{
                 boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.2)",
                 borderRadius: "12px",
@@ -167,7 +167,7 @@ export default function OnboardingTutorial() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className={`fixed z-[102] w-full max-w-md mx-auto ${
+            className={`fixed z-102 w-full max-w-md mx-auto ${
               currentStepData.position === "center"
                 ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
                 : currentStepData.position === "top"
@@ -184,7 +184,7 @@ export default function OnboardingTutorial() {
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
                   transition={{ duration: 0.3 }}
-                  className="h-full bg-gradient-to-r from-blue-500 to-purple-600"
+                  className="h-full bg-linear-to-r from-blue-500 to-purple-600"
                 />
               </div>
 

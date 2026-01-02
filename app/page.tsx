@@ -371,8 +371,8 @@ const App = () => {
           <div className="grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
             {/* FAQ Card */}
             <Link href="/faq" className="flex h-full">
-              <article className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 p-8 rounded-2xl shadow-lg border-2 border-blue-200 dark:border-blue-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group flex flex-col w-full h-full">
-                <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
+              <article className="bg-linear-to-br from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 p-8 rounded-2xl shadow-lg border-2 border-blue-200 dark:border-blue-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group flex flex-col w-full h-full">
+                <div className="shrink-0 w-16 h-16 bg-linear-to-br from-blue-500 to-purple-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
@@ -394,8 +394,8 @@ const App = () => {
 
             {/* Contact Card */}
             <Link href="/contact" className="flex h-full">
-              <article className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 p-8 rounded-2xl shadow-lg border-2 border-green-200 dark:border-green-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group flex flex-col w-full h-full">
-                <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
+              <article className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 p-8 rounded-2xl shadow-lg border-2 border-green-200 dark:border-green-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group flex flex-col w-full h-full">
+                <div className="shrink-0 w-16 h-16 bg-linear-to-br from-green-500 to-emerald-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
@@ -417,8 +417,8 @@ const App = () => {
 
             {/* Loading States Demo Card */}
             <Link href="/loading-demo" className="flex h-full">
-              <article className="bg-gradient-to-br from-orange-50 to-pink-50 dark:from-orange-950/30 dark:to-pink-950/30 p-8 rounded-2xl shadow-lg border-2 border-orange-200 dark:border-orange-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group flex flex-col w-full h-full">
-                <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-orange-500 to-pink-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
+              <article className="bg-linear-to-br from-orange-50 to-pink-50 dark:from-orange-950/30 dark:to-pink-950/30 p-8 rounded-2xl shadow-lg border-2 border-orange-200 dark:border-orange-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group flex flex-col w-full h-full">
+                <div className="shrink-0 w-16 h-16 bg-linear-to-br from-orange-500 to-pink-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
@@ -440,8 +440,8 @@ const App = () => {
 
             {/* Keyboard Shortcuts Card */}
             <Link href="/shortcuts" className="flex h-full">
-              <article className="bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-950/30 dark:to-pink-950/30 p-8 rounded-2xl shadow-lg border-2 border-rose-200 dark:border-rose-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group flex flex-col w-full h-full">
-                <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-rose-500 to-pink-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
+              <article className="bg-linear-to-br from-rose-50 to-pink-50 dark:from-rose-950/30 dark:to-pink-950/30 p-8 rounded-2xl shadow-lg border-2 border-rose-200 dark:border-rose-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group flex flex-col w-full h-full">
+                <div className="shrink-0 w-16 h-16 bg-linear-to-br from-rose-500 to-pink-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                   </svg>
@@ -463,8 +463,8 @@ const App = () => {
 
             {/* 404 Page Demo Card */}
             <Link href="/this-page-does-not-exist" className="flex h-full">
-              <article className="bg-gradient-to-br from-violet-50 to-indigo-50 dark:from-violet-950/30 dark:to-indigo-950/30 p-8 rounded-2xl shadow-lg border-2 border-violet-200 dark:border-violet-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group flex flex-col w-full h-full">
-                <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-violet-500 to-indigo-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
+              <article className="bg-linear-to-br from-violet-50 to-indigo-50 dark:from-violet-950/30 dark:to-indigo-950/30 p-8 rounded-2xl shadow-lg border-2 border-violet-200 dark:border-violet-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group flex flex-col w-full h-full">
+                <div className="shrink-0 w-16 h-16 bg-linear-to-br from-violet-500 to-indigo-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
@@ -486,8 +486,8 @@ const App = () => {
 
             {/* Enhanced Footer Card */}
             <a href="#footer" className="flex h-full">
-              <article className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 p-8 rounded-2xl shadow-lg border-2 border-emerald-200 dark:border-emerald-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group flex flex-col w-full h-full">
-                <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
+              <article className="bg-linear-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 p-8 rounded-2xl shadow-lg border-2 border-emerald-200 dark:border-emerald-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group flex flex-col w-full h-full">
+                <div className="shrink-0 w-16 h-16 bg-linear-to-br from-emerald-500 to-teal-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                   </svg>
@@ -515,8 +515,8 @@ const App = () => {
               }}
               className="text-left w-full flex h-full justify-self-center"
             >
-              <article className="bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/30 p-8 rounded-2xl shadow-lg border-2 border-amber-200 dark:border-amber-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group flex flex-col w-full items-center text-center">
-                <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-amber-500 to-yellow-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
+              <article className="bg-linear-to-br from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/30 p-8 rounded-2xl shadow-lg border-2 border-amber-200 dark:border-amber-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group flex flex-col w-full items-center text-center">
+                <div className="shrink-0 w-16 h-16 bg-linear-to-br from-amber-500 to-yellow-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
@@ -539,8 +539,8 @@ const App = () => {
 
             {/* Newsletter Card */}
             <a href="#footer" className="flex h-full">
-              <article className="bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-950/30 dark:to-blue-950/30 p-8 rounded-2xl shadow-lg border-2 border-cyan-200 dark:border-cyan-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group flex flex-col w-full h-full">
-                <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
+              <article className="bg-linear-to-br from-cyan-50 to-blue-50 dark:from-cyan-950/30 dark:to-blue-950/30 p-8 rounded-2xl shadow-lg border-2 border-cyan-200 dark:border-cyan-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group flex flex-col w-full h-full">
+                <div className="shrink-0 w-16 h-16 bg-linear-to-br from-cyan-500 to-blue-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>

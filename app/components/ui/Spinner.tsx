@@ -23,7 +23,7 @@ export function Spinner({ size = 'md', variant = 'default', className }: Spinner
       <div className={cn('relative', className)}>
         <div
           className={cn(
-            'rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 animate-spin',
+            'rounded-full bg-linear-to-r from-blue-500 via-purple-500 to-pink-500 animate-spin',
             sizeStyles[size]
           )}
           style={{
@@ -104,11 +104,11 @@ export function InlineLoader({ text, className }: { text?: string; className?: s
  */
 export function PageLoader({ title = 'Loading...', subtitle }: { title?: string; subtitle?: string }) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 dark:from-gray-900 dark:via-blue-950/30 dark:to-purple-950/30">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-50 via-blue-50/30 to-purple-50/30 dark:from-gray-900 dark:via-blue-950/30 dark:to-purple-950/30">
       <div className="text-center space-y-6">
         <Spinner size="xl" variant="gradient" />
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             {title}
           </h2>
           {subtitle && (

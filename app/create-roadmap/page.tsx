@@ -373,17 +373,17 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
   // Profile Form
   if (step === 'profile') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50 p-4 md:p-8">
+      <div className="min-h-screen bg-linear-to-br from-blue-50 via-cyan-50 to-teal-50 p-4 md:p-8">
         <div className="max-w-4xl mx-auto">
           {/* Hero Section */}
           <div className="text-center mb-12">
             <div className="relative mb-8">
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full blur-xl opacity-20 animate-pulse"></div>
-              <div className="relative inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full mb-6 shadow-lg">
+              <div className="absolute inset-0 bg-linear-to-r from-cyan-400 to-blue-500 rounded-full blur-xl opacity-20 animate-pulse"></div>
+              <div className="relative inline-flex items-center justify-center w-20 h-20 bg-linear-to-r from-cyan-500 to-blue-600 rounded-full mb-6 shadow-lg">
                 <Sparkles className="w-10 h-10 text-white" />
               </div>
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-700 bg-clip-text text-transparent mb-4">
+            <h1 className="text-5xl md:text-6xl font-bold bg-linear-to-r from-cyan-600 via-blue-600 to-indigo-700 bg-clip-text text-transparent mb-4">
               AI-Powered Learning Path
             </h1>
             <p className="text-xl text-gray-700 max-w-2xl mx-auto leading-relaxed">
@@ -404,7 +404,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
             {/* Progress Indicator */}
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full text-white text-sm font-bold">1</div>
+                <div className="flex items-center justify-center w-8 h-8 bg-linear-to-r from-cyan-500 to-blue-600 rounded-full text-white text-sm font-bold">1</div>
                 <span className="text-gray-800 font-medium">Profile Setup</span>
               </div>
               <div className="text-gray-500 text-sm">Step 1 of 3</div>
@@ -429,7 +429,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
                     onClick={() => setProfile(prev => ({ ...prev, currentLevel: level.value }))}
                     className={`group p-6 rounded-2xl border-2 transition-all duration-300 hover:scale-105 ${
                       profile.currentLevel === level.value
-                        ? 'border-cyan-500 bg-gradient-to-br from-cyan-50 to-blue-50 shadow-lg shadow-cyan-500/25'
+                        ? 'border-cyan-500 bg-linear-to-br from-cyan-50 to-blue-50 shadow-lg shadow-cyan-500/25'
                         : 'border-gray-200 bg-white hover:border-cyan-300 hover:bg-cyan-50/50'
                     }`}
                   >
@@ -482,7 +482,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
                     onClick={() => setProfile(prev => ({ ...prev, timeCommitment: option.value }))}
                     className={`group p-5 rounded-2xl border-2 transition-all duration-300 hover:scale-105 ${
                       profile.timeCommitment === option.value
-                        ? 'border-teal-500 bg-gradient-to-br from-teal-50 to-cyan-50 shadow-lg shadow-teal-500/25'
+                        ? 'border-teal-500 bg-linear-to-br from-teal-50 to-cyan-50 shadow-lg shadow-teal-500/25'
                         : 'border-gray-200 bg-white hover:border-teal-300 hover:bg-teal-50/50'
                     }`}
                   >
@@ -518,7 +518,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
                     onClick={() => handleInterestToggle(interest.name)}
                     className={`flex items-center gap-2 px-4 py-3 rounded-full border-2 transition-all duration-300 hover:scale-105 ${
                       profile.interests.includes(interest.name)
-                        ? 'border-amber-500 bg-gradient-to-r from-amber-50 to-yellow-50 text-gray-800 shadow-lg shadow-amber-500/25'
+                        ? 'border-amber-500 bg-linear-to-r from-amber-50 to-yellow-50 text-gray-800 shadow-lg shadow-amber-500/25'
                         : 'border-gray-200 text-gray-700 bg-white hover:border-amber-300 hover:bg-amber-50/50'
                     }`}
                   >
@@ -551,7 +551,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
               <button
                 onClick={generateRoadmap}
                 disabled={!profile.currentLevel || !profile.targetRole || !profile.timeCommitment}
-                className="w-full bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 text-white font-bold py-5 rounded-2xl hover:from-cyan-700 hover:via-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-3 shadow-xl hover:shadow-2xl hover:scale-105 text-lg"
+                className="w-full bg-linear-to-r from-cyan-600 via-blue-600 to-indigo-600 text-white font-bold py-5 rounded-2xl hover:from-cyan-700 hover:via-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-3 shadow-xl hover:shadow-2xl hover:scale-105 text-lg"
               >
                 <Sparkles className="w-6 h-6" />
                 Generate My AI Roadmap
@@ -591,9 +591,9 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
   // Generating State
   if (step === 'generating') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-800 via-gray-900 to-slate-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-linear-to-br from-slate-800 via-gray-900 to-slate-900 flex items-center justify-center p-4">
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full mb-6 animate-pulse shadow-lg">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-linear-to-r from-cyan-500 to-blue-600 rounded-full mb-6 animate-pulse shadow-lg">
             <Sparkles className="w-10 h-10 text-white" />
           </div>
           <h2 className="text-3xl font-bold text-white mb-3">
@@ -614,7 +614,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
 
   // Results View
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-4 md:p-8">
+    <div className="min-h-screen bg-linear-to-br from-gray-50 to-blue-50 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
@@ -654,7 +654,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           </div>
 
           {/* Milestones */}
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
+          <div className="bg-linear-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
             <h3 className="font-semibold text-gray-900 mb-3">Key Milestones</h3>
             <div className="flex flex-wrap gap-2">
               {generatedRoadmap?.milestones.map((milestone, idx) => (
@@ -677,7 +677,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
               <div className="p-6">
                 <div className="flex items-start gap-4">
                   {/* Order Badge */}
-                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                  <div className="shrink-0 w-12 h-12 bg-linear-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
                     {node.order}
                   </div>
 
@@ -729,7 +729,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
                               href={resource.url}
                               className="flex items-start gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors group"
                             >
-                              <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                              <div className="shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                                 <Book className="w-5 h-5 text-blue-600" />
                               </div>
                               <div className="flex-1 min-w-0">
@@ -740,7 +740,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
                                   {resource.type} • {resource.platform}
                                 </div>
                               </div>
-                              <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors flex-shrink-0" />
+                              <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors shrink-0" />
                             </a>
                           ))}
                         </div>
@@ -752,7 +752,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
 
               {/* Progress Bar */}
               <div className="h-2 bg-gray-100">
-                <div className="h-full bg-gradient-to-r from-blue-600 to-indigo-600" style={{ width: '0%' }}></div>
+                <div className="h-full bg-linear-to-r from-blue-600 to-indigo-600" style={{ width: '0%' }}></div>
               </div>
             </div>
           ))}
@@ -760,7 +760,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
 
         {/* Action Buttons */}
         <div className="mt-8 flex gap-4 justify-center">
-          <button className="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg">
+          <button className="px-8 py-4 bg-linear-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg">
             Save to Dashboard
           </button>
           <button className="px-8 py-4 bg-white text-gray-900 font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-600 transition-all">

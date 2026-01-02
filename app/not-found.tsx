@@ -49,7 +49,7 @@ export default function NotFound() {
             />
             <button
               type="submit"
-              className="absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-md hover:shadow-xl"
+              className="absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2 bg-linear-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-md hover:shadow-xl"
             >
               Search
             </button>
@@ -59,8 +59,8 @@ export default function NotFound() {
         {/* Quick Links */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12 max-w-3xl mx-auto">
           <Link href="/">
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 p-6 rounded-2xl border-2 border-blue-200 dark:border-blue-800 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer group">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-xl flex items-center justify-center mb-3 mx-auto group-hover:scale-110 transition-transform">
+            <div className="bg-linear-to-br from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 p-6 rounded-2xl border-2 border-blue-200 dark:border-blue-800 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer group">
+              <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-purple-600 text-white rounded-xl flex items-center justify-center mb-3 mx-auto group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                 </svg>
@@ -71,8 +71,8 @@ export default function NotFound() {
           </Link>
 
           <Link href="/faq">
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 p-6 rounded-2xl border-2 border-green-200 dark:border-green-800 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer group">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-xl flex items-center justify-center mb-3 mx-auto group-hover:scale-110 transition-transform">
+            <div className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 p-6 rounded-2xl border-2 border-green-200 dark:border-green-800 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer group">
+              <div className="w-12 h-12 bg-linear-to-br from-green-500 to-emerald-600 text-white rounded-xl flex items-center justify-center mb-3 mx-auto group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -83,8 +83,8 @@ export default function NotFound() {
           </Link>
 
           <Link href="/contact">
-            <div className="bg-gradient-to-br from-orange-50 to-pink-50 dark:from-orange-950/30 dark:to-pink-950/30 p-6 rounded-2xl border-2 border-orange-200 dark:border-orange-800 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer group">
-              <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-pink-600 text-white rounded-xl flex items-center justify-center mb-3 mx-auto group-hover:scale-110 transition-transform">
+            <div className="bg-linear-to-br from-orange-50 to-pink-50 dark:from-orange-950/30 dark:to-pink-950/30 p-6 rounded-2xl border-2 border-orange-200 dark:border-orange-800 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer group">
+              <div className="w-12 h-12 bg-linear-to-br from-orange-500 to-pink-600 text-white rounded-xl flex items-center justify-center mb-3 mx-auto group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
@@ -108,7 +108,7 @@ export default function NotFound() {
           </button>
 
           <Link href="/">
-            <button className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+            <button className="inline-flex items-center gap-2 px-6 py-3 bg-linear-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
               </svg>

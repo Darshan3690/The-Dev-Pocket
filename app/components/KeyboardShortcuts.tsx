@@ -88,7 +88,7 @@ export default function KeyboardShortcuts() {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div className="relative w-full max-w-2xl mx-4 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 max-h-[80vh] overflow-y-auto">
         {/* Close button */}
         <button
@@ -103,7 +103,7 @@ export default function KeyboardShortcuts() {
 
         {/* Header */}
         <div className="mb-8">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+          <h2 className="text-3xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
             Keyboard Shortcuts
           </h2>
           <p className="text-gray-600 dark:text-gray-300">

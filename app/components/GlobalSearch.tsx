@@ -154,15 +154,15 @@ export default function GlobalSearch() {
   const getCategoryColor = (category: string) => {
     switch (category) {
       case "page":
-        return "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30";
+        return "bg-linear-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30";
       case "resource":
-        return "bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/30";
+        return "bg-linear-to-r from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/30";
       case "feature":
-        return "bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg shadow-purple-500/30";
+        return "bg-linear-to-r from-purple-500 to-pink-600 text-white shadow-lg shadow-purple-500/30";
       case "documentation":
-        return "bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg shadow-orange-500/30";
+        return "bg-linear-to-r from-orange-500 to-red-600 text-white shadow-lg shadow-orange-500/30";
       default:
-        return "bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-lg shadow-gray-500/30";
+        return "bg-linear-to-r from-gray-500 to-gray-600 text-white shadow-lg shadow-gray-500/30";
     }
   };
 
@@ -174,19 +174,19 @@ export default function GlobalSearch() {
           setIsOpen(true);
           setTimeout(() => inputRef.current?.focus(), 100);
         }}
-        className="group relative flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-blue-900/20 dark:hover:to-purple-900/20 transition-all duration-300 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 shadow-sm hover:shadow-lg transform hover:scale-105"
+        className="group relative flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 rounded-xl hover:bg-linear-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-blue-900/20 dark:hover:to-purple-900/20 transition-all duration-300 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 shadow-sm hover:shadow-lg transform hover:scale-105"
         aria-label="Open search"
       >
         <Search className="w-4 h-4 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
         <span className="hidden sm:inline text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
           Search...
         </span>
-        <kbd className="hidden lg:inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold text-gray-600 dark:text-gray-400 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-inner group-hover:from-blue-100 group-hover:to-purple-100 dark:group-hover:from-blue-900/40 dark:group-hover:to-purple-900/40 transition-all">
+        <kbd className="hidden lg:inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold text-gray-600 dark:text-gray-400 bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-inner group-hover:from-blue-100 group-hover:to-purple-100 dark:group-hover:from-blue-900/40 dark:group-hover:to-purple-900/40 transition-all">
           <Command className="w-3 h-3" />
           <span>K</span>
         </kbd>
         {/* Shine effect on hover */}
-        <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-shine pointer-events-none" />
+        <div className="absolute inset-0 rounded-xl bg-linear-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-shine pointer-events-none" />
       </button>
 
       {/* Search Modal - Enhanced Design */}
@@ -197,8 +197,8 @@ export default function GlobalSearch() {
             className="w-full max-w-3xl bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border-2 border-gray-200 dark:border-gray-700 overflow-hidden animate-slide-up"
           >
             {/* Search Input - Enhanced */}
-            <div className="relative flex items-center gap-3 px-5 py-4 bg-gradient-to-r from-blue-50/50 via-purple-50/50 to-pink-50/50 dark:from-blue-950/30 dark:via-purple-950/30 dark:to-pink-950/30 border-b-2 border-gray-200 dark:border-gray-700">
-              <div className="relative flex-shrink-0">
+            <div className="relative flex items-center gap-3 px-5 py-4 bg-linear-to-r from-blue-50/50 via-purple-50/50 to-pink-50/50 dark:from-blue-950/30 dark:via-purple-950/30 dark:to-pink-950/30 border-b-2 border-gray-200 dark:border-gray-700">
+              <div className="relative shrink-0">
                 <Search className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                 <div className="absolute -inset-1 bg-blue-500/20 dark:bg-blue-500/30 rounded-full blur-md" />
               </div>

@@ -130,7 +130,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     <div className="mb-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-bold bg-linear-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
             Quick Actions
           </h2>
           <p className="text-slate-600 mt-1">Jump into any feature instantly</p>
@@ -147,12 +147,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               className="group relative overflow-hidden bg-white rounded-2xl border border-slate-200/60 hover:border-slate-300/60 transition-all duration-300 hover:shadow-xl hover:shadow-slate-200/40 hover:-translate-y-1"
             >
               {/* Background Gradient */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
+              <div className={`absolute inset-0 bg-linear-to-br ${action.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
 
               {/* Content */}
               <div className="relative p-6">
                 {/* Icon with gradient background */}
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${action.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`w-12 h-12 rounded-xl bg-linear-to-br ${action.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                   <Icon className="w-6 h-6 text-white" />
                 </div>
 
@@ -178,12 +178,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
                 {/* Hover Shine Effect */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                  <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 </div>
               </div>
 
               {/* Bottom Border Accent */}
-              <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${action.gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left`} />
+              <div className={`absolute bottom-0 left-0 right-0 h-1 bg-linear-to-r ${action.gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left`} />
             </Link>
           )
         })}
@@ -192,7 +192,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   )
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="flex h-screen bg-linear-to-br from-slate-50 to-slate-100">
       {/* Mobile overlay */}
       {mobileMenuOpen && (
         <div
