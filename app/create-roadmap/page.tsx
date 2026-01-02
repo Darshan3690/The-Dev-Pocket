@@ -83,38 +83,8 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
   });
   const [generatedRoadmap, setGeneratedRoadmap] = useState<GeneratedRoadmap | null>(null);
   const [selectedNode, setSelectedNode] = useState<RoadmapNode | null>(null);
-
-  // Simulated AI roadmap generation
-  const generateRoadmap = useCallback(() => {
-    setStep('generating');
-    
-    setTimeout(() => {
-      const roadmap: GeneratedRoadmap = {
-        id: `roadmap-${Date.now()}`,
-        title: `${profile.targetRole} Learning Path`,
-        description: `Personalized roadmap tailored for ${profile.currentLevel} developers aiming to become ${profile.targetRole}`,
-        estimatedDuration: profile.timeCommitment === 'full-time' ? '3-4 months' : profile.timeCommitment === 'part-time' ? '6-8 months' : '9-12 months',
-        totalHours: profile.timeCommitment === 'full-time' ? 480 : profile.timeCommitment === 'part-time' ? 720 : 960,
-        tags: [profile.targetRole.toLowerCase(), profile.currentLevel.toLowerCase(), ...profile.interests.map(i => i.toLowerCase())],
-        difficulty: profile.currentLevel.toLowerCase() as 'beginner' | 'intermediate' | 'advanced',
-        completionRate: 0,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        milestones: [
-          'Complete fundamentals',
-          'Build 3 portfolio projects',
-          'Master core technologies',
-          'Prepare for interviews',
-          'Land target role'
-        ],
-        nodes: generateNodes(profile)
-      };
-      
-      setGeneratedRoadmap(roadmap);
-      setStep('result');
-    }, 2500);
-  }, [profile, generateNodes]);
-
+  
+  // Resource factory (kept as-is)
   const createResource = (title: string, type: Resource['type'], url: string, platform: string, level: Resource['level'] = 'beginner', isFree: boolean = true): Resource => ({
     title,
     type,
@@ -128,7 +98,8 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
     description: `High-quality ${type} covering ${title.toLowerCase()}`
   });
 
-  const generateNodes = (prof: UserProfile): RoadmapNode[] => {
+  // Generate nodes (now declared above usage and memoized)
+  const generateNodes = useCallback((prof: UserProfile): RoadmapNode[] => {
     const baseNodes: RoadmapNode[] = [];
     let order = 1;
 
@@ -175,7 +146,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           ],
           resources: [
             createResource('JavaScript.info', 'course', '#', 'javascript.info', 'intermediate', true),
-            createResource('You Don&apos;t Know JS', 'book', '#', 'GitHub', 'intermediate', true)
+            createResource('You Don\&apos;t Know JS', 'book', '#', 'GitHub', 'intermediate', true)
           ]
         },
         {
@@ -346,7 +317,40 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
     }
 
     return baseNodes;
-  };
+  }, []);
+
+  // Simulated AI roadmap generation
+  const generateRoadmap = useCallback(() => {
+    setStep('generating');
+    
+    setTimeout(() => {
+      const roadmap: GeneratedRoadmap = {
+        id: `roadmap-${Date.now()}`,
+        title: `${profile.targetRole} Learning Path`,
+        description: `Personalized roadmap tailored for ${profile.currentLevel} developers aiming to become ${profile.targetRole}`,
+        estimatedDuration: profile.timeCommitment === 'full-time' ? '3-4 months' : profile.timeCommitment === 'part-time' ? '6-8 months' : '9-12 months',
+        totalHours: profile.timeCommitment === 'full-time' ? 480 : profile.timeCommitment === 'part-time' ? 720 : 960,
+        tags: [profile.targetRole.toLowerCase(), profile.currentLevel.toLowerCase(), ...profile.interests.map(i => i.toLowerCase())],
+        difficulty: profile.currentLevel.toLowerCase() as 'beginner' | 'intermediate' | 'advanced',
+        completionRate: 0,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        milestones: [
+          'Complete fundamentals',
+          'Build 3 portfolio projects',
+          'Master core technologies',
+          'Prepare for interviews',
+          'Land target role'
+        ],
+        nodes: generateNodes(profile)
+      };
+      
+      setGeneratedRoadmap(roadmap);
+      setStep('result');
+    }, 2500);
+  }, [profile, generateNodes]);
+
+  
 
   const handleInterestToggle = (interest: string) => {
     setProfile(prev => ({

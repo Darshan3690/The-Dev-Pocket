@@ -16,15 +16,15 @@ export default function NotFound() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center px-4">
       <div className="max-w-4xl w-full text-center">
         {/* Animated 404 */}
         <div className="mb-8">
-          <h1 className="text-[150px] sm:text-[200px] font-black bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent animate-bounce">
+          <h1 className="text-[150px] sm:text-[200px] font-black bg-linear-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent animate-bounce">
             404
           </h1>
           <div className="relative -mt-12">
-            <div className="absolute inset-0 blur-3xl bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 opacity-20 animate-pulse"></div>
+            <div className="absolute inset-0 blur-3xl bg-linear-to-brfrom-purple-400 via-pink-400 to-blue-400 opacity-20 animate-pulse"></div>
           </div>
         </div>
 

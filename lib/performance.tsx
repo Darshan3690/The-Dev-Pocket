@@ -3,7 +3,8 @@
  * Provides comprehensive performance tracking and optimization features
  */
 
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState } from 'react';
+import { onCLS, onFCP, onLCP, onTTFB } from 'web-vitals';
 
 export interface PerformanceMetric {
   name: string;
@@ -14,7 +15,7 @@ export interface PerformanceMetric {
 }
 
 export interface WebVitalsMetric {
-  name: 'CLS' | 'FID' | 'FCP' | 'LCP' | 'TTFB';
+  name: 'CLS' | 'FCP' | 'LCP' | 'TTFB' | 'INP';
   value: number;
   delta: number;
   id: string;
@@ -149,49 +150,46 @@ class PerformanceMonitor {
     if (typeof window === 'undefined') return;
 
     // Core Web Vitals
-    const vitals = ['CLS', 'FID', 'FCP', 'LCP', 'TTFB'] as const;
+    const vitals = ['CLS', 'FCP', 'LCP', 'TTFB', 'INP'] as const;
 
     vitals.forEach(vital => {
-      try {
-        import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-          const getMetric = {
-            CLS: getCLS,
-            FID: getFID,
-            FCP: getFCP,
-            LCP: getLCP,
-            TTFB: getTTFB
-          }[vital];
+      const onMetricFn = {
+        CLS: onCLS,
+        FCP: onFCP,
+        LCP: onLCP,
+        TTFB: onTTFB,
+        INP: (cb: (metric: { value: number; delta: number; id: string; navigationType: string }) => void) => {
+          // Import onINP lazily to avoid SSR issues
+          import('web-vitals').then(({ onINP }) => onINP(cb));
+        }
+      }[vital];
 
-          if (getMetric) {
-            getMetric((metric) => {
-              const webVitalsMetric: WebVitalsMetric = {
-                name: vital,
-                value: metric.value,
-                delta: metric.delta,
-                id: metric.id,
-                navigationType: metric.navigationType
-              };
+      if (onMetricFn) {
+        onMetricFn((metric) => {
+          const webVitalsMetric: WebVitalsMetric = {
+            name: vital,
+            value: metric.value,
+            delta: metric.delta,
+            id: metric.id,
+            navigationType: metric.navigationType
+          };
 
-              // Record as performance metric
-              this.metrics.push({
-                name: `web-vitals-${vital}`,
-                duration: metric.value,
-                timestamp: Date.now(),
-                type: 'resource',
-                metadata: {
-                  delta: metric.delta,
-                  id: metric.id,
-                  navigationType: metric.navigationType
-                }
-              });
+          // Record as performance metric
+          this.metrics.push({
+            name: `web-vitals-${vital}`,
+            duration: metric.value,
+            timestamp: Date.now(),
+            type: 'resource',
+            metadata: {
+              delta: metric.delta,
+              id: metric.id,
+              navigationType: metric.navigationType
+            }
+          });
 
-              onMetric?.(webVitalsMetric);
-              console.log(`[Dev Pocket Web Vitals] ${vital}: ${metric.value}`);
-            });
-          }
+          onMetric?.(webVitalsMetric);
+          console.log(`[Dev Pocket Web Vitals] ${vital}: ${metric.value}`);
         });
-      } catch (error) {
-        console.warn(`Failed to load Web Vitals for ${vital}:`, error);
       }
     });
   }
