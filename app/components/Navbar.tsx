@@ -36,17 +36,17 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             {/* If NOT logged in → show Login */}
             <SignedOut>
-              <Link href="/sign-in">
-                <NavbarButton as="span" variant="primary">Login</NavbarButton>
-              </Link>
+              <NavbarButton as={Link} href="/sign-in" variant="primary">
+                Login
+              </NavbarButton>
             </SignedOut>
 
             {/* If logged in → show Avatar + Dashboard */}
             <SignedIn>
               <UserButton afterSignOutUrl="/" />
-              <Link href="/dashboard">
-                <NavbarButton as="span" variant="primary">Dashboard</NavbarButton>
-              </Link>
+              <NavbarButton as={Link} href="/dashboard" variant="primary">
+                Dashboard
+              </NavbarButton>
             </SignedIn>
           </div>
         </NavBody>
@@ -79,30 +79,28 @@ export default function Navbar() {
             {/* Mobile Auth Section */}
             <div className="flex w-full flex-col gap-4">
               <SignedOut>
-                <Link href="/sign-in">
-                  <NavbarButton
-                    as="span"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    variant="primary"
-                    className="w-full"
-                  >
-                    Login
-                  </NavbarButton>
-                </Link>
+                <NavbarButton
+                  as={Link}
+                  href="/sign-in"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  variant="primary"
+                  className="w-full"
+                >
+                  Login
+                </NavbarButton>
               </SignedOut>
 
               <SignedIn>
                 <UserButton afterSignOutUrl="/" />
-                <Link href="/dashboard">
-                  <NavbarButton
-                    as="span"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    variant="primary"
-                    className="w-full"
-                  >
-                    Dashboard
-                  </NavbarButton>
-                </Link>
+                <NavbarButton
+                  as={Link}
+                  href="/dashboard"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  variant="primary"
+                  className="w-full"
+                >
+                  Dashboard
+                </NavbarButton>
               </SignedIn>
             </div>
           </MobileNavMenu>
