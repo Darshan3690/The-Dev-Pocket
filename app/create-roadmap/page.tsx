@@ -391,7 +391,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
               <div className="flex items-center gap-3 mb-4">
                 <Target className="w-5 h-5 text-cyan-600" />
                 <label className="text-lg font-semibold text-gray-800">
-                  What's your current skill level?
+                  What&apos;s your current skill level?
                 </label>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -422,7 +422,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
               <div className="flex items-center gap-3 mb-4">
                 <Award className="w-5 h-5 text-blue-600" />
                 <label className="text-lg font-semibold text-gray-800">
-                  What's your dream role?
+                  What&apos;s your dream role?
                 </label>
               </div>
               <div className="relative">

@@ -175,7 +175,7 @@ const EnhancedDashboard: React.FC = () => {
               <h1 className="text-2xl font-bold text-gray-900">
                 Welcome back, {user?.firstName || 'Developer'}!
               </h1>
-              <p className="text-gray-600">Here's your development progress overview</p>
+              <p className="text-gray-600">Here&apos;s your development progress overview</p>
             </div>
             <div className="flex space-x-3">
               <button

@@ -308,9 +308,12 @@ export function usePerformanceMonitoring() {
     performanceMonitor.measureComponent(componentName, renderFn);
   }, []);
 
-  const measureAsync = useCallback(async <T>(name: string, operation: () => Promise<T>, type: PerformanceMetric['type'] = 'api'): Promise<T> => {
-    return performanceMonitor.measureAsync(name, operation, type);
-  }, []);
+  const measureAsync = useCallback(
+    async <T,>(name: string, operation: () => Promise<T>, type: PerformanceMetric['type'] = 'api'): Promise<T> => {
+      return performanceMonitor.measureAsync(name, operation, type);
+    },
+    []
+  );
 
   const getStats = useCallback(() => {
     return performanceMonitor.getStats();
