@@ -1,6 +1,6 @@
 "use client"
 
-import { ReactNode, useState } from "react"
+import { ReactNode, useState, Suspense } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -24,6 +24,7 @@ import {
 } from "lucide-react"
 
 import { UserButton } from "@clerk/nextjs";
+import { InlineLoader } from "../components/ui/Spinner";
 
 const sidebarLinks = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard, tooltip: "Overview" },
@@ -221,7 +222,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <div
               className="font-extrabold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent drop-shadow-sm"
               role="heading"
-              aria-level="1"
+              aria-level={1}
             >
               The Dev Pocket
             </div>
@@ -367,10 +368,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           {pathname === '/dashboard' ? (
             <div>
               <QuickActionsSection />
-              {children}
+              <Suspense fallback={<InlineLoader text="Loading dashboard content..." />}>
+                {children}
+              </Suspense>
             </div>
           ) : (
-            children
+            <Suspense fallback={<InlineLoader text="Loading..." />}>
+              {children}
+            </Suspense>
           )}
         </main>
       </div>

@@ -26,6 +26,8 @@ import { usePerformanceMonitoring } from "../lib/performance";
 import { ErrorBoundary, useErrorHandling } from "../lib/error-handling";
 import GlobalSearch from "./components/GlobalSearch";
 import ToastProvider from "./components/ToastProvider";
+import KeyboardShortcuts from "./components/KeyboardShortcuts";
+import OnboardingTutorial from "./components/OnboardingTutorial";
 
 export default function RootLayout({
   children,
@@ -69,6 +71,8 @@ export default function RootLayout({
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
             <ErrorBoundary>
               <ToastProvider />
+              <KeyboardShortcuts />
+              <OnboardingTutorial />
               <AccessibilityAnnouncer />
               <SkipLink href="#main-content">Skip to main content</SkipLink>
 

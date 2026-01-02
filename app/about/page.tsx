@@ -15,7 +15,7 @@ const AboutPage = () => {
         />
       </Head>
 
-      <main className="max-w-5xl mx-auto px-6 py-20 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-lg shadow-lg">
+      <main className="max-w-5xl mx-auto px-6 py-20 mt-8 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-lg shadow-lg">
         <h1 id="hero-heading" className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-800 leading-tight mb-3">
           About Dev Pocket
         </h1>
