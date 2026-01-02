@@ -128,15 +128,24 @@ yarn install
 pnpm install
 ```
 
-### 3️⃣ Set Up Supabase Database
+### 3️⃣ Set Up Supabase Database (Prisma)
+
+> ⚠️ Important: Prisma CLI does **not** load `.env.local`.  
+> Please use a `.env` file for database configuration.
 
 1. 🌐 Visit [Supabase](https://supabase.com)
 2. ➕ Create a new project
-3. 📋 Copy your connection string
-4. 📝 Add to `.env.local`:
+3. ⚙️ Go to **Settings → Database → Connection string**
+
+You will need **two connection URLs** from Supabase:
+- **Session pooler URL** (used by Prisma Client)
+- **Direct connection URL** (used by Prisma migrations)
+
+4. 📝 Create a `.env` file in the project root (same level as `package.json`) and add:
 
 ```env
-DATABASE_URL=your_supabase_connection_string
+DATABASE_URL="postgresql://postgres:<PASSWORD>@db.xxxxx.supabase.co:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://postgres:<PASSWORD>@db.xxxxx.supabase.co:5432/postgres"
 ```
 
 ### 4️⃣ Run Database Migrations
