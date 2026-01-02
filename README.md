@@ -146,6 +146,8 @@ You will need **two connection URLs** from Supabase:
 ```env
 DATABASE_URL="postgresql://postgres:<PASSWORD>@db.xxxxx.supabase.co:6543/postgres?pgbouncer=true"
 DIRECT_URL="postgresql://postgres:<PASSWORD>@db.xxxxx.supabase.co:5432/postgres"
+```
+
 ### 4️⃣ Run Database Migrations
 
 ```bash
