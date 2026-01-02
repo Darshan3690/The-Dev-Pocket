@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useCallback } from 'react';
-import { Sparkles, Target, TrendingUp, Book, Award, ChevronRight, X, Check, ArrowRight, Star, Clock, Users, Download, Share2, Play, Pause, RotateCcw } from 'lucide-react';
+import { Sparkles, Target, TrendingUp, Book, Award, ChevronRight, Check, ArrowRight, Star, Clock, Users } from 'lucide-react';
 
 // Enhanced Types
 interface UserProfile {
@@ -67,17 +67,7 @@ interface GeneratedRoadmap {
   updatedAt: string;
 }
 
-interface LearningPath {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  nodes: Omit<RoadmapNode, 'completed' | 'progress'>[];
-  prerequisites: string[];
-  outcomes: string[];
-  avgSalary: string;
-  jobDemand: 'low' | 'medium' | 'high' | 'very-high';
-}
+ 
 
 const PersonalizedRoadmapGenerator: React.FC = () => {
   const [step, setStep] = useState<'profile' | 'generating' | 'result'>('profile');
@@ -123,7 +113,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
       setGeneratedRoadmap(roadmap);
       setStep('result');
     }, 2500);
-  }, [profile]);
+  }, [profile, generateNodes]);
 
   const createResource = (title: string, type: Resource['type'], url: string, platform: string, level: Resource['level'] = 'beginner', isFree: boolean = true): Resource => ({
     title,
@@ -645,7 +635,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
 
         {/* Roadmap Nodes */}
         <div className="space-y-4">
-          {generatedRoadmap?.nodes.map((node, idx) => (
+          {generatedRoadmap?.nodes.map((node) => (
             <div
               key={node.id}
               className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
