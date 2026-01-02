@@ -151,7 +151,7 @@ const App = () => {
   }, []);
 
   return (
-    <main>
+    <main className="pt-24">
       <section
         ref={heroRef}
         className={`transition-all duration-700 ease-out max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${

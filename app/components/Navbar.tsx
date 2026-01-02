@@ -33,7 +33,7 @@ export default function Navbar() {
           <NavItems items={navItems} />
 
           {/* Auth Section */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-5">
             {/* If NOT logged in → show Login */}
             <SignedOut>
               <Link href="/sign-in">
@@ -43,7 +43,14 @@ export default function Navbar() {
 
             {/* If logged in → show Avatar + Dashboard */}
             <SignedIn>
-              <UserButton afterSignOutUrl="/" />
+              <UserButton 
+                afterSignOutUrl="/"
+                appearance={{
+                  elements: {
+                    avatarBox: "w-10 h-10 ring-2 ring-sky-500/20 hover:ring-sky-500/40 transition-all"
+                  }
+                }}
+              />
               <Link href="/dashboard">
                 <NavbarButton as="span" variant="primary">Dashboard</NavbarButton>
               </Link>
@@ -70,16 +77,16 @@ export default function Navbar() {
                 key={`mobile-link-${idx}`}
                 href={item.link}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="relative text-neutral-600 dark:text-neutral-300"
+                className="relative text-gray-700 dark:text-gray-200 font-medium text-base hover:text-sky-600 dark:hover:text-sky-400 transition-colors duration-200 py-2 w-full"
               >
                 <span className="block">{item.name}</span>
               </a>
             ))}
 
             {/* Mobile Auth Section */}
-            <div className="flex w-full flex-col gap-4">
+            <div className="flex w-full flex-col gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
               <SignedOut>
-                <Link href="/sign-in">
+                <Link href="/sign-in" className="w-full">
                   <NavbarButton
                     as="span"
                     onClick={() => setIsMobileMenuOpen(false)}
@@ -92,17 +99,19 @@ export default function Navbar() {
               </SignedOut>
 
               <SignedIn>
-                <UserButton afterSignOutUrl="/" />
-                <Link href="/dashboard">
-                  <NavbarButton
-                    as="span"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    variant="primary"
-                    className="w-full"
-                  >
-                    Dashboard
-                  </NavbarButton>
-                </Link>
+                <div className="flex items-center gap-3 w-full">
+                  <UserButton afterSignOutUrl="/" />
+                  <Link href="/dashboard" className="flex-1">
+                    <NavbarButton
+                      as="span"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      variant="primary"
+                      className="w-full"
+                    >
+                      Dashboard
+                    </NavbarButton>
+                  </Link>
+                </div>
               </SignedIn>
             </div>
           </MobileNavMenu>
