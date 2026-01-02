@@ -234,6 +234,11 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           difficulty: 'beginner',
           order: order++,
           prerequisites: [],
+          completed: false,
+          progress: 0,
+          estimatedHours: 40,
+          skills: ['HTTP', 'REST', 'APIs'],
+          assessments: [],
           resources: [
             createResource('HTTP Basics', 'article', '#', 'MDN', 'beginner', true),
             createResource('REST API Design', 'course', '#', 'Udemy', 'beginner', true)
@@ -248,6 +253,11 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           difficulty: 'intermediate',
           order: order++,
           prerequisites: ['server-basics'],
+          completed: false,
+          progress: 0,
+          estimatedHours: 70,
+          skills: ['Node.js', 'Express', 'Middleware'],
+          assessments: [],
           resources: [
             createResource('Node.js Complete Guide', 'course', '#', 'Udemy', 'intermediate', true),
             createResource('Express Documentation', 'article', '#', 'Express', 'intermediate', true)
@@ -262,6 +272,11 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           difficulty: 'intermediate',
           order: order++,
           prerequisites: ['nodejs'],
+          completed: false,
+          progress: 0,
+          estimatedHours: 60,
+          skills: ['SQL', 'PostgreSQL', 'MongoDB'],
+          assessments: [],
           resources: [
             createResource('SQL Fundamentals', 'course', '#', 'Khan Academy', 'intermediate', true),
             createResource('MongoDB University', 'course', '#', 'MongoDB', 'intermediate', true)
@@ -276,6 +291,11 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           difficulty: 'advanced',
           order: order++,
           prerequisites: ['databases'],
+          completed: false,
+          progress: 0,
+          estimatedHours: 90,
+          skills: ['API Design', 'Authentication', 'Testing'],
+          assessments: [],
           resources: [
             createResource('API Best Practices', 'article', '#', 'Dev.to', 'advanced', true),
             createResource('Microservices Tutorial', 'video', '#', 'YouTube', 'advanced', true)
@@ -293,6 +313,11 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           difficulty: 'beginner',
           order: order++,
           prerequisites: [],
+          completed: false,
+          progress: 0,
+          estimatedHours: 50,
+          skills: ['Variables', 'Loops', 'Functions'],
+          assessments: [],
           resources: [
             createResource('CS50', 'course', '#', 'Harvard', 'beginner', true),
             createResource('Algorithms Course', 'course', '#', 'Coursera', 'beginner', true)
@@ -307,6 +332,11 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           difficulty: 'intermediate',
           order: order++,
           prerequisites: ['programming-basics'],
+          completed: false,
+          progress: 0,
+          estimatedHours: 70,
+          skills: ['Advanced Syntax', 'Best Practices'],
+          assessments: [],
           resources: [
             createResource('Language Documentation', 'article', '#', 'Official Docs', 'intermediate', true),
             createResource('Advanced Concepts', 'course', '#', 'Pluralsight', 'intermediate', true)
