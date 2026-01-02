@@ -245,8 +245,8 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           order: order++,
           prerequisites: [],
           resources: [
-            { title: 'HTTP Basics', type: 'article', url: '#', platform: 'MDN' },
-            { title: 'REST API Design', type: 'course', url: '#', platform: 'Udemy' }
+            createResource('HTTP Basics', 'article', '#', 'MDN', 'beginner', true),
+            createResource('REST API Design', 'course', '#', 'Udemy', 'beginner', true)
           ]
         },
         {
@@ -259,8 +259,8 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           order: order++,
           prerequisites: ['server-basics'],
           resources: [
-            { title: 'Node.js Complete Guide', type: 'course', url: '#', platform: 'Udemy' },
-            { title: 'Express Documentation', type: 'article', url: '#', platform: 'Express' }
+            createResource('Node.js Complete Guide', 'course', '#', 'Udemy', 'intermediate', true),
+            createResource('Express Documentation', 'article', '#', 'Express', 'intermediate', true)
           ]
         },
         {
@@ -273,8 +273,8 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           order: order++,
           prerequisites: ['nodejs'],
           resources: [
-            { title: 'SQL Fundamentals', type: 'course', url: '#', platform: 'Khan Academy' },
-            { title: 'MongoDB University', type: 'course', url: '#', platform: 'MongoDB' }
+            createResource('SQL Fundamentals', 'course', '#', 'Khan Academy', 'intermediate', true),
+            createResource('MongoDB University', 'course', '#', 'MongoDB', 'intermediate', true)
           ]
         },
         {
@@ -287,8 +287,8 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           order: order++,
           prerequisites: ['databases'],
           resources: [
-            { title: 'API Best Practices', type: 'article', url: '#', platform: 'Dev.to' },
-            { title: 'Microservices Tutorial', type: 'video', url: '#', platform: 'YouTube' }
+            createResource('API Best Practices', 'article', '#', 'Dev.to', 'advanced', true),
+            createResource('Microservices Tutorial', 'video', '#', 'YouTube', 'advanced', true)
           ]
         }
       );
@@ -304,8 +304,8 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           order: order++,
           prerequisites: [],
           resources: [
-            { title: 'CS50', type: 'course', url: '#', platform: 'Harvard' },
-            { title: 'Algorithms Course', type: 'course', url: '#', platform: 'Coursera' }
+            createResource('CS50', 'course', '#', 'Harvard', 'beginner', true),
+            createResource('Algorithms Course', 'course', '#', 'Coursera', 'beginner', true)
           ]
         },
         {
@@ -318,8 +318,8 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           order: order++,
           prerequisites: ['programming-basics'],
           resources: [
-            { title: 'Language Documentation', type: 'article', url: '#', platform: 'Official Docs' },
-            { title: 'Advanced Concepts', type: 'course', url: '#', platform: 'Pluralsight' }
+            createResource('Language Documentation', 'article', '#', 'Official Docs', 'intermediate', true),
+            createResource('Advanced Concepts', 'course', '#', 'Pluralsight', 'intermediate', true)
           ]
         }
       );
