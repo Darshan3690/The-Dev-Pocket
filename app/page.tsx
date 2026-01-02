@@ -513,7 +513,7 @@ const App = () => {
                 localStorage.removeItem("onboarding-completed");
                 window.dispatchEvent(new Event("restart-onboarding"));
               }}
-              className="text-left w-full flex justify-self-center"
+              className="text-left w-full flex h-full justify-self-center"
             >
               <article className="bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/30 p-8 rounded-2xl shadow-lg border-2 border-amber-200 dark:border-amber-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 transform cursor-pointer group flex flex-col w-full items-center text-center">
                 <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-amber-500 to-yellow-600 text-white rounded-2xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-all">
