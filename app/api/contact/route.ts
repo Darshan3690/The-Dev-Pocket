@@ -10,18 +10,10 @@ const prisma = globalForPrisma.prisma || new PrismaClient();
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 export async function POST(request: NextRequest) {
-  // Optional CSRF protection (opt-in): if `CSRF_PROTECTION=true`, require header `x-csrf-token` match `CSRF_PROTECTION_TOKEN`
-  if (process.env.CSRF_PROTECTION === 'true') {
-    const provided = request.headers.get('x-csrf-token');
-    if (!provided || provided !== process.env.CSRF_PROTECTION_TOKEN) {
-      return NextResponse.json({ error: 'Forbidden - missing or invalid CSRF token' }, { status: 403 });
-    }
-  }
-
   // Rate limiting: 5 requests per hour per IP
   const clientIP = getClientIP(request);
   const rateLimitKey = `${clientIP}:contact`;
-  const rateLimitResult = await checkRateLimit(rateLimitKey, {
+  const rateLimitResult = checkRateLimit(rateLimitKey, {
     maxRequests: 5,
     windowMs: 60 * 60 * 1000, // 1 hour
   });

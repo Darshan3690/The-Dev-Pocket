@@ -11,17 +11,9 @@ if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 // POST /api/newsletter - Subscribe to newsletter
 export async function POST(request: NextRequest) {
-  // Optional CSRF protection for state-changing endpoints
-  if (process.env.CSRF_PROTECTION === 'true') {
-    const provided = request.headers.get('x-csrf-token');
-    if (!provided || provided !== process.env.CSRF_PROTECTION_TOKEN) {
-      return NextResponse.json({ error: 'Forbidden - missing or invalid CSRF token' }, { status: 403 });
-    }
-  }
-
   // Rate limiting: 3 requests per hour per IP
   const clientIP = getClientIP(request);
-  const rateLimitResult = await checkRateLimit(clientIP + ':newsletter', {
+  const rateLimitResult = checkRateLimit(clientIP + ':newsletter', {
     maxRequests: 3,
     windowMs: 60 * 60 * 1000, // 1 hour
   });
