@@ -1,51 +1,30 @@
-name: DevPocket CI
+name: Build and Deploy
 
 on:
-  pull_request:
   push:
-    branches: [main]
+    branches: [ darshna, main ]
+  pull_request:
+    branches: [ darshna, main ]
 
 jobs:
-  ci:
+  build:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:15
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: devpocket
-        options: >-
-          --health-cmd="pg_isready -U postgres"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
-    env:
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/devpocket
-      DIRECT_URL: postgres://postgres:postgres@localhost:5432/devpocket
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: test_key
-      CLERK_SECRET_KEY: test_secret
-
     steps:
-      - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+    - name: Install dependencies
+      run: npm ci
 
-      - name: Prisma generate
-        run: npx prisma generate
-
-      - name: Prisma migrate
-        run: npx prisma db push
-
-      - name: Build project
-        run: npm run build
+    - name: Build project
+      env:
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+        CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+      run: npm run build
