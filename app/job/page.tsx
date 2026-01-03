@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { showError } from '@/lib/toast';
 import { Search, MapPin, Briefcase, DollarSign, Clock, Star, Bookmark, Filter, X, TrendingUp, Users, Building2, ExternalLink } from 'lucide-react';
 
 interface Job {
@@ -154,7 +155,13 @@ export default function JobSearchPage() {
       newSaved.add(jobId);
     }
     setSavedJobs(newSaved);
-    localStorage.setItem('savedJobs', JSON.stringify(Array.from(newSaved)));
+    try {
+      localStorage.setItem('savedJobs', JSON.stringify(Array.from(newSaved)));
+    } catch (error) {
+      console.error('Failed to save jobs:', error);
+      // Show a non-blocking error to the user
+      try { showError('Failed to save job. Please free up storage or try again.'); } catch (e) { /* ignore */ }
+    }
   };
 
   // Filter jobs
