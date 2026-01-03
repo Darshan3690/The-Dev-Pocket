@@ -106,7 +106,7 @@ const TestimonialCard = ({
 );
 import { Button } from "@/components/ui/button";
 import { HeroWithMockup } from "@/components/hero-with-mockup";
-import FeaturesSectionWithHoverEffects from "./components/FeaturedSection";
+
 import HowItWorks from "./components/HowItWorks";
 import Testimonials from "./components/Testimonials";
 
@@ -181,10 +181,10 @@ const App = () => {
       >
 <h2
   className={`text-3xl sm:text-4xl font-bold mb-4 ${
-    isDark ? "text-white" : "text-gray-900"
+    isDark ? "text-dark" : "text-white"
   }`}
 >
-  All the Tools You Need, in One Place
+  All the Tools You Need, in <span className="text-sky-500">One Place</span>
 </h2>
 
          <p className={`text-base sm:text-lg mb-8 max-w-3xl mx-auto ${isDark ? "text-gray-400" : "text-gray-600"}`}>
@@ -367,7 +367,6 @@ const App = () => {
         </div>
       </section>
 
-        <FeaturesSectionWithHoverEffects />
       
       <HowItWorks />
       <Testimonials />
