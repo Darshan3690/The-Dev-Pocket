@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import { useState } from 'react';
 
 // A tiny harness to test saveResume's localStorage behavior
@@ -30,12 +30,14 @@ describe('saveResume', () => {
     };
 
     const { result } = renderHook(() => useResumeSave());
-    const out = result.current.saveResume();
+    try {
+      const out = result.current.saveResume();
 
-    expect(out.ok).toBe(false);
-    expect(out.error).toBeDefined();
-
-    // restore
-    window.localStorage.setItem = original;
+      expect(out.ok).toBe(false);
+      expect(out.error).toBeDefined();
+    } finally {
+      // restore
+      window.localStorage.setItem = original;
+    }
   });
 });
