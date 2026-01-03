@@ -225,26 +225,50 @@ class ErrorHandler {
   }
 
   private showCriticalError(error: DevPocketError): void {
-    // Show critical error modal
+    // Show critical error modal with XSS protection
     const modal = document.createElement('div');
     modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-    modal.innerHTML = `
-      <div class="bg-white rounded-lg p-6 max-w-md mx-4">
-        <h2 class="text-xl font-bold text-red-600 mb-4">Critical Error</h2>
-        <p class="text-gray-700 mb-4">${error.message}</p>
-        <p class="text-sm text-gray-500 mb-4">Error ID: ${error.id}</p>
-        <div class="flex space-x-3">
-          <button onclick="this.closest('.fixed').remove(); window.location.reload();" 
-                  class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
-            Reload Page
-          </button>
-          <button onclick="this.closest('.fixed').remove();" 
-                  class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400">
-            Dismiss
-          </button>
-        </div>
-      </div>
-    `;
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'bg-white rounded-lg p-6 max-w-md mx-4';
+    
+    const title = document.createElement('h2');
+    title.className = 'text-xl font-bold text-red-600 mb-4';
+    title.textContent = 'Critical Error';
+    
+    const message = document.createElement('p');
+    message.className = 'text-gray-700 mb-4';
+    message.textContent = error.message;
+    
+    const errorId = document.createElement('p');
+    errorId.className = 'text-sm text-gray-500 mb-4';
+    errorId.textContent = `Error ID: ${error.id}`;
+    
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = 'flex space-x-3';
+    
+    const reloadButton = document.createElement('button');
+    reloadButton.className = 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700';
+    reloadButton.textContent = 'Reload Page';
+    reloadButton.onclick = () => {
+      modal.remove();
+      window.location.reload();
+    };
+    
+    const dismissButton = document.createElement('button');
+    dismissButton.className = 'bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400';
+    dismissButton.textContent = 'Dismiss';
+    dismissButton.onclick = () => modal.remove();
+    
+    buttonContainer.appendChild(reloadButton);
+    buttonContainer.appendChild(dismissButton);
+    
+    modalContent.appendChild(title);
+    modalContent.appendChild(message);
+    modalContent.appendChild(errorId);
+    modalContent.appendChild(buttonContainer);
+    
+    modal.appendChild(modalContent);
     document.body.appendChild(modal);
   }
 
