@@ -21,19 +21,6 @@ function useToggleSaveJob() {
 describe('toggleSaveJob', () => {
   it('handles localStorage errors gracefully', () => {
     const original = window.localStorage.setItem;
-<<<<<<< HEAD
-    window.localStorage.setItem = () => { throw new Error('Quota exceeded'); };
-
-    const { result } = renderHook(() => useToggleSaveJob());
-    const out = result.current.toggleSaveJob('job-1');
-
-    expect(out.ok).toBe(false);
-    expect(out.error).toBeDefined();
-
-    window.localStorage.setItem = original;
-  });
-});
-=======
     try {
       window.localStorage.setItem = () => { throw new Error('Quota exceeded'); };
 
@@ -50,4 +37,3 @@ describe('toggleSaveJob', () => {
     }
   });
 });
->>>>>>> 2dfd229 (fix(job): guard localStorage writes in toggleSaveJob and add isolation test)
