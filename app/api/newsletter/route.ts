@@ -11,9 +11,17 @@ if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 // POST /api/newsletter - Subscribe to newsletter
 export async function POST(request: NextRequest) {
+  // Optional CSRF protection for state-changing endpoints
+  if (process.env.CSRF_PROTECTION === 'true') {
+    const provided = request.headers.get('x-csrf-token');
+    if (!provided || provided !== process.env.CSRF_PROTECTION_TOKEN) {
+      return NextResponse.json({ error: 'Forbidden - missing or invalid CSRF token' }, { status: 403 });
+    }
+  }
+
   // Rate limiting: 3 requests per hour per IP
   const clientIP = getClientIP(request);
-  const rateLimitResult = checkRateLimit(clientIP + ':newsletter', {
+  const rateLimitResult = await checkRateLimit(clientIP + ':newsletter', {
     maxRequests: 3,
     windowMs: 60 * 60 * 1000, // 1 hour
   });
@@ -125,6 +133,38 @@ export async function POST(request: NextRequest) {
 
 // DELETE /api/newsletter - Unsubscribe from newsletter
 export async function DELETE(request: NextRequest) {
+  // Optional CSRF protection: require token for state-changing endpoint
+  if (process.env.CSRF_PROTECTION === 'true') {
+    const provided = request.headers.get('x-csrf-token');
+    if (!provided || provided !== process.env.CSRF_PROTECTION_TOKEN) {
+      return NextResponse.json({ error: 'Forbidden - missing or invalid CSRF token' }, { status: 403 });
+    }
+  }
+
+  // Rate limiting: 5 requests per hour per IP
+  const clientIP = getClientIP(request);
+  const rateLimitResult = await checkRateLimit(clientIP + ':newsletter:delete', {
+    maxRequests: 5,
+    windowMs: 60 * 60 * 1000, // 1 hour
+  });
+
+  if (!rateLimitResult.success) {
+    return NextResponse.json(
+      {
+        error: "Too many requests. Please try again later.",
+        resetAt: new Date(rateLimitResult.reset).toISOString()
+      },
+      {
+        status: 429,
+        headers: {
+          'X-RateLimit-Limit': '5',
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+        }
+      }
+    );
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const email = searchParams.get("email");
