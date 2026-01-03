@@ -14,7 +14,8 @@ export type AppEnv = {
 };
 
 function parseBool(v?: string | undefined): boolean {
-  return String(v).toLowerCase() === 'true';
+  if (v === undefined) return false;
+  return v.toLowerCase() === 'true';
 }
 
 /**
@@ -26,10 +27,12 @@ export function validateEnv(opts?: { throwOnMissing?: boolean }): AppEnv {
   const throwOnMissing = opts?.throwOnMissing ?? true;
   const env = process.env;
 
+  const rawRateLimitMode = (env.RATE_LIMIT_MODE || 'INMEM').toUpperCase();
+
   const parsed: AppEnv = {
     NODE_ENV: env.NODE_ENV ?? 'development',
     DATABASE_URL: env.DATABASE_URL,
-    RATE_LIMIT_MODE: (env.RATE_LIMIT_MODE || 'INMEM').toUpperCase() as RateLimitMode,
+    RATE_LIMIT_MODE: (rawRateLimitMode as RateLimitMode),
     UPSTASH_REDIS_REST_URL: env.UPSTASH_REDIS_REST_URL,
     UPSTASH_REDIS_REST_TOKEN: env.UPSTASH_REDIS_REST_TOKEN,
     CSRF_PROTECTION: parseBool(env.CSRF_PROTECTION),
@@ -40,6 +43,11 @@ export function validateEnv(opts?: { throwOnMissing?: boolean }): AppEnv {
   };
 
   const errors: string[] = [];
+
+  // Validate RATE_LIMIT_MODE explicitly to avoid unsafe casting
+  if (!['INMEM', 'UPSTASH'].includes(rawRateLimitMode)) {
+    errors.push(`RATE_LIMIT_MODE has invalid value: ${rawRateLimitMode}. Expected 'INMEM' or 'UPSTASH'.`);
+  }
 
   // Production-only sanity checks
   if (parsed.NODE_ENV === 'production') {
@@ -59,7 +67,7 @@ export function validateEnv(opts?: { throwOnMissing?: boolean }): AppEnv {
   }
 
   if (errors.length && throwOnMissing) {
-    const message = ['Invalid environment configuration:'].concat(errors).join('\n - ');
+    const message = `Invalid environment configuration:\n  - ${errors.join('\n  - ')}`;
     throw new Error(message);
   }
 

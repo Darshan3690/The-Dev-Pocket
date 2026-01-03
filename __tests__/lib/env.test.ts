@@ -32,8 +32,14 @@ describe('env validation', () => {
     delete process.env.DATABASE_URL;
     delete process.env.CLERK_SECRET_KEY;
 
-    expect(() => validateEnv()).toThrow(/DATABASE_URL/);
-    expect(() => validateEnv()).toThrow(/CLERK_SECRET_KEY/);
+    try {
+      validateEnv();
+      fail('validateEnv should throw when DATABASE_URL and CLERK_SECRET_KEY are missing in production');
+    } catch (error) {
+      const message = String(error);
+      expect(message).toMatch(/DATABASE_URL/);
+      expect(message).toMatch(/CLERK_SECRET_KEY/);
+    }
   });
 
   test('returns typed env when everything is provided', () => {
