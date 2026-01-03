@@ -10,15 +10,10 @@ interface RateLimitEntry {
 
 const rateLimitStore = new Map<string, RateLimitEntry>();
 
-// Clean up old entries every 5 minutes
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, entry] of rateLimitStore.entries()) {
-    if (now > entry.resetTime) {
-      rateLimitStore.delete(key);
-    }
-  }
-}, 5 * 60 * 1000);
+// NOTE: Avoid background intervals in serverless environments (module scope).
+// Instead, expired entries are handled lazily inside `checkRateLimit` to prevent
+// memory leaks when functions are short-lived or run in multiple instances.
+// For production use, prefer a Redis-backed rate limiter (e.g., Upstash) with TTLs.
 
 export interface RateLimitConfig {
   maxRequests: number;
@@ -67,32 +62,43 @@ export function checkRateLimit(
     };
   }
 
-  // Increment counter
-  entry.count++;
-  rateLimitStore.set(identifier, entry);
+  // Increment counter (in-memory store is best-effort and is not atomic across
+  // concurrent requests in multi-process deployments). For robust guarantees,
+  // use a centralized store with atomic commands (Redis).
+  const newCount = entry.count + 1;
+  rateLimitStore.set(identifier, { count: newCount, resetTime: entry.resetTime });
 
   return {
     success: true,
-    remaining: config.maxRequests - entry.count,
+    remaining: config.maxRequests - newCount,
     reset: entry.resetTime,
   };
 }
 
 /**
  * Get client IP address from request
+ *
+ * Note: In production behind proxies (Vercel, Cloudflare, etc.) headers like
+ * `cf-connecting-ip`, `x-real-ip`, or `x-forwarded-for` are provided by trusted
+ * proxies. Accepting values from these headers assumes the platform terminates
+ * TLS and sets these headers. Do not trust arbitrary `x-forwarded-for` values
+ * from untrusted sources.
  */
 export function getClientIP(request: Request): string {
-  // Try to get real IP from headers (behind proxy)
-  const forwarded = request.headers.get('x-forwarded-for');
-  if (forwarded) {
-    return forwarded.split(',')[0].trim();
-  }
+  // Prefer platform-specific headers when available
+  const cfIp = request.headers.get('cf-connecting-ip');
+  if (cfIp) return cfIp;
 
   const realIp = request.headers.get('x-real-ip');
-  if (realIp) {
-    return realIp;
+  if (realIp) return realIp;
+
+  const forwarded = request.headers.get('x-forwarded-for');
+  if (forwarded) {
+    // x-forwarded-for can contain a list: client, proxy1, proxy2
+    const parts = forwarded.split(',').map(p => p.trim()).filter(Boolean);
+    if (parts.length > 0) return parts[0];
   }
 
-  // Fallback to localhost
+  // Fallback to localhost as a safe default for local dev
   return '127.0.0.1';
 }

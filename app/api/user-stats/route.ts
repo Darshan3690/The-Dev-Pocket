@@ -89,7 +89,17 @@ export async function GET() {
       });
     }
 
-    return NextResponse.json({ stats: user?.stats });
+    return NextResponse.json(
+      { stats: user?.stats },
+      {
+        status: 200,
+        headers: {
+          'X-RateLimit-Limit': '60',
+          'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+          'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+        },
+      }
+    );
   } catch (error) {
     console.error('Error fetching user stats:', error);
     return NextResponse.json(
