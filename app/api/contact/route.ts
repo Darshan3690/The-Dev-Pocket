@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
   // Rate limiting: 5 requests per hour per IP
   const clientIP = getClientIP(request);
   const rateLimitKey = `${clientIP}:contact`;
-  const rateLimitResult = await checkRateLimit(rateLimitKey, {
+  const rateLimitResult = checkRateLimit(rateLimitKey, {
     maxRequests: 5,
     windowMs: 60 * 60 * 1000, // 1 hour
   });

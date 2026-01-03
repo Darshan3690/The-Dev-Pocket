@@ -13,7 +13,7 @@ if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 export async function POST(request: NextRequest) {
   // Rate limiting: 3 requests per hour per IP
   const clientIP = getClientIP(request);
-  const rateLimitResult = await checkRateLimit(clientIP + ':newsletter', {
+  const rateLimitResult = checkRateLimit(clientIP + ':newsletter', {
     maxRequests: 3,
     windowMs: 60 * 60 * 1000, // 1 hour
   });
