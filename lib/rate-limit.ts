@@ -32,47 +32,65 @@ export interface RateLimitResult {
  * @param config - Rate limit configuration
  * @returns Rate limit result
  */
-export function checkRateLimit(
+// Per-identifier promise queue to serialize in-memory updates and avoid lost increments
+const rateLimitLocks = new Map<string, Promise<void>>();
+
+export async function checkRateLimit(
   identifier: string,
   config: RateLimitConfig
-): RateLimitResult {
-  const now = Date.now();
-  const entry = rateLimitStore.get(identifier);
+): Promise<RateLimitResult> {
+  // Serialize operations for the same identifier to avoid race conditions
+  const prev = rateLimitLocks.get(identifier) || Promise.resolve();
+  let release: () => void;
+  const gate = new Promise<void>(res => (release = res));
+  rateLimitLocks.set(identifier, prev.then(() => gate));
 
-  // No existing entry or expired entry
-  if (!entry || now > entry.resetTime) {
-    rateLimitStore.set(identifier, {
-      count: 1,
-      resetTime: now + config.windowMs,
-    });
+  try {
+    await prev;
+
+    const now = Date.now();
+    const entry = rateLimitStore.get(identifier);
+
+    // No existing entry or expired entry
+    if (!entry || now > entry.resetTime) {
+      rateLimitStore.set(identifier, {
+        count: 1,
+        resetTime: now + config.windowMs,
+      });
+
+      return {
+        success: true,
+        remaining: config.maxRequests - 1,
+        reset: now + config.windowMs,
+      };
+    }
+
+    // Check if limit exceeded
+    if (entry.count >= config.maxRequests) {
+      return {
+        success: false,
+        remaining: 0,
+        reset: entry.resetTime,
+      };
+    }
+
+    // Increment counter
+    const newCount = entry.count + 1;
+    rateLimitStore.set(identifier, { count: newCount, resetTime: entry.resetTime });
 
     return {
       success: true,
-      remaining: config.maxRequests - 1,
-      reset: now + config.windowMs,
-    };
-  }
-
-  // Check if limit exceeded
-  if (entry.count >= config.maxRequests) {
-    return {
-      success: false,
-      remaining: 0,
+      remaining: config.maxRequests - newCount,
       reset: entry.resetTime,
     };
+  } finally {
+    // Release the gate for next waiter
+    release!();
+    // Clean up lock if it points to the gate we just released
+    if (rateLimitLocks.get(identifier) === prev.then(() => gate)) {
+      rateLimitLocks.delete(identifier);
+    }
   }
-
-  // Increment counter (in-memory store is best-effort and is not atomic across
-  // concurrent requests in multi-process deployments). For robust guarantees,
-  // use a centralized store with atomic commands (Redis).
-  const newCount = entry.count + 1;
-  rateLimitStore.set(identifier, { count: newCount, resetTime: entry.resetTime });
-
-  return {
-    success: true,
-    remaining: config.maxRequests - newCount,
-    reset: entry.resetTime,
-  };
 }
 
 /**
@@ -89,14 +107,18 @@ export function getClientIP(request: Request): string {
   const cfIp = request.headers.get('cf-connecting-ip');
   if (cfIp) return cfIp;
 
-  const realIp = request.headers.get('x-real-ip');
-  if (realIp) return realIp;
+  // Only trust proxy headers (x-real-ip, x-forwarded-for) when explicitly enabled
+  const trustProxy = process.env.TRUST_PROXY_HEADERS === 'true';
+  if (trustProxy) {
+    const realIp = request.headers.get('x-real-ip');
+    if (realIp) return realIp;
 
-  const forwarded = request.headers.get('x-forwarded-for');
-  if (forwarded) {
-    // x-forwarded-for can contain a list: client, proxy1, proxy2
-    const parts = forwarded.split(',').map(p => p.trim()).filter(Boolean);
-    if (parts.length > 0) return parts[0];
+    const forwarded = request.headers.get('x-forwarded-for');
+    if (forwarded) {
+      // x-forwarded-for can contain a list: client, proxy1, proxy2
+      const parts = forwarded.split(',').map(p => p.trim()).filter(Boolean);
+      if (parts.length > 0) return parts[0];
+    }
   }
 
   // Fallback to localhost as a safe default for local dev
