@@ -51,6 +51,9 @@ Currently, the endpoints accept POST/DELETE requests without CSRF checks.
 ## 🛠 Suggested Fix
 
 - Add an opt-in guard in `app/api/contact/route.ts` and `app/api/newsletter/route.ts` that when `CSRF_PROTECTION=true` requires header `x-csrf-token` to match `CSRF_PROTECTION_TOKEN`.
+
+**Limitations & recommendations:**
+- The current implementation uses a static token in an environment variable for simplicity and to make it testable from forks without secrets. This is intentionally opt-in and not recommended for high-security production environments. Recommend a follow-up to implement a per-session CSRF token (double-submit cookie or server-side session token) if stronger guarantees are required.
 - Add unit tests that set `CSRF_PROTECTION=true` and ensure missing/invalid token returns 403.
 - Document the change in `bug-reports/BUG-027-csrf-protection.md`.
 

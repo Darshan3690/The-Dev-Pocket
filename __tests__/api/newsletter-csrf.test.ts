@@ -8,7 +8,7 @@ jest.mock('@prisma/client', () => {
     };
   }
   return { PrismaClient: MockPrisma };
-}, { virtual: true });
+});
 
 describe('CSRF protection for /api/newsletter', () => {
   beforeAll(() => {

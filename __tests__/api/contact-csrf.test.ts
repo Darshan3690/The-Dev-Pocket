@@ -4,7 +4,7 @@ jest.mock('@prisma/client', () => {
     contactSubmission = { create: jest.fn().mockResolvedValue({ id: 'abc' }) };
   }
   return { PrismaClient: MockPrisma };
-}, { virtual: true });
+});
 
 describe('POST /api/contact CSRF protection', () => {
   beforeAll(() => {

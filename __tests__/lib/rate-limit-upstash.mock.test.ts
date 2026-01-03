@@ -8,7 +8,7 @@ process.env.UPSTASH_REDIS_REST_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || '
 
 jest.mock('@upstash/redis', () => ({
   Redis: jest.fn().mockImplementation(() => ({})),
-}), { virtual: true });
+});
 
 jest.mock('@upstash/ratelimit', () => {
   const slidingWindow = jest.fn().mockImplementation((_max: number, _win: string) => ({}));

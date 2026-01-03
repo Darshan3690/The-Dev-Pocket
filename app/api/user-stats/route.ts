@@ -19,7 +19,7 @@ export async function GET() {
     }
 
     // Rate limiting: 60 requests per minute per user
-    const rateLimitResult = checkRateLimit(userId + ':stats', {
+    const rateLimitResult = await checkRateLimit(userId + ':stats', {
       maxRequests: 60,
       windowMs: 60 * 1000, // 1 minute
     });
@@ -27,7 +27,7 @@ export async function GET() {
     if (!rateLimitResult.success) {
       return NextResponse.json(
         { 
-          error: "Too many requests. Please slow down.",
+          error: "Too many requests. Please try again later.",
           resetAt: new Date(rateLimitResult.reset).toISOString()
         },
         { 
