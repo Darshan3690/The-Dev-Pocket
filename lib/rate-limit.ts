@@ -32,10 +32,25 @@ export interface RateLimitResult {
  * @param config - Rate limit configuration
  * @returns Rate limit result
  */
-export function checkRateLimit(
+export async function checkRateLimit(
   identifier: string,
   config: RateLimitConfig
-): RateLimitResult {
+): Promise<RateLimitResult> {
+  // Allow selecting a different backend via environment variable (INMEM or UPSTASH)
+  const mode = (process.env.RATE_LIMIT_MODE || 'INMEM').toUpperCase();
+
+  if (mode === 'UPSTASH') {
+    // Delegate to Upstash adapter (dynamic import)
+    try {
+      const { upstashLimit } = await import('./rate-limit-upstash');
+      return await upstashLimit(identifier, config);
+    } catch (err) {
+      console.error('Upstash rate limiter failed or not installed:', err);
+      // Fall back to in-memory behavior if adapter fails
+    }
+  }
+
+  // In-memory fallback (existing behavior)
   const now = Date.now();
   const entry = rateLimitStore.get(identifier);
 
