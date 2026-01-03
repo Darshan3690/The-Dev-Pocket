@@ -64,7 +64,9 @@ export async function checkRateLimit(
   const prev = rateLimitLocks.get(identifier) || Promise.resolve();
   let release: () => void;
   const gate = new Promise<void>(res => (release = res));
-  rateLimitLocks.set(identifier, prev.then(() => gate));
+  // Store the holder promise so we can compare it later for cleanup
+  const holder = prev.then(() => gate);
+  rateLimitLocks.set(identifier, holder);
 
   try {
     await prev;
@@ -116,11 +118,18 @@ export async function checkRateLimit(
   } finally {
     // Release the gate for next waiter
     release!();
-    // Clean up lock if it points to the gate we just released
-    if (rateLimitLocks.get(identifier) === prev.then(() => gate)) {
+    // Clean up lock if it points to the holder we set earlier
+    if (rateLimitLocks.get(identifier) === holder) {
       rateLimitLocks.delete(identifier);
     }
   }
+}
+
+// Test helper to reset in-memory state (used in unit tests)
+export function __testResetRateLimit() {
+  rateLimitStore.clear();
+  rateLimitLocks.clear();
+  lastCleanup = 0;
 }
 
 /**

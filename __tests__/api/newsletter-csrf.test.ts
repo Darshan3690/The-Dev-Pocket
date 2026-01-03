@@ -15,10 +15,13 @@ describe('CSRF protection for /api/newsletter', () => {
     process.env.DATABASE_URL = process.env.DATABASE_URL || 'postgresql://test:test@localhost:5432/testdb';
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     jest.resetModules();
     delete process.env.CSRF_PROTECTION;
     delete process.env.CSRF_PROTECTION_TOKEN;
+    // Reset in-memory rate limiter state so tests are isolated
+    const { __testResetRateLimit } = await import('@/lib/rate-limit');
+    __testResetRateLimit();
   });
 
   it('POST returns 403 when CSRF token missing and protection enabled', async () => {
