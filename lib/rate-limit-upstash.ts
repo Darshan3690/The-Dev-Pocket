@@ -22,17 +22,16 @@ export async function upstashLimit(identifier: string, config: RateLimitConfig):
   const redis = new Redis({ url: process.env.UPSTASH_REDIS_REST_URL!, token: process.env.UPSTASH_REDIS_REST_TOKEN! });
   const rt = new Ratelimit({
     redis,
-    // Use sliding window with maxRequests per windowMs
-    limiter: Ratelimit.slidingWindow(config.maxRequests, `${config.windowMs} ms`),
+    limiter: Ratelimit.slidingWindow(config.maxRequests, `${Math.ceil(config.windowMs / 1000)} s`),
   });
 
-  // Upstash's limit API returns different fields depending on configuration; adapt as needed.
+  // Use Upstash's rate limiter
   const res = await rt.limit(identifier);
 
-  // Fallback mapping
+  // Upstash returns properties like `success`, `limit`, `remaining`, and `resetAfter` (ms)
   const success = !!res.success;
-  const remaining = typeof res.remaining === 'number' ? res.remaining : (res.limit ? res.limit - (res.count ?? 0) : 0);
-  const reset = Date.now() + (res.resetAfter ?? 0);
+  const remaining = typeof res.remaining === 'number' ? res.remaining : (typeof res.limit === 'number' && typeof res.count === 'number' ? Math.max(0, (res.limit - res.count)) : 0);
+  const reset = Date.now() + (typeof res.resetAfter === 'number' ? res.resetAfter : 0);
 
   return {
     success,
