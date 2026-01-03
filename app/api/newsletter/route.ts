@@ -1,11 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { checkRateLimit, getClientIP } from '@/lib/rate-limit';
 
-const prisma = new PrismaClient();
+// Singleton pattern for Prisma Client to avoid connection pool exhaustion
+const globalForPrisma = global as unknown as { prisma: PrismaClient };
+const prisma = globalForPrisma.prisma || new PrismaClient();
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 // POST /api/newsletter - Subscribe to newsletter
 export async function POST(request: NextRequest) {
   try {
+    // Optional CSRF protection via header (opt-in)
+    if (process.env.CSRF_PROTECTION === 'true') {
+      const token = request.headers.get('x-csrf-token');
+      if (!token || token !== process.env.CSRF_PROTECTION_TOKEN) {
+        return NextResponse.json({ error: 'CSRF token missing or invalid' }, { status: 403 });
+      }
+    }
+
     const body = await request.json();
     const { email, name, source } = body;
 
@@ -14,6 +26,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "Valid email is required" },
         { status: 400 }
+      );
+    }
+
+    // Rate limiting: 3 requests per hour per IP
+    const clientIP = getClientIP(request as unknown as Request);
+    const rateLimitResult = await checkRateLimit(`${clientIP}:newsletter`, { maxRequests: 3, windowMs: 60 * 60 * 1000 });
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later.", resetAt: new Date(rateLimitResult.reset).toISOString() },
+        { status: 429, headers: { 'X-RateLimit-Limit': '3', 'X-RateLimit-Remaining': '0', 'X-RateLimit-Reset': rateLimitResult.reset.toString() } }
       );
     }
 
@@ -34,15 +57,21 @@ export async function POST(request: NextRequest) {
           },
         });
 
+        const headers = {
+          'X-RateLimit-Limit': '3',
+          'X-RateLimit-Remaining': String(rateLimitResult.remaining),
+          'X-RateLimit-Reset': String(rateLimitResult.reset),
+        };
+
         return NextResponse.json(
           { message: "Welcome back! You've been resubscribed.", resubscribed: true },
-          { status: 200 }
+          { status: 200, headers }
         );
       }
 
       return NextResponse.json(
         { error: "This email is already subscribed" },
-        { status: 409 }
+        { status: 409, headers: { 'X-RateLimit-Limit': '3', 'X-RateLimit-Remaining': String(rateLimitResult.remaining), 'X-RateLimit-Reset': String(rateLimitResult.reset) } }
       );
     }
 
@@ -60,6 +89,12 @@ export async function POST(request: NextRequest) {
     // TODO: Send welcome email here
     // await sendWelcomeEmail(subscriber.email, subscriber.name);
 
+    const headers = {
+      'X-RateLimit-Limit': '3',
+      'X-RateLimit-Remaining': String(rateLimitResult.remaining),
+      'X-RateLimit-Reset': String(rateLimitResult.reset),
+    };
+
     return NextResponse.json(
       {
         message: "Successfully subscribed to newsletter!",
@@ -68,7 +103,7 @@ export async function POST(request: NextRequest) {
           email: subscriber.email,
         },
       },
-      { status: 201 }
+      { status: 201, headers }
     );
   } catch (error) {
     console.error("Newsletter subscription error:", error);
@@ -82,6 +117,14 @@ export async function POST(request: NextRequest) {
 // DELETE /api/newsletter - Unsubscribe from newsletter
 export async function DELETE(request: NextRequest) {
   try {
+    // Optional CSRF protection via header (opt-in)
+    if (process.env.CSRF_PROTECTION === 'true') {
+      const token = request.headers.get('x-csrf-token');
+      if (!token || token !== process.env.CSRF_PROTECTION_TOKEN) {
+        return NextResponse.json({ error: 'CSRF token missing or invalid' }, { status: 403 });
+      }
+    }
+
     const { searchParams } = new URL(request.url);
     const email = searchParams.get("email");
 
@@ -89,6 +132,17 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         { error: "Email is required" },
         { status: 400 }
+      );
+    }
+
+    // Rate limiting: 3 requests per hour per IP
+    const clientIP = getClientIP(request as unknown as Request);
+    const rateLimitResult = await checkRateLimit(`${clientIP}:newsletter`, { maxRequests: 3, windowMs: 60 * 60 * 1000 });
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later.", resetAt: new Date(rateLimitResult.reset).toISOString() },
+        { status: 429, headers: { 'X-RateLimit-Limit': '3', 'X-RateLimit-Remaining': '0', 'X-RateLimit-Reset': rateLimitResult.reset.toString() } }
       );
     }
 
@@ -120,7 +174,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json(
       { message: "Successfully unsubscribed from newsletter" },
-      { status: 200 }
+      { status: 200, headers: { 'X-RateLimit-Limit': '3', 'X-RateLimit-Remaining': String(rateLimitResult.remaining), 'X-RateLimit-Reset': String(rateLimitResult.reset) } }
     );
   } catch (error) {
     console.error("Newsletter unsubscribe error:", error);
