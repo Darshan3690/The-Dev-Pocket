@@ -32,6 +32,10 @@ export interface RateLimitResult {
  * @param config - Rate limit configuration
  * @returns Rate limit result
  */
+// Per-identifier promise queue to serialize in-memory updates and avoid lost increments
+const rateLimitLocks = new Map<string, Promise<void>>();
+let lastCleanup = 0;
+
 export async function checkRateLimit(
   identifier: string,
   config: RateLimitConfig
@@ -45,49 +49,78 @@ export async function checkRateLimit(
       const { upstashLimit } = await import('./rate-limit-upstash');
       return await upstashLimit(identifier, config);
     } catch (err) {
-      console.error('Upstash rate limiter failed or not installed:', err);
-      // Fall back to in-memory behavior if adapter fails
+      // In production, fail fast and do not silently fall back to the in-memory limiter
+      if (process.env.NODE_ENV === 'production') {
+        console.error('Upstash rate limiter failed in production:', err);
+        throw err;
+      }
+
+      console.warn('Upstash rate limiter failed or not installed; falling back to in-memory limiter for development.', err);
+      // Fall back to in-memory behavior for non-production
     }
   }
 
-  // In-memory fallback (existing behavior)
-  const now = Date.now();
-  const entry = rateLimitStore.get(identifier);
+  // Serialize operations for the same identifier to avoid race conditions
+  const prev = rateLimitLocks.get(identifier) || Promise.resolve();
+  let release: () => void;
+  const gate = new Promise<void>(res => (release = res));
+  rateLimitLocks.set(identifier, prev.then(() => gate));
 
-  // No existing entry or expired entry
-  if (!entry || now > entry.resetTime) {
-    rateLimitStore.set(identifier, {
-      count: 1,
-      resetTime: now + config.windowMs,
-    });
+  try {
+    await prev;
+
+    const now = Date.now();
+
+    // Periodic lazy cleanup to avoid unbounded Map growth (run every 5 minutes)
+    if (now - lastCleanup > 5 * 60 * 1000) {
+      lastCleanup = now;
+      for (const [key, entry] of rateLimitStore.entries()) {
+        if (now > entry.resetTime) rateLimitStore.delete(key);
+      }
+    }
+
+    const entry = rateLimitStore.get(identifier);
+
+    // No existing entry or expired entry
+    if (!entry || now > entry.resetTime) {
+      rateLimitStore.set(identifier, {
+        count: 1,
+        resetTime: now + config.windowMs,
+      });
+
+      return {
+        success: true,
+        remaining: config.maxRequests - 1,
+        reset: now + config.windowMs,
+      };
+    }
+
+    // Check if limit exceeded
+    if (entry.count >= config.maxRequests) {
+      return {
+        success: false,
+        remaining: 0,
+        reset: entry.resetTime,
+      };
+    }
+
+    // Increment counter
+    const newCount = entry.count + 1;
+    rateLimitStore.set(identifier, { count: newCount, resetTime: entry.resetTime });
 
     return {
       success: true,
-      remaining: config.maxRequests - 1,
-      reset: now + config.windowMs,
-    };
-  }
-
-  // Check if limit exceeded
-  if (entry.count >= config.maxRequests) {
-    return {
-      success: false,
-      remaining: 0,
+      remaining: config.maxRequests - newCount,
       reset: entry.resetTime,
     };
+  } finally {
+    // Release the gate for next waiter
+    release!();
+    // Clean up lock if it points to the gate we just released
+    if (rateLimitLocks.get(identifier) === prev.then(() => gate)) {
+      rateLimitLocks.delete(identifier);
+    }
   }
-
-  // Increment counter (in-memory store is best-effort and is not atomic across
-  // concurrent requests in multi-process deployments). For robust guarantees,
-  // use a centralized store with atomic commands (Redis).
-  const newCount = entry.count + 1;
-  rateLimitStore.set(identifier, { count: newCount, resetTime: entry.resetTime });
-
-  return {
-    success: true,
-    remaining: config.maxRequests - newCount,
-    reset: entry.resetTime,
-  };
 }
 
 /**

@@ -1,10 +1,20 @@
 import { checkRateLimit as checkLimitInmem, RateLimitConfig } from '@/lib/rate-limit';
 
 describe('In-memory rate limiter (sanity checks)', () => {
+  const originalRateLimitMode = process.env.RATE_LIMIT_MODE;
+
+  afterAll(() => {
+    if (originalRateLimitMode === undefined) {
+      delete process.env.RATE_LIMIT_MODE;
+    } else {
+      process.env.RATE_LIMIT_MODE = originalRateLimitMode;
+    }
+  });
+
   it('should allow requests up to the limit and then block', async () => {
     process.env.RATE_LIMIT_MODE = 'INMEM';
 
-    const key = `test:${Date.now()}`;
+    const key = `test:${Date.now()}:${Math.random()}`;
     const config: RateLimitConfig = { maxRequests: 3, windowMs: 1000 * 60 };
 
     const r1 = await checkLimitInmem(key, config);
