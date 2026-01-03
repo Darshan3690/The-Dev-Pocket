@@ -55,6 +55,8 @@ model ContactSubmission {
   @@index([email])
   @@index([status])
   @@index([createdAt])
+  @@index([status, createdAt])
+  @@index([email, createdAt])
 }
 
 model NewsletterSubscriber {
@@ -73,4 +75,6 @@ model NewsletterSubscriber {
   @@index([email])
   @@index([status])
   @@index([subscribedAt])
+  @@index([status, subscribedAt])
+  @@index([status, email])
 }
