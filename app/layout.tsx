@@ -39,13 +39,13 @@ export default function RootLayout({
 
   const { announceSuccess } = useAccessibility();
   const { startTimer, endTimer } = usePerformanceMonitoring();
-  const { wrapAsync } = useErrorHandling();
+  const { wrapSync } = useErrorHandling();
 
   useEffect(() => {
     startTimer("layout-initialization");
 
-    const onScroll = wrapAsync(() => setScrolled(window.scrollY > 8), "Scroll Handler");
-    const onHashChange = wrapAsync(() => setHash(window.location.hash), "Hash Change Handler");
+    const onScroll = wrapSync(() => setScrolled(window.scrollY > 8), "Scroll Handler");
+    const onHashChange = wrapSync(() => setHash(window.location.hash), "Hash Change Handler");
 
     onScroll();
     setHash(window.location.hash);
@@ -60,7 +60,7 @@ export default function RootLayout({
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("hashchange", onHashChange);
     };
-  }, [startTimer, endTimer, announceSuccess, wrapAsync]);
+  }, [startTimer, endTimer, announceSuccess, wrapSync]);
 
     const isDashboard = pathname.startsWith("/dashboard");
 

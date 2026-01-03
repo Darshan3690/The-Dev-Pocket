@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useCallback } from 'react';
-import { Sparkles, Target, TrendingUp, Book, Award, ChevronRight, X, Check, ArrowRight, Star, Clock, Users, Download, Share2, Play, Pause, RotateCcw } from 'lucide-react';
+import { Sparkles, Target, TrendingUp, Book, Award, ChevronRight, Check, ArrowRight, Star, Clock, Users } from 'lucide-react';
 
 // Enhanced Types
 interface UserProfile {
@@ -67,17 +67,7 @@ interface GeneratedRoadmap {
   updatedAt: string;
 }
 
-interface LearningPath {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  nodes: Omit<RoadmapNode, 'completed' | 'progress'>[];
-  prerequisites: string[];
-  outcomes: string[];
-  avgSalary: string;
-  jobDemand: 'low' | 'medium' | 'high' | 'very-high';
-}
+ 
 
 const PersonalizedRoadmapGenerator: React.FC = () => {
   const [step, setStep] = useState<'profile' | 'generating' | 'result'>('profile');
@@ -93,38 +83,8 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
   });
   const [generatedRoadmap, setGeneratedRoadmap] = useState<GeneratedRoadmap | null>(null);
   const [selectedNode, setSelectedNode] = useState<RoadmapNode | null>(null);
-
-  // Simulated AI roadmap generation
-  const generateRoadmap = useCallback(() => {
-    setStep('generating');
-    
-    setTimeout(() => {
-      const roadmap: GeneratedRoadmap = {
-        id: `roadmap-${Date.now()}`,
-        title: `${profile.targetRole} Learning Path`,
-        description: `Personalized roadmap tailored for ${profile.currentLevel} developers aiming to become ${profile.targetRole}`,
-        estimatedDuration: profile.timeCommitment === 'full-time' ? '3-4 months' : profile.timeCommitment === 'part-time' ? '6-8 months' : '9-12 months',
-        totalHours: profile.timeCommitment === 'full-time' ? 480 : profile.timeCommitment === 'part-time' ? 720 : 960,
-        tags: [profile.targetRole.toLowerCase(), profile.currentLevel.toLowerCase(), ...profile.interests.map(i => i.toLowerCase())],
-        difficulty: profile.currentLevel.toLowerCase() as 'beginner' | 'intermediate' | 'advanced',
-        completionRate: 0,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        milestones: [
-          'Complete fundamentals',
-          'Build 3 portfolio projects',
-          'Master core technologies',
-          'Prepare for interviews',
-          'Land target role'
-        ],
-        nodes: generateNodes(profile)
-      };
-      
-      setGeneratedRoadmap(roadmap);
-      setStep('result');
-    }, 2500);
-  }, [profile]);
-
+  
+  // Resource factory (kept as-is)
   const createResource = (title: string, type: Resource['type'], url: string, platform: string, level: Resource['level'] = 'beginner', isFree: boolean = true): Resource => ({
     title,
     type,
@@ -138,7 +98,8 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
     description: `High-quality ${type} covering ${title.toLowerCase()}`
   });
 
-  const generateNodes = (prof: UserProfile): RoadmapNode[] => {
+  // Generate nodes (now declared above usage and memoized)
+  const generateNodes = useCallback((prof: UserProfile): RoadmapNode[] => {
     const baseNodes: RoadmapNode[] = [];
     let order = 1;
 
@@ -185,7 +146,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           ],
           resources: [
             createResource('JavaScript.info', 'course', '#', 'javascript.info', 'intermediate', true),
-            createResource('You Don&apos;t Know JS', 'book', '#', 'GitHub', 'intermediate', true)
+            createResource('You Don\&apos;t Know JS', 'book', '#', 'GitHub', 'intermediate', true)
           ]
         },
         {
@@ -244,9 +205,14 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           difficulty: 'beginner',
           order: order++,
           prerequisites: [],
+          completed: false,
+          progress: 0,
+          estimatedHours: 40,
+          skills: ['HTTP', 'REST', 'APIs'],
+          assessments: [],
           resources: [
-            { title: 'HTTP Basics', type: 'article', url: '#', platform: 'MDN' },
-            { title: 'REST API Design', type: 'course', url: '#', platform: 'Udemy' }
+            createResource('HTTP Basics', 'article', '#', 'MDN', 'beginner', true),
+            createResource('REST API Design', 'course', '#', 'Udemy', 'beginner', true)
           ]
         },
         {
@@ -258,9 +224,14 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           difficulty: 'intermediate',
           order: order++,
           prerequisites: ['server-basics'],
+          completed: false,
+          progress: 0,
+          estimatedHours: 70,
+          skills: ['Node.js', 'Express', 'Middleware'],
+          assessments: [],
           resources: [
-            { title: 'Node.js Complete Guide', type: 'course', url: '#', platform: 'Udemy' },
-            { title: 'Express Documentation', type: 'article', url: '#', platform: 'Express' }
+            createResource('Node.js Complete Guide', 'course', '#', 'Udemy', 'intermediate', true),
+            createResource('Express Documentation', 'article', '#', 'Express', 'intermediate', true)
           ]
         },
         {
@@ -272,9 +243,14 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           difficulty: 'intermediate',
           order: order++,
           prerequisites: ['nodejs'],
+          completed: false,
+          progress: 0,
+          estimatedHours: 60,
+          skills: ['SQL', 'PostgreSQL', 'MongoDB'],
+          assessments: [],
           resources: [
-            { title: 'SQL Fundamentals', type: 'course', url: '#', platform: 'Khan Academy' },
-            { title: 'MongoDB University', type: 'course', url: '#', platform: 'MongoDB' }
+            createResource('SQL Fundamentals', 'course', '#', 'Khan Academy', 'intermediate', true),
+            createResource('MongoDB University', 'course', '#', 'MongoDB', 'intermediate', true)
           ]
         },
         {
@@ -286,9 +262,14 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           difficulty: 'advanced',
           order: order++,
           prerequisites: ['databases'],
+          completed: false,
+          progress: 0,
+          estimatedHours: 90,
+          skills: ['API Design', 'Authentication', 'Testing'],
+          assessments: [],
           resources: [
-            { title: 'API Best Practices', type: 'article', url: '#', platform: 'Dev.to' },
-            { title: 'Microservices Tutorial', type: 'video', url: '#', platform: 'YouTube' }
+            createResource('API Best Practices', 'article', '#', 'Dev.to', 'advanced', true),
+            createResource('Microservices Tutorial', 'video', '#', 'YouTube', 'advanced', true)
           ]
         }
       );
@@ -303,9 +284,14 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           difficulty: 'beginner',
           order: order++,
           prerequisites: [],
+          completed: false,
+          progress: 0,
+          estimatedHours: 50,
+          skills: ['Variables', 'Loops', 'Functions'],
+          assessments: [],
           resources: [
-            { title: 'CS50', type: 'course', url: '#', platform: 'Harvard' },
-            { title: 'Algorithms Course', type: 'course', url: '#', platform: 'Coursera' }
+            createResource('CS50', 'course', '#', 'Harvard', 'beginner', true),
+            createResource('Algorithms Course', 'course', '#', 'Coursera', 'beginner', true)
           ]
         },
         {
@@ -317,16 +303,54 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
           difficulty: 'intermediate',
           order: order++,
           prerequisites: ['programming-basics'],
+          completed: false,
+          progress: 0,
+          estimatedHours: 70,
+          skills: ['Advanced Syntax', 'Best Practices'],
+          assessments: [],
           resources: [
-            { title: 'Language Documentation', type: 'article', url: '#', platform: 'Official Docs' },
-            { title: 'Advanced Concepts', type: 'course', url: '#', platform: 'Pluralsight' }
+            createResource('Language Documentation', 'article', '#', 'Official Docs', 'intermediate', true),
+            createResource('Advanced Concepts', 'course', '#', 'Pluralsight', 'intermediate', true)
           ]
         }
       );
     }
 
     return baseNodes;
-  };
+  }, []);
+
+  // Simulated AI roadmap generation
+  const generateRoadmap = useCallback(() => {
+    setStep('generating');
+    
+    setTimeout(() => {
+      const roadmap: GeneratedRoadmap = {
+        id: `roadmap-${Date.now()}`,
+        title: `${profile.targetRole} Learning Path`,
+        description: `Personalized roadmap tailored for ${profile.currentLevel} developers aiming to become ${profile.targetRole}`,
+        estimatedDuration: profile.timeCommitment === 'full-time' ? '3-4 months' : profile.timeCommitment === 'part-time' ? '6-8 months' : '9-12 months',
+        totalHours: profile.timeCommitment === 'full-time' ? 480 : profile.timeCommitment === 'part-time' ? 720 : 960,
+        tags: [profile.targetRole.toLowerCase(), profile.currentLevel.toLowerCase(), ...profile.interests.map(i => i.toLowerCase())],
+        difficulty: profile.currentLevel.toLowerCase() as 'beginner' | 'intermediate' | 'advanced',
+        completionRate: 0,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        milestones: [
+          'Complete fundamentals',
+          'Build 3 portfolio projects',
+          'Master core technologies',
+          'Prepare for interviews',
+          'Land target role'
+        ],
+        nodes: generateNodes(profile)
+      };
+      
+      setGeneratedRoadmap(roadmap);
+      setStep('result');
+    }, 2500);
+  }, [profile, generateNodes]);
+
+  
 
   const handleInterestToggle = (interest: string) => {
     setProfile(prev => ({
@@ -391,7 +415,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
               <div className="flex items-center gap-3 mb-4">
                 <Target className="w-5 h-5 text-cyan-600" />
                 <label className="text-lg font-semibold text-gray-800">
-                  What's your current skill level?
+                  What&apos;s your current skill level?
                 </label>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -422,7 +446,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
               <div className="flex items-center gap-3 mb-4">
                 <Award className="w-5 h-5 text-blue-600" />
                 <label className="text-lg font-semibold text-gray-800">
-                  What's your dream role?
+                  What&apos;s your dream role?
                 </label>
               </div>
               <div className="relative">
@@ -645,7 +669,7 @@ const PersonalizedRoadmapGenerator: React.FC = () => {
 
         {/* Roadmap Nodes */}
         <div className="space-y-4">
-          {generatedRoadmap?.nodes.map((node, idx) => (
+          {generatedRoadmap?.nodes.map((node) => (
             <div
               key={node.id}
               className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden"

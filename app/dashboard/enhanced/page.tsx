@@ -29,6 +29,11 @@ interface Project {
   lastUpdated: string;
 }
 
+type DashboardData = {
+  stats: DashboardStats;
+  projects: Project[];
+};
+
 const EnhancedDashboard: React.FC = () => {
   const { user } = useUser();
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -47,7 +52,7 @@ const EnhancedDashboard: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      const data = await measureAsync('dashboard-data-fetch', async () => {
+      const data = await measureAsync<DashboardData>('dashboard-data-fetch', async () => {
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1000));
         
@@ -175,7 +180,7 @@ const EnhancedDashboard: React.FC = () => {
               <h1 className="text-2xl font-bold text-gray-900">
                 Welcome back, {user?.firstName || 'Developer'}!
               </h1>
-              <p className="text-gray-600">Here's your development progress overview</p>
+              <p className="text-gray-600">Here&apos;s your development progress overview</p>
             </div>
             <div className="flex space-x-3">
               <button

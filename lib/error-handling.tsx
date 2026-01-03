@@ -13,7 +13,7 @@ export interface DevPocketError {
   context?: string;
   timestamp: number;
   stack?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   id: string;
 }
 
@@ -34,7 +34,7 @@ class ErrorHandler {
     message: string,
     level: ErrorLevel = 'error',
     context?: string,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ): DevPocketError {
     const error: DevPocketError = {
       message,
@@ -55,7 +55,7 @@ class ErrorHandler {
     error: Error | DevPocketError | string,
     level: ErrorLevel = 'error',
     context?: string,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ): DevPocketError {
     let devPocketError: DevPocketError;
 
@@ -98,7 +98,7 @@ class ErrorHandler {
     error: Error | DevPocketError | string,
     level: ErrorLevel = 'error',
     context?: string,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ): DevPocketError {
     const devPocketError = this.logError(error, level, context, metadata);
 
@@ -124,6 +124,7 @@ class ErrorHandler {
   /**
    * Wrap async functions with error handling
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wrapAsync<T extends (...args: any[]) => Promise<any>>(
     fn: T,
     context?: string,
@@ -142,6 +143,7 @@ class ErrorHandler {
   /**
    * Wrap sync functions with error handling
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wrapSync<T extends (...args: any[]) => any>(
     fn: T,
     context?: string,
@@ -291,7 +293,7 @@ export function useErrorHandling() {
     error: Error | DevPocketError | string,
     level: ErrorLevel = 'error',
     context?: string,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ) => {
     return errorHandler.logError(error, level, context, metadata);
   }, []);
@@ -300,11 +302,12 @@ export function useErrorHandling() {
     error: Error | DevPocketError | string,
     level: ErrorLevel = 'error',
     context?: string,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ) => {
     return errorHandler.handleError(error, level, context, metadata);
   }, []);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const wrapAsync = useCallback(<T extends (...args: any[]) => Promise<any>>(
     fn: T,
     context?: string,
@@ -313,6 +316,7 @@ export function useErrorHandling() {
     return errorHandler.wrapAsync(fn, context, level);
   }, []);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const wrapSync = useCallback(<T extends (...args: any[]) => any>(
     fn: T,
     context?: string,

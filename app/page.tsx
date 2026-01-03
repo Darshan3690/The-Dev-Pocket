@@ -380,7 +380,7 @@ const App = () => {
       >
         <div className="max-w-7xl mx-auto">
           <h2 id="support-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-400 mb-4">
-            Need Help? We're Here for You
+            Need Help? We&apos;re Here for You
           </h2>
           <p className="text-base sm:text-lg text-gray-600 mb-10">
             Get quick answers or reach out to our support team
@@ -651,13 +651,13 @@ const App = () => {
                <span aria-label="0 dollars">$0</span>
                <span className="text-base font-medium text-gray-500">/mo</span>
              </p>
-             <a
+             <Link
               href="/sign-in?plan=hobby"
               className="w-full inline-block bg-gray-100 text-gray-700 font-bold py-2.5 px-6 rounded-full hover:bg-gray-200 transition-colors focus:outline-none focus:ring-4 focus:ring-gray-300 focus:ring-opacity-50"
               aria-describedby="hobby-plan"
             >
               Get Started
-            </a>
+            </Link>
           </div>
            <div className="border-2 border-sky-500 rounded-2xl p-6 relative shadow-2xl" role="article" aria-labelledby="pro-plan">
              <span className="absolute top-0 -translate-y-1/2 bg-gradient-to-r from-sky-500 to-blue-500 text-white text-xs font-bold px-4 py-1 rounded-full shadow-md">
