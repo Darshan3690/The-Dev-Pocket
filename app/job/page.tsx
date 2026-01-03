@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { showError } from '@/lib/toast';
 import Link from 'next/link';
+import { showError } from '@/lib/toast';
 import { Search, MapPin, Briefcase, DollarSign, Clock, Star, Bookmark, Filter, X, TrendingUp, Users, Building2, ExternalLink } from 'lucide-react';
 
 interface Job {
@@ -139,9 +141,16 @@ export default function JobSearchPage() {
 
   // Load saved jobs from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem('savedJobs');
-    if (saved) {
-      setSavedJobs(new Set(JSON.parse(saved)));
+    try {
+      const saved = localStorage.getItem('savedJobs');
+      if (saved) {
+        setSavedJobs(new Set(JSON.parse(saved)));
+      }
+    } catch (error) {
+      console.error('Failed to parse saved jobs:', error);
+      // Clear corrupted data
+      localStorage.removeItem('savedJobs');
+      setSavedJobs(new Set());
     }
   }, []);
 
@@ -154,7 +163,12 @@ export default function JobSearchPage() {
       newSaved.add(jobId);
     }
     setSavedJobs(newSaved);
-    localStorage.setItem('savedJobs', JSON.stringify(Array.from(newSaved)));
+    try {
+      localStorage.setItem('savedJobs', JSON.stringify(Array.from(newSaved)));
+    } catch (error) {
+      console.error('Failed to save jobs:', error);
+      showError('Failed to save job. Please free up storage or try again.');
+    }
   };
 
   // Filter jobs

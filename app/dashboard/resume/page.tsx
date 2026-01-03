@@ -182,22 +182,40 @@ export default function ResumeBuilderPage() {
       experience,
       skills
     };
-    localStorage.setItem("devPocketResume", JSON.stringify(resumeData));
-    alert("Resume saved successfully!");
+
+    try {
+    try {
+      localStorage.setItem("devPocketResume", JSON.stringify(resumeData));
+      alert("Resume saved successfully!");
+    } catch (error) {
+      console.error("Failed to save resume:", error);
+      alert("Failed to save resume. Please free up storage or try again.");
+    }
+    } catch (error) {
+      console.error('Failed to save resume:', error);
+      alert('Failed to save resume. Please free up storage or try again.');
+    }
   };
 
   // Load resume from localStorage
   const loadResume = () => {
-    const savedResume = localStorage.getItem("devPocketResume");
-    if (savedResume) {
-      const resumeData = JSON.parse(savedResume);
-      setPersonalInfo(resumeData.personalInfo);
-      setEducation(resumeData.education);
-      setExperience(resumeData.experience);
-      setSkills(resumeData.skills);
-      alert("Resume loaded successfully!");
-    } else {
-      alert("No saved resume found.");
+    try {
+      const savedResume = localStorage.getItem("devPocketResume");
+      if (savedResume) {
+        const resumeData = JSON.parse(savedResume);
+        setPersonalInfo(resumeData.personalInfo);
+        setEducation(resumeData.education);
+        setExperience(resumeData.experience);
+        setSkills(resumeData.skills);
+        alert("Resume loaded successfully!");
+      } else {
+        alert("No saved resume found.");
+      }
+    } catch (error) {
+      console.error('Failed to parse saved resume:', error);
+      // Clear corrupted data
+      localStorage.removeItem("devPocketResume");
+      alert("Resume data was corrupted and has been reset. Please create a new resume.");
     }
   };
 
