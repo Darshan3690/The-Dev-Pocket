@@ -56,6 +56,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Optional CSRF protection via header (opt-in)
+    if (process.env.CSRF_PROTECTION === 'true') {
+      const token = request.headers.get('x-csrf-token');
+      if (!token || token !== process.env.CSRF_PROTECTION_TOKEN) {
+        return NextResponse.json({ error: 'CSRF token missing or invalid' }, { status: 403 });
+      }
+    }
+
+    // Rate limiting: 5 requests per hour per IP
+    const clientIP = getClientIP(request as unknown as Request);
+    const rateLimitResult = await checkRateLimit(`${clientIP}:contact`, { maxRequests: 5, windowMs: 60 * 60 * 1000 });
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later.", resetAt: new Date(rateLimitResult.reset).toISOString() },
+        { status: 429, headers: { 'X-RateLimit-Limit': '5', 'X-RateLimit-Remaining': '0', 'X-RateLimit-Reset': rateLimitResult.reset.toString() } }
+      );
+    }
+
     // Save to database
     const contactSubmission = await prisma.contactSubmission.create({
       data: {
