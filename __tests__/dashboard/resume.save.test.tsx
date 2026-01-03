@@ -24,21 +24,20 @@ function useResumeSave() {
 describe('saveResume', () => {
   it('handles localStorage errors gracefully', () => {
     // mock localStorage.setItem to throw
-    const originalStorage = window.localStorage;
-    // Replace storage with a thrower implementation
-    const thrower = jest.fn(() => { throw new Error('Quota exceeded'); });
-    Object.defineProperty(window, 'localStorage', { value: { setItem: thrower }, configurable: true });
+    const original = window.localStorage.setItem;
+    window.localStorage.setItem = () => {
+      throw new Error('Quota exceeded');
+    };
 
     const { result } = renderHook(() => useResumeSave());
-    try {    // confirm the mocked setItem actually throws as expected
-    expect(() => window.localStorage.setItem('x', 'y')).toThrow('Quota exceeded');
+    try {
       const out = result.current.saveResume();
 
       expect(out.ok).toBe(false);
       expect(out.error).toBeDefined();
     } finally {
       // restore
-      Object.defineProperty(window, 'localStorage', { value: originalStorage, configurable: true });
+      window.localStorage.setItem = original;
     }
   });
 });

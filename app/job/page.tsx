@@ -141,9 +141,16 @@ export default function JobSearchPage() {
 
   // Load saved jobs from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem('savedJobs');
-    if (saved) {
-      setSavedJobs(new Set(JSON.parse(saved)));
+    try {
+      const saved = localStorage.getItem('savedJobs');
+      if (saved) {
+        setSavedJobs(new Set(JSON.parse(saved)));
+      }
+    } catch (error) {
+      console.error('Failed to parse saved jobs:', error);
+      // Clear corrupted data
+      localStorage.removeItem('savedJobs');
+      setSavedJobs(new Set());
     }
   }, []);
 
