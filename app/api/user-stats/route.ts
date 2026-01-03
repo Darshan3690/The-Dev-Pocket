@@ -1,8 +1,14 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { PrismaClient } from '@prisma/client';
+import { checkRateLimit } from '@/lib/rate-limit';
 
-const prisma = new PrismaClient();
+// Singleton pattern for Prisma Client to avoid connection pool exhaustion
+const globalForPrisma = global as unknown as { prisma: PrismaClient };
+
+const prisma = globalForPrisma.prisma || new PrismaClient();
+
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 export async function GET() {
   try {
@@ -10,6 +16,29 @@ export async function GET() {
 
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Rate limiting: 60 requests per minute per user
+    const rateLimitResult = checkRateLimit(userId + ':stats', {
+      maxRequests: 60,
+      windowMs: 60 * 1000, // 1 minute
+    });
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { 
+          error: "Too many requests. Please slow down.",
+          resetAt: new Date(rateLimitResult.reset).toISOString()
+        },
+        { 
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': '60',
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+          }
+        }
+      );
     }
 
     // Try to find existing user stats

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
 
 // Singleton pattern for Prisma Client to avoid connection pool exhaustion
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
@@ -9,6 +10,30 @@ const prisma = globalForPrisma.prisma || new PrismaClient();
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 export async function POST(request: NextRequest) {
+  // Rate limiting: 5 requests per hour per IP
+  const clientIP = getClientIP(request);
+  const rateLimitResult = checkRateLimit(clientIP, {
+    maxRequests: 5,
+    windowMs: 60 * 60 * 1000, // 1 hour
+  });
+
+  if (!rateLimitResult.success) {
+    return NextResponse.json(
+      { 
+        error: "Too many requests. Please try again later.",
+        resetAt: new Date(rateLimitResult.reset).toISOString()
+      },
+      { 
+        status: 429,
+        headers: {
+          'X-RateLimit-Limit': '5',
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+        }
+      }
+    );
+  }
+
   try {
     const body = await request.json();
     const { name, email, subject, message } = body;
