@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
 
 // Singleton pattern for Prisma Client to avoid connection pool exhaustion
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
@@ -9,6 +10,31 @@ const prisma = globalForPrisma.prisma || new PrismaClient();
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 export async function POST(request: NextRequest) {
+  // Rate limiting: 5 requests per hour per IP
+  const clientIP = getClientIP(request);
+  const rateLimitKey = `${clientIP}:contact`;
+  const rateLimitResult = checkRateLimit(rateLimitKey, {
+    maxRequests: 5,
+    windowMs: 60 * 60 * 1000, // 1 hour
+  });
+
+  if (!rateLimitResult.success) {
+    return NextResponse.json(
+      { 
+        error: "Too many requests. Please try again later.",
+        resetAt: new Date(rateLimitResult.reset).toISOString()
+      },
+      { 
+        status: 429,
+        headers: {
+          'X-RateLimit-Limit': '5',
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+        }
+      }
+    );
+  }
+
   try {
     const body = await request.json();
     const { name, email, subject, message } = body;
@@ -50,7 +76,14 @@ export async function POST(request: NextRequest) {
         message: "Thank you for contacting us! We'll get back to you soon.",
         id: contactSubmission.id,
       },
-      { status: 200 }
+      {
+        status: 200,
+        headers: {
+          'X-RateLimit-Limit': '5',
+          'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+          'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+        },
+      }
     );
   } catch (error) {
     console.error("Contact form submission error:", error);
