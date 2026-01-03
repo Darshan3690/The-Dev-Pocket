@@ -12,7 +12,8 @@ if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 export async function POST(request: NextRequest) {
   // Rate limiting: 5 requests per hour per IP
   const clientIP = getClientIP(request);
-  const rateLimitResult = checkRateLimit(clientIP, {
+  const rateLimitKey = `${clientIP}:contact`;
+  const rateLimitResult = checkRateLimit(rateLimitKey, {
     maxRequests: 5,
     windowMs: 60 * 60 * 1000, // 1 hour
   });
@@ -75,7 +76,14 @@ export async function POST(request: NextRequest) {
         message: "Thank you for contacting us! We'll get back to you soon.",
         id: contactSubmission.id,
       },
-      { status: 200 }
+      {
+        status: 200,
+        headers: {
+          'X-RateLimit-Limit': '5',
+          'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+          'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+        },
+      }
     );
   } catch (error) {
     console.error("Contact form submission error:", error);

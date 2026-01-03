@@ -207,8 +207,6 @@ export default function ResumeBuilderPage() {
       alert("Resume data was corrupted and has been reset. Please create a new resume.");
     }
   };
-    }
-  };
 
   // Export as JSON
   const exportAsJSON = () => {

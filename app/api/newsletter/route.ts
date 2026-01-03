@@ -66,7 +66,14 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json(
           { message: "Welcome back! You've been resubscribed.", resubscribed: true },
-          { status: 200 }
+          {
+            status: 200,
+            headers: {
+              'X-RateLimit-Limit': '3',
+              'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+              'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+            },
+          }
         );
       }
 
@@ -98,7 +105,14 @@ export async function POST(request: NextRequest) {
           email: subscriber.email,
         },
       },
-      { status: 201 }
+      {
+        status: 201,
+        headers: {
+          'X-RateLimit-Limit': '3',
+          'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+          'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+        },
+      }
     );
   } catch (error) {
     console.error("Newsletter subscription error:", error);
