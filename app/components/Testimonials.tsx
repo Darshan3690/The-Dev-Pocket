@@ -48,10 +48,10 @@ function Testimonials() {
 
         {/* 🔹 Content */}
         <div className="relative max-w-6xl mx-auto text-center z-10">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
             Loved by Developers Worldwide
           </h2>
-          <p className="text-lg text-gray-600 mb-12">
+          <p className="text-lg text-gray-300 mb-12">
             Here’s how Dev Pocket is transforming careers across the globe.
           </p>
 
