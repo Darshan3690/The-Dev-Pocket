@@ -184,16 +184,13 @@ export default function ResumeBuilderPage() {
     };
 
     try {
-    try {
       localStorage.setItem("devPocketResume", JSON.stringify(resumeData));
-      alert("Resume saved successfully!");
-    } catch (error) {
+      // Return structured result for easier testing and integration
+      return { ok: true };
+    } catch (error: any) {
       console.error("Failed to save resume:", error);
-      alert("Failed to save resume. Please free up storage or try again.");
-    }
-    } catch (error) {
-      console.error('Failed to save resume:', error);
-      alert('Failed to save resume. Please free up storage or try again.');
+      // Return result so callers/tests can assert failure without depending on alerts
+      return { ok: false, error };
     }
   };
 
