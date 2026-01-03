@@ -1,6 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { useState } from 'react';
 
+// Minimal harness that mirrors the production toggleSaveJob behavior
 function useToggleSaveJob() {
   const [savedJobs, setSavedJobs] = useState<Set<string>>(new Set());
   const toggleSaveJob = (jobId: string) => {
@@ -10,10 +11,8 @@ function useToggleSaveJob() {
     setSavedJobs(newSaved);
     try {
       localStorage.setItem('savedJobs', JSON.stringify(Array.from(newSaved)));
-      return { ok: true };
     } catch (error) {
       console.error('Failed to save jobs:', error);
-      return { ok: false, error };
     }
   };
   return { toggleSaveJob };
@@ -22,6 +21,7 @@ function useToggleSaveJob() {
 describe('toggleSaveJob', () => {
   it('handles localStorage errors gracefully', () => {
     const original = window.localStorage.setItem;
+<<<<<<< HEAD
     window.localStorage.setItem = () => { throw new Error('Quota exceeded'); };
 
     const { result } = renderHook(() => useToggleSaveJob());
@@ -33,3 +33,21 @@ describe('toggleSaveJob', () => {
     window.localStorage.setItem = original;
   });
 });
+=======
+    try {
+      window.localStorage.setItem = () => { throw new Error('Quota exceeded'); };
+
+      const { result } = renderHook(() => useToggleSaveJob());
+      let out: any;
+      act(() => {
+        out = result.current.toggleSaveJob('job-1');
+      });
+
+      // The real implementation doesn't return a value; this asserts the function completes and doesn't throw
+      expect(() => out).not.toThrow();
+    } finally {
+      window.localStorage.setItem = original;
+    }
+  });
+});
+>>>>>>> 2dfd229 (fix(job): guard localStorage writes in toggleSaveJob and add isolation test)

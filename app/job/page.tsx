@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { showError } from '@/lib/toast';
 import Link from 'next/link';
 import { showError } from '@/lib/toast';
 import { Search, MapPin, Briefcase, DollarSign, Clock, Star, Bookmark, Filter, X, TrendingUp, Users, Building2, ExternalLink } from 'lucide-react';
@@ -159,8 +160,7 @@ export default function JobSearchPage() {
       localStorage.setItem('savedJobs', JSON.stringify(Array.from(newSaved)));
     } catch (error) {
       console.error('Failed to save jobs:', error);
-      // Show a non-blocking error to the user
-      try { showError('Failed to save job. Please free up storage or try again.'); } catch (e) { /* ignore */ }
+      showError('Failed to save job. Please free up storage or try again.');
     }
   };
 
