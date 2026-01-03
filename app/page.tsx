@@ -151,7 +151,7 @@ const App = () => {
   }, []);
 
   return (
-    <main>
+    <main className="pt-24">
       <section
         ref={heroRef}
         className={`transition-all duration-700 ease-out max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${
@@ -302,53 +302,71 @@ const App = () => {
         ref={howItWorksRef}
         id="how-it-works"
         aria-labelledby="how-it-works-heading"
-        className={`py-12 sm:py-16 text-center transition-all duration-700 ease-out ${
+        className={`py-10 sm:py-14 text-center transition-all duration-700 ease-out ${
           howItWorksVisible
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-10"
         }`}
       >
-        <h2 id="how-it-works-heading" className={`text-3xl sm:text-4xl font-bold mb-4 ${
-    isDark ? "text-white" : "text-gray-900"
-  }`}>
-          Get Started in 3 Simple Steps
+        <h2
+          id="how-it-works-heading"
+          className={`text-3xl sm:text-4xl font-bold mb-3 ${
+            isDark ? "text-black" : "text-white"
+          }`}
+        >
+          Get Started in{" "}
+          <span className="text-sky-500">3 Simple Steps</span>
         </h2>
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-          <div className="relative">
-            <div className="w-12 h-12 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-xl font-bold text-sky-600 mx-auto mb-3"
-              aria-label="Step 1"
-            >
+
+        <p className="text-gray-400 mb-10">
+          From signup to growth — your journey starts here.
+        </p>
+
+        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-10 max-w-8xl mx-auto">
+          {/* connector line */}
+          <div className="hidden md:block absolute top-6 left-1/2 w-[70%] h-px bg-sky-500/20 -translate-x-1/2" />
+
+          {/* Step 1 */}
+          <div className="group relative text-center">
+            <div className="w-12 h-12 bg-sky-500/10 border border-sky-500 rounded-full flex items-center justify-center text-lg font-bold text-sky-400 mx-auto mb-3 group-hover:scale-105 transition">
               1
             </div>
-            <h3 className="text-xl font-bold mb-2">Sign Up</h3>
-            <p className="text-gray-500">
+            <h3 className="text-lg font-semibold text-white mb-2">
+              Sign Up
+            </h3>
+            <p className="text-sm text-gray-400 max-w-xs mx-auto">
               Create your free account and tell us about your career goals.
             </p>
           </div>
-          <div className="relative">
-            <div className="w-12 h-12 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-xl font-bold text-sky-600 mx-auto mb-3"
-               aria-label="Step 2"
-             >
-               2
-             </div>
-             <h3 className="text-xl font-bold mb-2">Get Your Roadmap</h3>
-             <p className="text-gray-500">
-               Our AI analyzes your profile and generates a personalized plan.
-             </p>
-           </div>
-           <div className="relative">
-             <div className="w-12 h-12 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-xl font-bold text-sky-600 mx-auto mb-3"
-               aria-label="Step 3"
-             >
-               3
-             </div>
-             <h3 className="text-xl font-bold mb-2">Start Growing</h3>
-             <p className="text-gray-500">
-               Follow your plan, track progress, and land your dream job.
-             </p>
-           </div>
-         </div>
-       </section>
+
+          {/* Step 2 */}
+          <div className="group relative text-center">
+            <div className="w-12 h-12 bg-sky-500/10 border border-sky-500 rounded-full flex items-center justify-center text-lg font-bold text-sky-400 mx-auto mb-3 group-hover:scale-105 transition">
+              2
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-2">
+              Get Your Roadmap
+            </h3>
+            <p className="text-sm text-gray-400 max-w-xs mx-auto">
+              Our AI analyzes your profile and generates a personalized plan.
+            </p>
+          </div>
+
+          {/* Step 3 */}
+          <div className="group relative text-center">
+            <div className="w-12 h-12 bg-sky-500/10 border border-sky-500 rounded-full flex items-center justify-center text-lg font-bold text-sky-400 mx-auto mb-3 group-hover:scale-105 transition">
+              3
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-2">
+              Start Growing
+            </h3>
+            <p className="text-sm text-gray-400 max-w-xs mx-auto">
+              Follow your plan, track progress, and land your dream job.
+            </p>
+          </div>
+        </div>
+      </section>
+
         <FeaturesSectionWithHoverEffects />
       
       <HowItWorks />
@@ -568,20 +586,26 @@ const App = () => {
         ref={pricingRef}
         id="pricing"
         aria-labelledby="pricing-heading"
-        className={`py-12 sm:py-16 text-center transition-all duration-700 ease-out ${
+        className={`py-12 sm:py-10 text-center transition-all duration-700 ease-out ${
           pricingVisible
             ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
-         <h2 id="pricing-heading" className={`text-3xl sm:text-4xl font-bold mb-4 ${
-    isDark ? "text-white" : "text-gray-900"
-  }`}>
-           Simple, Transparent Pricing
-         </h2>
-         <p className="text-base sm:text-lg text-gray-600 mb-6">
+         <h2
+            id="pricing-heading"
+            className="text-4xl sm:text-5xl font-extrabold mb-4 text-white"
+          >
+            <span className="relative">
+              Simple
+              <span className="absolute left-0 -bottom-1 w-full h-1 bg-sky-500/30 rounded-full"></span>
+            </span>
+            ,{" "}
+            <span className="text-sky-500">Transparent</span> Pricing
+          </h2>
+         <p className="text-base sm:text-lg text-gray-400 mb-8">
            Choose the plan that&apos;s right for you.
          </p>
-         <div className="flex justify-center items-center space-x-3 mb-8">
+         <div className="flex justify-center items-center space-x-4 mb-10">
            <span
             className={`font-medium ${
               !isYearly ? "text-sky-600" : "text-gray-500"
@@ -617,7 +641,7 @@ const App = () => {
             </span>
           </span>
         </div>
-         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
            <div className="border border-gray-200 rounded-2xl p-6" role="article" aria-labelledby="hobby-plan">
              <h3 id="hobby-plan" className="text-xl font-bold mb-2">Hobby</h3>
              <p className="text-gray-500 mb-6">
@@ -636,9 +660,9 @@ const App = () => {
             </Link>
           </div>
            <div className="border-2 border-sky-500 rounded-2xl p-6 relative shadow-2xl" role="article" aria-labelledby="pro-plan">
-             <span className="absolute top-0 -translate-y-1/2 bg-sky-500 text-white text-xs font-bold px-3 py-1 rounded-full" aria-label="Most popular plan">
-               MOST POPULAR
-             </span>
+             <span className="absolute top-0 -translate-y-1/2 bg-gradient-to-r from-sky-500 to-blue-500 text-white text-xs font-bold px-4 py-1 rounded-full shadow-md">
+              MOST POPULAR
+            </span>
              <h3 id="pro-plan" className="text-xl font-bold mb-2">Pro</h3>
              <p className="text-gray-500 mb-6">
                For professionals ready to accelerate.
@@ -667,7 +691,7 @@ const App = () => {
            <div className="border border-gray-200 rounded-2xl p-6" role="article" aria-labelledby="teams-plan">
              <h3 id="teams-plan" className="text-xl font-bold mb-2">Teams</h3>
              <p className="text-gray-500 mb-6">For organizations and groups.</p>
-             <p className="text-4xl font-extrabold mb-5" aria-label="Custom pricing">Custom</p>
+             <p className="text-3xl font-extrabold mb-5" aria-label="Custom pricing">Custom</p>
              <a
               href="https://bento.me/darshan3690"
               className="w-full inline-block bg-gray-100 text-gray-700 font-bold py-2.5 px-6 rounded-full hover:bg-gray-200 transition-colors focus:outline-none focus:ring-4 focus:ring-gray-300 focus:ring-opacity-50"
@@ -678,25 +702,20 @@ const App = () => {
           </div>
         </div>
       </section>
-      <div className="text-center text-gray-600 mt-10">
-        <p>📅 Today’s Date: {currentDate}</p>
-      </div>
+      <div className="py-15 flex flex-col items-center gap-4">
+        <p className="text-xs text-gray-400 italic tracking-wide">
+          Prices last updated on {currentDate}
+        </p>
 
-      <section
-        ref={ctaRef}
-        className={`text-center py-20 transition-all duration-700 ease-out ${
-          ctaVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        }`}
-      >
         <Button
           asChild
           className="bg-sky-600 text-white px-8 py-4 rounded-full hover:bg-sky-700 transition text-lg sm:text-xl whitespace-nowrap"
         >
           <Link href="#demo">
-            Schedule My Free <span className="hidden sm:inline">Discovery</span> Demo Now
+            Schedule My Free Demo Now
           </Link>
         </Button>
-      </section>
+      </div>
     </main>
   );
 };
