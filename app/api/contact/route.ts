@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { checkRateLimit, getClientIP } from '@/lib/rate-limit';
 
 // Singleton pattern for Prisma Client to avoid connection pool exhaustion
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
@@ -30,6 +31,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Optional CSRF protection via header (opt-in)
+    if (process.env.CSRF_PROTECTION === 'true') {
+      const token = request.headers.get('x-csrf-token');
+      if (!token || token !== process.env.CSRF_PROTECTION_TOKEN) {
+        return NextResponse.json({ error: 'CSRF token missing or invalid' }, { status: 403 });
+      }
+    }
+
+    // Rate limiting: 5 requests per hour per IP
+    const clientIP = getClientIP(request as unknown as Request);
+    const rateLimitResult = await checkRateLimit(`${clientIP}:contact`, { maxRequests: 5, windowMs: 60 * 60 * 1000 });
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later.", resetAt: new Date(rateLimitResult.reset).toISOString() },
+        { status: 429, headers: { 'X-RateLimit-Limit': '5', 'X-RateLimit-Remaining': '0', 'X-RateLimit-Reset': rateLimitResult.reset.toString() } }
+      );
+    }
+
     // Save to database
     const contactSubmission = await prisma.contactSubmission.create({
       data: {
@@ -50,7 +69,7 @@ export async function POST(request: NextRequest) {
         message: "Thank you for contacting us! We'll get back to you soon.",
         id: contactSubmission.id,
       },
-      { status: 200 }
+      { status: 200, headers: { 'X-RateLimit-Limit': '5', 'X-RateLimit-Remaining': rateLimitResult.remaining.toString(), 'X-RateLimit-Reset': rateLimitResult.reset.toString() } }
     );
   } catch (error) {
     console.error("Contact form submission error:", error);
