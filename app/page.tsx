@@ -302,53 +302,71 @@ const App = () => {
         ref={howItWorksRef}
         id="how-it-works"
         aria-labelledby="how-it-works-heading"
-        className={`py-12 sm:py-16 text-center transition-all duration-700 ease-out ${
+        className={`py-10 sm:py-14 text-center transition-all duration-700 ease-out ${
           howItWorksVisible
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-10"
         }`}
       >
-        <h2 id="how-it-works-heading" className={`text-3xl sm:text-4xl font-bold mb-4 ${
-    isDark ? "text-white" : "text-gray-900"
-  }`}>
-          Get Started in 3 Simple Steps
+        <h2
+          id="how-it-works-heading"
+          className={`text-3xl sm:text-4xl font-bold mb-3 ${
+            isDark ? "text-black" : "text-white"
+          }`}
+        >
+          Get Started in{" "}
+          <span className="text-sky-500">3 Simple Steps</span>
         </h2>
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-          <div className="relative">
-            <div className="w-12 h-12 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-xl font-bold text-sky-600 mx-auto mb-3"
-              aria-label="Step 1"
-            >
+
+        <p className="text-gray-400 mb-10">
+          From signup to growth — your journey starts here.
+        </p>
+
+        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-10 max-w-8xl mx-auto">
+          {/* connector line */}
+          <div className="hidden md:block absolute top-6 left-1/2 w-[70%] h-px bg-sky-500/20 -translate-x-1/2" />
+
+          {/* Step 1 */}
+          <div className="group relative text-center">
+            <div className="w-12 h-12 bg-sky-500/10 border border-sky-500 rounded-full flex items-center justify-center text-lg font-bold text-sky-400 mx-auto mb-3 group-hover:scale-105 transition">
               1
             </div>
-            <h3 className="text-xl font-bold mb-2">Sign Up</h3>
-            <p className="text-gray-500">
+            <h3 className="text-lg font-semibold text-white mb-2">
+              Sign Up
+            </h3>
+            <p className="text-sm text-gray-400 max-w-xs mx-auto">
               Create your free account and tell us about your career goals.
             </p>
           </div>
-          <div className="relative">
-            <div className="w-12 h-12 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-xl font-bold text-sky-600 mx-auto mb-3"
-               aria-label="Step 2"
-             >
-               2
-             </div>
-             <h3 className="text-xl font-bold mb-2">Get Your Roadmap</h3>
-             <p className="text-gray-500">
-               Our AI analyzes your profile and generates a personalized plan.
-             </p>
-           </div>
-           <div className="relative">
-             <div className="w-12 h-12 bg-white border-2 border-sky-200 rounded-full flex items-center justify-center text-xl font-bold text-sky-600 mx-auto mb-3"
-               aria-label="Step 3"
-             >
-               3
-             </div>
-             <h3 className="text-xl font-bold mb-2">Start Growing</h3>
-             <p className="text-gray-500">
-               Follow your plan, track progress, and land your dream job.
-             </p>
-           </div>
-         </div>
-       </section>
+
+          {/* Step 2 */}
+          <div className="group relative text-center">
+            <div className="w-12 h-12 bg-sky-500/10 border border-sky-500 rounded-full flex items-center justify-center text-lg font-bold text-sky-400 mx-auto mb-3 group-hover:scale-105 transition">
+              2
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-2">
+              Get Your Roadmap
+            </h3>
+            <p className="text-sm text-gray-400 max-w-xs mx-auto">
+              Our AI analyzes your profile and generates a personalized plan.
+            </p>
+          </div>
+
+          {/* Step 3 */}
+          <div className="group relative text-center">
+            <div className="w-12 h-12 bg-sky-500/10 border border-sky-500 rounded-full flex items-center justify-center text-lg font-bold text-sky-400 mx-auto mb-3 group-hover:scale-105 transition">
+              3
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-2">
+              Start Growing
+            </h3>
+            <p className="text-sm text-gray-400 max-w-xs mx-auto">
+              Follow your plan, track progress, and land your dream job.
+            </p>
+          </div>
+        </div>
+      </section>
+
         <FeaturesSectionWithHoverEffects />
       
       <HowItWorks />
