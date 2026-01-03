@@ -1,4 +1,20 @@
+// Mock Prisma globally for tests in this file to avoid real DB connections
+jest.mock('@prisma/client', () => {
+  class MockPrisma {
+    newsletterSubscriber = {
+      findUnique: jest.fn().mockResolvedValue(null),
+      create: jest.fn().mockResolvedValue({ id: '123', email: 'test@example.com' }),
+      update: jest.fn().mockResolvedValue({}),
+    };
+  }
+  return { PrismaClient: MockPrisma };
+}, { virtual: true });
+
 describe('CSRF protection for /api/newsletter', () => {
+  beforeAll(() => {
+    process.env.DATABASE_URL = process.env.DATABASE_URL || 'postgresql://test:test@localhost:5432/testdb';
+  });
+
   afterEach(() => {
     jest.resetModules();
     delete process.env.CSRF_PROTECTION;
@@ -25,6 +41,9 @@ describe('CSRF protection for /api/newsletter', () => {
     process.env.CSRF_PROTECTION = 'true';
     process.env.CSRF_PROTECTION_TOKEN = 'token123';
 
+    // Ensure module cache is reset so mocks apply to imports
+    jest.resetModules();
+
     // Mock Prisma to avoid DB calls
     jest.doMock('@prisma/client', () => {
       class MockPrisma {
@@ -49,6 +68,9 @@ describe('CSRF protection for /api/newsletter', () => {
   it('allows POST/DELETE when correct token provided', async () => {
     process.env.CSRF_PROTECTION = 'true';
     process.env.CSRF_PROTECTION_TOKEN = 'token123';
+
+    // Ensure module cache is reset so mocks apply to imports
+    jest.resetModules();
 
     // Mock Prisma behavior
     jest.doMock('@prisma/client', () => {

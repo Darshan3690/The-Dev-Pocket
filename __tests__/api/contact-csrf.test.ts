@@ -1,4 +1,16 @@
+// Mock Prisma globally for tests in this file to avoid real DB connections
+jest.mock('@prisma/client', () => {
+  class MockPrisma {
+    contactSubmission = { create: jest.fn().mockResolvedValue({ id: 'abc' }) };
+  }
+  return { PrismaClient: MockPrisma };
+}, { virtual: true });
+
 describe('POST /api/contact CSRF protection', () => {
+  beforeAll(() => {
+    process.env.DATABASE_URL = process.env.DATABASE_URL || 'postgresql://test:test@localhost:5432/testdb';
+  });
+
   afterEach(() => {
     jest.resetModules();
     delete process.env.CSRF_PROTECTION;
@@ -26,6 +38,9 @@ describe('POST /api/contact CSRF protection', () => {
   it('allows request when CSRF_PROTECTION enabled and correct token present', async () => {
     process.env.CSRF_PROTECTION = 'true';
     process.env.CSRF_PROTECTION_TOKEN = 'supersecret';
+
+    // Ensure module cache is reset so mocks apply to imports
+    jest.resetModules();
 
     // Mock Prisma to avoid DB calls
     jest.doMock('@prisma/client', () => {
