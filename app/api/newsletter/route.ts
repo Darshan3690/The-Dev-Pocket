@@ -125,6 +125,30 @@ export async function POST(request: NextRequest) {
 
 // DELETE /api/newsletter - Unsubscribe from newsletter
 export async function DELETE(request: NextRequest) {
+  // Rate limiting: 5 requests per hour per IP
+  const clientIP = getClientIP(request);
+  const rateLimitResult = await checkRateLimit(clientIP + ':newsletter:delete', {
+    maxRequests: 5,
+    windowMs: 60 * 60 * 1000, // 1 hour
+  });
+
+  if (!rateLimitResult.success) {
+    return NextResponse.json(
+      {
+        error: "Too many requests. Please try again later.",
+        resetAt: new Date(rateLimitResult.reset).toISOString()
+      },
+      {
+        status: 429,
+        headers: {
+          'X-RateLimit-Limit': '5',
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+        }
+      }
+    );
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const email = searchParams.get("email");
@@ -150,7 +174,14 @@ export async function DELETE(request: NextRequest) {
     if (subscriber.status === "unsubscribed") {
       return NextResponse.json(
         { message: "Already unsubscribed" },
-        { status: 200 }
+        {
+          status: 200,
+          headers: {
+            'X-RateLimit-Limit': '5',
+            'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+            'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+          },
+        }
       );
     }
 
@@ -164,7 +195,14 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json(
       { message: "Successfully unsubscribed from newsletter" },
-      { status: 200 }
+      {
+        status: 200,
+        headers: {
+          'X-RateLimit-Limit': '5',
+          'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+          'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+        },
+      }
     );
   } catch (error) {
     console.error("Newsletter unsubscribe error:", error);
@@ -178,6 +216,16 @@ export async function DELETE(request: NextRequest) {
 // GET /api/newsletter/stats - Get newsletter statistics (admin only)
 export async function GET(request: NextRequest) {
   try {
+    // Optional admin auth: if `NEWSLETTER_STATS_TOKEN` is set, require callers
+    // to present a matching token in the `x-admin-token` header.
+    const adminToken = process.env.NEWSLETTER_STATS_TOKEN;
+    if (adminToken) {
+      const provided = request.headers.get('x-admin-token');
+      if (provided !== adminToken) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+    }
+
     const totalSubscribers = await prisma.newsletterSubscriber.count({
       where: { status: "active" },
     });
@@ -199,6 +247,30 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    // Rate limiting: 20 requests per minute per IP for stats
+    const clientIP = getClientIP(request);
+    const rateLimitResult = await checkRateLimit(clientIP + ':newsletter:stats', {
+      maxRequests: 20,
+      windowMs: 60 * 1000, // 1 minute
+    });
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        {
+          error: "Too many requests. Please slow down.",
+          resetAt: new Date(rateLimitResult.reset).toISOString()
+        },
+        {
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': '20',
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+          }
+        }
+      );
+    }
+
     return NextResponse.json(
       {
         stats: {
@@ -207,7 +279,14 @@ export async function GET(request: NextRequest) {
           recentSubscribers,
         },
       },
-      { status: 200 }
+      {
+        status: 200,
+        headers: {
+          'X-RateLimit-Limit': '20',
+          'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+          'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+        },
+      }
     );
   } catch (error) {
     console.error("Newsletter stats error:", error);
