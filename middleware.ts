@@ -1,4 +1,5 @@
-import { clerkMiddleware ,createRouteMatcher} from '@clerk/nextjs/server';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import validateEnv from './lib/env';
 
 const isPublicRoute = createRouteMatcher([
   '/',
@@ -7,6 +8,9 @@ const isPublicRoute = createRouteMatcher([
   '/sign-up(.*)',
   // Add other public routes here
 ])
+
+// Validate environment early in non-test runtimes so misconfiguration fails fast
+if (process.env.NODE_ENV !== 'test') validateEnv();
 
 export default clerkMiddleware(async (auth, req) => {
   // Skip auth check if using dummy keys (CI environment)
