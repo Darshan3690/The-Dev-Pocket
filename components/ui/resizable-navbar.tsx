@@ -54,19 +54,42 @@ export const Navbar = ({ children, className }: NavbarProps) => {
     target: ref,
     offset: ["start start", "end start"],
   });
+    const lastScrollY = useRef(0);
+
   const [visible, setVisible] = useState<boolean>(true);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    if (latest > 100) {
-      setVisible(true);
-    } else {
+    // if (latest > 100) {
+    //   setVisible(true);
+    // } else {
+    //   setVisible(true);
+    // }
+const delta = latest - lastScrollY.current;
+
+    // Scroll DOWN → hide
+    if (delta > 0 && latest > 120) {
+      setVisible(false);
+    }
+
+    // Scroll UP → show
+    if (delta < 0) {
       setVisible(true);
     }
+
+    lastScrollY.current = latest;
   });
 
   return (
     <motion.div
       ref={ref}
+        animate={{
+        y: visible ? 0 : -120,
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 260,
+        damping: 30,
+      }}
       className={cn("fixed inset-x-0 top-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-50 w-full", className)}
     >
       {React.Children.map(children, (child) =>
