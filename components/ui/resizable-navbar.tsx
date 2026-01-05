@@ -54,28 +54,49 @@ export const Navbar = ({ children, className }: NavbarProps) => {
     target: ref,
     offset: ["start start", "end start"],
   });
+  const lastScrollY = useRef(0);
+
   const [visible, setVisible] = useState<boolean>(true);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    if (latest > 100) {
-      setVisible(true);
-    } else {
+    const delta = latest - lastScrollY.current;
+
+    // Scroll DOWN → hide
+    if (delta > 0 && latest > 120) {
+      setVisible(false);
+    }
+
+    // Scroll UP → show
+    if (delta < 0) {
       setVisible(true);
     }
+
+    lastScrollY.current = latest;
   });
 
   return (
     <motion.div
       ref={ref}
-      className={cn("fixed inset-x-0 top-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-50 w-full", className)}
+      animate={{
+        y: visible ? 0 : -120,
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 260,
+        damping: 30,
+      }}
+      className={cn(
+        "fixed inset-x-0 top-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-50 w-full",
+        className
+      )}
     >
       {React.Children.map(children, (child) =>
         React.isValidElement(child)
           ? React.cloneElement(
               child as React.ReactElement<{ visible?: boolean }>,
-              { visible },
+              { visible }
             )
-          : child,
+          : child
       )}
     </motion.div>
   );
@@ -105,7 +126,7 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
         "bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl",
         "shadow-lg transition-shadow duration-300",
         "border border-gray-200/50 dark:border-gray-700/50",
-        className,
+        className
       )}
     >
       {children}
@@ -121,7 +142,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
       onMouseLeave={() => setHovered(null)}
       className={cn(
         "hidden flex-1 flex-row items-center justify-center space-x-1 lg:flex",
-        className,
+        className
       )}
     >
       {items.map((item, idx) => (
@@ -153,9 +174,7 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
   return (
     <motion.div
       animate={{
-        boxShadow: visible
-          ? "0 4px 30px rgba(0, 0, 0, 0.1)"
-          : "none",
+        boxShadow: visible ? "0 4px 30px rgba(0, 0, 0, 0.1)" : "none",
         width: "95%",
         paddingRight: "16px",
         paddingLeft: "16px",
@@ -172,7 +191,7 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
         "bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl",
         "border border-gray-200/50 dark:border-gray-700/50",
         "shadow-lg",
-        className,
+        className
       )}
     >
       {children}
@@ -188,7 +207,7 @@ export const MobileNavHeader = ({
     <div
       className={cn(
         "flex w-full flex-row items-center justify-between",
-        className,
+        className
       )}
     >
       {children}
@@ -215,7 +234,7 @@ export const MobileNavMenu = ({
             "bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl",
             "px-6 py-8 shadow-2xl",
             "border border-gray-200/50 dark:border-gray-700/50",
-            className,
+            className
           )}
         >
           {children}
@@ -304,7 +323,8 @@ export const NavbarButton = ({
   const variantStyles = {
     primary:
       "bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 dark:from-sky-500 dark:to-blue-500 dark:hover:from-sky-600 dark:hover:to-blue-600 text-white shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-sky-300 dark:focus:ring-sky-600",
-    secondary: "bg-transparent border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 shadow-md hover:shadow-lg transform hover:scale-105",
+    secondary:
+      "bg-transparent border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 shadow-md hover:shadow-lg transform hover:scale-105",
     dark: "bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-lg hover:shadow-xl transform hover:scale-105",
     gradient:
       "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105",
