@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { showError } from '@/lib/toast';
 import Link from 'next/link';
 import { Search, MapPin, Briefcase, DollarSign, Clock, Star, Bookmark, Filter, X, TrendingUp, Users, Building2, ExternalLink } from 'lucide-react';
 

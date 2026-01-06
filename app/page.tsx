@@ -298,6 +298,8 @@ const App = () => {
 
       </motion.section>
 
+  
+        <FeaturesSectionWithHoverEffects />
       <section
         ref={howItWorksRef}
         id="how-it-works"
