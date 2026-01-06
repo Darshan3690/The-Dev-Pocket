@@ -1,7 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+ feat/search-blog-filter
 import { calculateReadingTime } from '../../js/utils/readingTime';
+
+import { calculateReadingTime } from '@/utils/readingTime';
+
 import "./globals.css";
 
 import Link from "next/link";

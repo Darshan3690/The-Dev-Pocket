@@ -110,7 +110,7 @@ export default function QuickStartPage() {
 
       {/* Learning Path Preview */}
       <div className="bg-white rounded-2xl p-8 shadow-lg border border-slate-200">
-        <h2 className="text-xl font-semibold text-slate-800 mb-6">What You'll Learn</h2>
+        <h2 className="text-xl font-semibold text-slate-800 mb-6">What You&apos;ll Learn</h2>
         <div className="grid md:grid-cols-2 gap-4">
           {[
             { icon: Code, text: "Core concepts and syntax" },
