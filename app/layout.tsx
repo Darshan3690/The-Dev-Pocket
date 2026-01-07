@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
- feat/search-blog-filter
-import { calculateReadingTime } from '../../js/utils/readingTime';
 
 import { calculateReadingTime } from '@/utils/readingTime';
 
@@ -67,7 +65,7 @@ export default function RootLayout({
     };
   }, [startTimer, endTimer, announceSuccess, wrapSync]);
 
-    const isDashboard = pathname.startsWith("/dashboard");
+  const isDashboard = pathname.startsWith("/dashboard");
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -89,7 +87,7 @@ export default function RootLayout({
                   <Navbar />
 
                   {/* Main content */}
-                  <main id="main-content" className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                  <main id="main-content" className="w-full px-2 sm:px-4 md:px-6 lg:px-8">
                     {children}
                   </main>
 
