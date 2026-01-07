@@ -5,6 +5,13 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Prevent horizontal overflow on all devices */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -17,6 +24,7 @@ html {
     opacity: 0;
     transform: translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -32,6 +40,7 @@ html {
   0% {
     background-position: -200% 0;
   }
+
   100% {
     background-position: 200% 0;
   }
@@ -40,6 +49,7 @@ html {
 .animate-shimmer {
   animation: shimmer 2s infinite linear;
 }
+
 /* 
 :root {
   --radius: 0.625rem;
@@ -121,6 +131,7 @@ html {
     border-color: var(--border);
     outline-color: hsl(var(--ring) / 0.5);
   }
+
   body {
     background-color: var(--background);
     color: var(--foreground);
@@ -129,32 +140,53 @@ html {
 
 /* === ANIMATIONS === */
 @keyframes spin-slow {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
+
 .animate-spin-slow {
   animation: spin-slow 6s linear infinite;
 }
 
 @keyframes pulse-glow {
-  0%, 100% { opacity: 0.7; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.1); }
+
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
 }
+
 .animate-pulse-glow {
   animation: pulse-glow 5s ease-in-out infinite;
 }
 
 /* Blob Animation for Background Orbs */
 @keyframes blob {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translate(0, 0) scale(1);
   }
+
   25% {
     transform: translate(20px, -50px) scale(1.1);
   }
+
   50% {
     transform: translate(-20px, 20px) scale(0.9);
   }
+
   75% {
     transform: translate(50px, 50px) scale(1.05);
   }
@@ -182,18 +214,23 @@ html {
 
 /* Floating Animation for Small Particles */
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0) translateX(0);
     opacity: 0.3;
   }
+
   25% {
     transform: translateY(-20px) translateX(10px);
     opacity: 0.6;
   }
+
   50% {
     transform: translateY(-40px) translateX(-10px);
     opacity: 0.8;
   }
+
   75% {
     transform: translateY(-20px) translateX(5px);
     opacity: 0.5;
@@ -206,9 +243,12 @@ html {
 
 /* Slow Bounce for Status Badge */
 @keyframes bounce-slow {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-10px);
   }
@@ -216,4 +256,42 @@ html {
 
 .animate-bounce-slow {
   animation: bounce-slow 3s ease-in-out infinite;
+}
+
+/* Clerk Component Responsive Fixes */
+.cl-rootBox {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.cl-card {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-shadow: none !important;
+}
+
+.cl-internal-b3fm6y {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Ensure Clerk forms are responsive */
+.cl-formButtonPrimary {
+  width: 100% !important;
+}
+
+@media (max-width: 640px) {
+  .cl-card {
+    padding: 1rem !important;
+    margin: 0 !important;
+  }
+
+  .cl-headerTitle,
+  .cl-headerSubtitle {
+    font-size: 1.25rem !important;
+  }
+
+  .cl-socialButtonsBlockButton {
+    padding: 0.5rem !important;
+  }
 }
