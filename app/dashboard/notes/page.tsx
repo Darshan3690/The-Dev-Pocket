@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, X, Search } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Plus, X, Search, Trash2 } from "lucide-react";
+import { showError } from "@/lib/toast";
 
 type Note = {
   id: number;
@@ -10,12 +11,48 @@ type Note = {
   date: string;
 };
 
+const INITIAL_MOCK_NOTES: Note[] = [
+  { id: 1, title: "Project Ideas", content: "Research new technologies for the upcoming project", date: "2025-09-30" },
+  { id: 2, title: "Meeting Notes", content: "Discussed roadmap for Q4 deliverables", date: "2025-09-29" },
+  { id: 3, title: "Learning Goals", content: "Complete React hooks tutorial series", date: "2025-09-28" }
+];
+
 export default function NotesPage() {
-  const [notes, setNotes] = useState<Note[]>([
-    { id: 1, title: "Project Ideas", content: "Research new technologies for the upcoming project", date: "2025-09-30" },
-    { id: 2, title: "Meeting Notes", content: "Discussed roadmap for Q4 deliverables", date: "2025-09-29" },
-    { id: 3, title: "Learning Goals", content: "Complete React hooks tutorial series", date: "2025-09-28" }
-  ]);
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Load notes from localStorage on mount
+  useEffect(() => {
+    try {
+      const savedNotes = localStorage.getItem("dev-pocket-notes");
+      if (savedNotes) {
+        const parsed = JSON.parse(savedNotes);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setNotes(parsed);
+        } else {
+          setNotes(INITIAL_MOCK_NOTES);
+        }
+      } else {
+        setNotes(INITIAL_MOCK_NOTES);
+      }
+    } catch (error) {
+      console.error("Error loading notes from localStorage:", error);
+      setNotes(INITIAL_MOCK_NOTES);
+    }
+    setIsInitialized(true);
+  }, []);
+
+  // Save notes to localStorage whenever they change
+  useEffect(() => {
+    if (!isInitialized) return;
+
+    try {
+      localStorage.setItem("dev-pocket-notes", JSON.stringify(notes));
+    } catch (error) {
+      console.error("Error saving notes to localStorage:", error);
+      showError("Failed to save notes. Your storage might be full.");
+    }
+  }, [notes, isInitialized]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,13 +64,17 @@ export default function NotesPage() {
     const note: Note = {
       id: Date.now(),
       title: newNote.title,
-      content: newNote.content,
+      content: newNote.content || "",
       date: new Date().toISOString().split("T")[0],
     };
 
-    setNotes([note, ...notes]);
+    setNotes((prevNotes) => [note, ...prevNotes]);
     setNewNote({ title: "", content: "" });
     setIsModalOpen(false);
+  };
+
+  const handleDeleteNote = (id: number) => {
+    setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
   };
 
   // 🔍 Search filtering logic
@@ -41,6 +82,10 @@ export default function NotesPage() {
     note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     note.content.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (!isInitialized) {
+    return null; // Or a loading skeleton
+  }
 
   return (
     <div className="space-y-6">
@@ -53,7 +98,7 @@ export default function NotesPage() {
 
         <button
           onClick={() => setIsModalOpen(true)}
-          className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-4 py-2 rounded-xl font-medium shadow-lg shadow-blue-500/20 transition-all duration-200"
+          className="inline-flex items-center gap-2 bg-linear-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-4 py-2 rounded-xl font-medium shadow-lg shadow-blue-500/20 transition-all duration-200"
         >
           <Plus className="w-4 h-4" />
           Add New Note
@@ -84,7 +129,14 @@ export default function NotesPage() {
               <span className="text-xs text-slate-500 whitespace-nowrap">{note.date}</span>
             </div>
             <p className="text-slate-600 text-sm mt-3 line-clamp-3">{note.content}</p>
-            <div className="flex justify-end mt-4">
+            <div className="flex justify-between items-center mt-4">
+              <button
+                onClick={() => handleDeleteNote(note.id)}
+                className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all duration-200"
+                title="Delete note"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
               <button className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
                 View Details
               </button>
@@ -158,7 +210,7 @@ export default function NotesPage() {
               </button>
               <button
                 onClick={handleAddNote}
-                className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium rounded-xl"
+                className="px-4 py-2 bg-linear-to-r from-blue-500 to-purple-500 text-white font-medium rounded-xl"
               >
                 Save Note
               </button>
