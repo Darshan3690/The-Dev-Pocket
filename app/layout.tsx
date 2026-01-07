@@ -30,6 +30,7 @@ import { ErrorBoundary, useErrorHandling } from "../lib/error-handling";
 import GlobalSearch from "./components/GlobalSearch";
 import ToastProvider from "./components/ToastProvider";
 import KeyboardShortcuts from "./components/KeyboardShortcuts";
+import ScrollToTop from "./components/ScrollToTop";
 import OnboardingTutorial from "./components/OnboardingTutorial";
 
 export default function RootLayout({
@@ -75,6 +76,7 @@ export default function RootLayout({
             <ErrorBoundary>
               <ToastProvider />
               <KeyboardShortcuts />
+              <ScrollToTop />
               <OnboardingTutorial />
               <AccessibilityAnnouncer />
               <SkipLink href="#main-content">Skip to main content</SkipLink>
