@@ -202,6 +202,13 @@ Sending request 10000...
 | `/api/newsletter` DELETE | 5 requests | 1 hour | IP address |
 | `/api/user-stats` | 60 requests | 1 minute | User ID |
 
+**Status update (Jan 3, 2026):**
+
+- **Implemented (partial):** `POST /api/newsletter` and `POST /api/contact` now include per-IP in-memory rate limiting (configurable) and return `X-RateLimit-*` headers. Both endpoints also support an **opt-in** CSRF header check (`x-csrf-token`) when `CSRF_PROTECTION=true`.
+- **Upstash adapter:** A scaffolding adapter for Upstash (`lib/rate-limit-upstash.ts`) was added along with unit tests that mock Upstash behavior. Integration tests gated by CI secrets are a recommended follow-up.
+- **Tests:** Jest config and test harness updates were added and the test suite passes locally.
+- **Remaining work:** `GET /api/user-stats` still requires a rate-limit implementation and integration tests.
+
 **Implementation options:**
 1. **Vercel/Next.js Middleware** (Recommended)
    - Use `@upstash/ratelimit` with Redis
