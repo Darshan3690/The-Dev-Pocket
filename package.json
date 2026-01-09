@@ -2,6 +2,8 @@
   "name": "the_dev_pocket",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   "engines": {
     "node": ">=20.x"
   },
@@ -16,7 +18,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.36.5",
-    "@prisma/client": "^6.16.2",
+    "@prisma/client": "^6.19.1",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-aspect-ratio": "^1.1.8",
@@ -56,7 +58,7 @@
     "next": "^16.1.1",
     "next-themes": "^0.4.6",
     "ogl": "^1.0.11",
-    "prisma": "^6.16.2",
+    "prisma": "^6.19.1",
     "react": "^19.1.0",
     "react-big-calendar": "^1.19.4",
     "react-dom": "^19.1.0",
@@ -84,9 +86,12 @@
     "jest-environment-jsdom": "^29.7.0",
     "jsdom": "^22.1.0",
     "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.15",
+    "ts-node": "^10.9.2",
     "tailwindcss": "^4.1.18",
     "ts-jest": "^29.1.0",
     "tw-animate-css": "^1.3.8",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "prisma": "6.19.1"
   }
 }
