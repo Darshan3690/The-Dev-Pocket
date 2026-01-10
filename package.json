@@ -4,6 +4,7 @@
   "private": true,
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
+  },
   "engines": {
     "node": ">=20.x"
   },
@@ -86,9 +87,8 @@
     "jest-environment-jsdom": "^29.7.0",
     "jsdom": "^22.1.0",
     "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.15",
-    "ts-node": "^10.9.2",
     "tailwindcss": "^4.1.18",
+    "ts-node": "^10.9.2",
     "ts-jest": "^29.1.0",
     "tw-animate-css": "^1.3.8",
     "typescript": "5.9.3",
