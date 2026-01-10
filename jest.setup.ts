@@ -8,7 +8,8 @@ if (typeof (global as any).Request === 'undefined') {
   (global as any).Request = class Request {
     url: string;
     method: string;
-    headers: Record<string, string>;
+    headers: { get: (name: string) => string | null };
+    private _body: any;
     constructor(input: any, init: any = {}) {
       this.url = typeof input === 'string' ? input : input?.url || '';
       this.method = init.method || 'GET';
@@ -39,7 +40,7 @@ if (typeof (global as any).Request === 'undefined') {
   // Minimal Response polyfill
   (global as any).Response = class Response {
     status: number;
-    headers: Record<string, string>;
+    headers: { get: (name: string) => string | null };
     body: any;
     constructor(body: any = null, init: any = {}) {
       this.body = body;

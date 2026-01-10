@@ -4,6 +4,7 @@ import validateEnv from './lib/env';
 const isPublicRoute = createRouteMatcher([
   '/',
   '/about(.*)',
+  '/contact(.*)',
   '/sign-in(.*)',
   '/sign-up(.*)',
   // Add other public routes here
