@@ -299,7 +299,7 @@ const App = () => {
       </motion.section>
 
   
-        <FeaturesSectionWithHoverEffects />
+        {/* <FeaturesSectionWithHoverEffects /> */}
       <section
         ref={howItWorksRef}
         id="how-it-works"
