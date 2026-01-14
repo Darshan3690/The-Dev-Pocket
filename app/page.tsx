@@ -154,7 +154,7 @@ const App = () => {
     <main className="pt-24">
       <section
         ref={heroRef}
-        className={`transition-all duration-700 ease-out max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        className={`transition-all duration-700 ease-out max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 ${heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
       >
         <HeroWithMockup
@@ -176,7 +176,7 @@ const App = () => {
         initial={{ opacity: 0, y: 40 }}
         animate={featuresVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="py-16 sm:py-24 text-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        className="py-16 sm:py-24 text-center max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8"
       >
         <h2
           className={`text-3xl sm:text-4xl font-bold mb-4 ${isDark ? "text-dark" : "text-white"
@@ -309,7 +309,7 @@ const App = () => {
       >
         <h2
           id="how-it-works-heading"
-          className={`text-3xl sm:text-4xl font-bold mb-3 ${isDark ? "text-black" : "text-white"
+          className={`text-3xl sm:text-4xl font-bold mb-3 ${isDark ? "text-white" : "text-gray-900"
             }`}
         >
           Get Started in{" "}
@@ -320,7 +320,7 @@ const App = () => {
           From signup to growth — your journey starts here.
         </p>
 
-        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10 max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10 max-w-screen-xl mx-auto px-4 sm:px-6">
           {/* connector line */}
           <div className="hidden md:block absolute top-6 left-1/2 w-[70%] h-px bg-sky-500/20 -translate-x-1/2" />
 
@@ -375,7 +375,7 @@ const App = () => {
         aria-labelledby="support-heading"
         className="py-12 sm:py-16 text-center"
       >
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-screen-2xl mx-auto">
           <h2 id="support-heading" className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-400 mb-4">
             Need Help? We&apos;re Here for You
           </h2>
@@ -635,7 +635,7 @@ const App = () => {
             </span>
           </span>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-screen-2xl mx-auto px-4 sm:px-6">
           <div className="border border-gray-200 rounded-2xl p-6" role="article" aria-labelledby="hobby-plan">
             <h3 id="hobby-plan" className="text-xl font-bold mb-2">Hobby</h3>
             <p className="text-gray-500 mb-6">

@@ -86,7 +86,7 @@ export const Navbar = ({ children, className }: NavbarProps) => {
         damping: 30,
       }}
       className={cn(
-        "fixed inset-x-0 top-4 sm:top-6 mx-auto px-2 sm:px-4 md:px-6 lg:px-8 z-50 max-w-[calc(100vw-1rem)] sm:max-w-[calc(100vw-2rem)] lg:max-w-7xl",
+        "fixed inset-x-0 top-4 sm:top-6 mx-auto px-2 sm:px-4 md:px-6 lg:px-8 z-50 max-w-[calc(100vw-1rem)] sm:max-w-[calc(100vw-2rem)] lg:max-w-screen-2xl",
         className
       )}
     >
