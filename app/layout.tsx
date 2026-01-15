@@ -88,7 +88,7 @@ export default function RootLayout({
                   <Navbar />
 
                   {/* Main content */}
-                  <main id="main-content" className="w-full px-2 sm:px-4 md:px-6 lg:px-8">
+                  <main id="main-content" className="w-full">
                     {children}
                   </main>
 
