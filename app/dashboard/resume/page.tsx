@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FileText, Download, Plus, Trash2, Save } from "lucide-react";
+import { showSuccess, showError } from "@/lib/toast";
 
 interface PersonalInfo {
   fullName: string;
@@ -257,8 +258,15 @@ export default function ResumeBuilderPage() {
               <Save className="w-4 h-4" />
               Load
             </button>
-            <button 
-              onClick={saveResume}
+            <button
+              onClick={() => {
+                const result = saveResume();
+                if (result.ok) {
+                  showSuccess("Resume saved successfully!");
+                } else {
+                  showError("Failed to save resume. Please free up storage or try again.");
+                }
+              }}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
             >
               <Save className="w-4 h-4" />
