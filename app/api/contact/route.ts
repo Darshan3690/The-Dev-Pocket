@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
+import { upstashLimit, getClientIP } from "@/lib/rate-limit-upstash";
 
 // Singleton pattern for Prisma Client to avoid connection pool exhaustion
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
   // Rate limiting: 5 requests per hour per IP
   const clientIP = getClientIP(request);
   const rateLimitKey = `${clientIP}:contact`;
-  const rateLimitResult = checkRateLimit(rateLimitKey, {
+  const rateLimitResult = await upstashLimit(rateLimitKey, {
     maxRequests: 5,
     windowMs: 60 * 60 * 1000, // 1 hour
   });

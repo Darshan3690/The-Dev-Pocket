@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
+import { upstashLimit } from "@/lib/rate-limit-upstash";
+import { getClientIP } from "@/lib/rate-limit";
 
 // Singleton pattern for Prisma Client to avoid connection pool exhaustion
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
@@ -13,7 +14,7 @@ if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 export async function POST(request: NextRequest) {
   // Rate limiting: 3 requests per hour per IP
   const clientIP = getClientIP(request);
-  const rateLimitResult = checkRateLimit(clientIP + ':newsletter', {
+  const rateLimitResult = await upstashLimit(clientIP + ':newsletter', {
     maxRequests: 3,
     windowMs: 60 * 60 * 1000, // 1 hour
   });
@@ -125,6 +126,30 @@ export async function POST(request: NextRequest) {
 
 // DELETE /api/newsletter - Unsubscribe from newsletter
 export async function DELETE(request: NextRequest) {
+  // Rate limiting: 5 requests per hour per IP
+  const clientIP = getClientIP(request);
+  const rateLimitResult = await upstashLimit(clientIP + ':newsletter-delete', {
+    maxRequests: 5,
+    windowMs: 60 * 60 * 1000, // 1 hour
+  });
+
+  if (!rateLimitResult.success) {
+    return NextResponse.json(
+      {
+        error: "Too many unsubscribe attempts. Please try again later.",
+        resetAt: new Date(rateLimitResult.reset).toISOString()
+      },
+      {
+        status: 429,
+        headers: {
+          'X-RateLimit-Limit': '5',
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+        }
+      }
+    );
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const email = searchParams.get("email");

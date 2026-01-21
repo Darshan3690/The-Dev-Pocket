@@ -19,7 +19,7 @@ export async function GET() {
     }
 
     // Rate limiting: 60 requests per minute per user
-    const rateLimitResult = checkRateLimit(userId + ':stats', {
+    const rateLimitResult = await upstashLimit(userId + ':stats', {
       maxRequests: 60,
       windowMs: 60 * 1000, // 1 minute
     });
