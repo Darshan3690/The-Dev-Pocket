@@ -15,6 +15,7 @@ model User {
   createdAt DateTime   @default(now())
   projects  Project[]
   stats     UserStats?
+  bookmarks Bookmark[]
 }
 
 model UserStats {
@@ -114,4 +115,21 @@ model QuizAttempt {
   score     Int
   total     Int
   createdAt DateTime @default(now())
+}
+
+model Bookmark {
+  id          String   @id @default(uuid())
+  userId      String
+  title       String
+  url         String
+  description String?
+  category    String   @default("General")
+  tags        String[] @default([])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, url])
+  @@index([userId])
+  @@index([category])
 }
