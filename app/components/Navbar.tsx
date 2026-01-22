@@ -18,6 +18,7 @@ import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 export default function Navbar() {
   const navItems = [
     { name: "Features", link: "#features" },
+    { name: "Resources", link: "/resources" },
     { name: "Pricing", link: "#pricing" },
     { name: "About", link: "/about" },
   ];
