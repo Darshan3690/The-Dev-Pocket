@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { PrismaClient } from '@prisma/client';
-import { checkRateLimit } from '@/lib/rate-limit';
+import { upstashLimit } from '@/lib/rate-limit-upstash';
 
 // Singleton pattern for Prisma Client to avoid connection pool exhaustion
 const globalForPrisma = global as unknown as { prisma: PrismaClient };

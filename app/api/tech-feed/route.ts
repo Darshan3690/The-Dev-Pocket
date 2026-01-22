@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { TechNewsResponse, TechNews, TechCategory } from "@/app/dashboard/tech-feed/lib/types"
+import { upstashLimit, getClientIP } from "@/lib/rate-limit-upstash"
 
 // Mock data - Replace with real API calls to tech news sources
 const MOCK_TECH_NEWS: TechNews[] = [
@@ -66,6 +67,31 @@ const MOCK_TECH_NEWS: TechNews[] = [
 ]
 
 export async function GET(request: NextRequest) {
+  // Rate limiting: 100 requests per hour per IP
+  const clientIP = getClientIP(request);
+  const rateLimitKey = `${clientIP}:tech-feed`;
+  const rateLimitResult = await upstashLimit(rateLimitKey, {
+    maxRequests: 100,
+    windowMs: 60 * 60 * 1000, // 1 hour
+  });
+
+  if (!rateLimitResult.success) {
+    return NextResponse.json(
+      {
+        error: "Too many requests. Please try again later.",
+        resetAt: new Date(rateLimitResult.reset).toISOString()
+      },
+      {
+        status: 429,
+        headers: {
+          'X-RateLimit-Limit': '100',
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+        }
+      }
+    );
+  }
+
   try {
     const { searchParams } = new URL(request.url)
     const category = searchParams.get("category")
@@ -85,7 +111,13 @@ export async function GET(request: NextRequest) {
       category: category === "all" ? undefined : (category as any),
     }
 
-    return NextResponse.json(response)
+    return NextResponse.json(response, {
+      headers: {
+        'X-RateLimit-Limit': '100',
+        'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+        'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+      },
+    })
   } catch (error) {
     console.error("Error fetching tech news:", error)
     return NextResponse.json(
