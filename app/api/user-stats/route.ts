@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { PrismaClient } from '@prisma/client';
-import { checkRateLimit } from '@/lib/rate-limit';
+import { upstashLimit } from '@/lib/rate-limit-upstash';
 
 // Singleton pattern for Prisma Client to avoid connection pool exhaustion
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
@@ -19,7 +19,7 @@ export async function GET() {
     }
 
     // Rate limiting: 60 requests per minute per user
-    const rateLimitResult = checkRateLimit(userId + ':stats', {
+    const rateLimitResult = await upstashLimit(userId + ':stats', {
       maxRequests: 60,
       windowMs: 60 * 1000, // 1 minute
     });

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { calculateReadingTime } from '@/utils/readingTime';
+
 import "./globals.css";
 
 import Link from "next/link";
@@ -28,6 +29,7 @@ import { ErrorBoundary, useErrorHandling } from "../lib/error-handling";
 import GlobalSearch from "./components/GlobalSearch";
 import ToastProvider from "./components/ToastProvider";
 import KeyboardShortcuts from "./components/KeyboardShortcuts";
+import ScrollToTop from "./components/ScrollToTop";
 import OnboardingTutorial from "./components/OnboardingTutorial";
 
 export default function RootLayout({
@@ -63,7 +65,7 @@ export default function RootLayout({
     };
   }, [startTimer, endTimer, announceSuccess, wrapSync]);
 
-    const isDashboard = pathname.startsWith("/dashboard");
+  const isDashboard = pathname.startsWith("/dashboard");
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -73,6 +75,7 @@ export default function RootLayout({
             <ErrorBoundary>
               <ToastProvider />
               <KeyboardShortcuts />
+              <ScrollToTop />
               <OnboardingTutorial />
               <AccessibilityAnnouncer />
               <SkipLink href="#main-content">Skip to main content</SkipLink>
@@ -85,7 +88,7 @@ export default function RootLayout({
                   <Navbar />
 
                   {/* Main content */}
-                  <main id="main-content" className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                  <main id="main-content" className="w-full">
                     {children}
                   </main>
 

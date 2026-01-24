@@ -1,35 +1,36 @@
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-}
-
 generator client {
   provider = "prisma-client-js"
 }
 
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
+  id        String     @id @default(uuid())
+  email     String     @unique
   name      String?
+  createdAt DateTime   @default(now())
   projects  Project[]
   stats     UserStats?
-  createdAt DateTime @default(now())
+  bookmarks Bookmark[]
 }
 
 model UserStats {
-  id              String   @id @default(uuid())
-  userId          String   @unique
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  points          Int      @default(0)
-  currentStreak   Int      @default(0)
-  lastActiveDate  DateTime?
-  dailyGoalTarget Int      @default(100)
-  dailyGoalProgress Int    @default(0)
-  tasksCompleted  Int      @default(0)
-  tasksTotal      Int      @default(0)
-  updatedAt       DateTime @updatedAt
-  createdAt       DateTime @default(now())
+  id                String    @id @default(uuid())
+  userId            String    @unique
+  points            Int       @default(0)
+  currentStreak     Int       @default(0)
+  lastActiveDate    DateTime?
+  dailyGoalTarget   Int       @default(100)
+  dailyGoalProgress Int       @default(0)
+  tasksCompleted    Int       @default(0)
+  tasksTotal        Int       @default(0)
+  updatedAt         DateTime  @updatedAt
+  createdAt         DateTime  @default(now())
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Project {
@@ -37,9 +38,9 @@ model Project {
   title     String
   category  String
   aiScore   Int?
-  user      User?    @relation(fields: [userId], references: [id])
   userId    String?
   createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
 }
 
 model ContactSubmission {
@@ -47,8 +48,8 @@ model ContactSubmission {
   name      String
   email     String
   subject   String?
-  message   String   @db.Text
-  status    String   @default("new") // new, read, replied, resolved
+  message   String
+  status    String   @default("new")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -61,11 +62,11 @@ model NewsletterSubscriber {
   id             String    @id @default(uuid())
   email          String    @unique
   name           String?
-  status         String    @default("active") // active, unsubscribed, bounced
+  status         String    @default("active")
   subscribedAt   DateTime  @default(now())
   unsubscribedAt DateTime?
-  source         String?   // website, referral, etc.
-  preferences    Json?     // JSON object for email preferences
+  source         String?
+  preferences    Json?
   verifiedAt     DateTime?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
@@ -73,4 +74,62 @@ model NewsletterSubscriber {
   @@index([email])
   @@index([status])
   @@index([subscribedAt])
+}
+
+model QuizCategory {
+  id             String   @id @default(uuid())
+  slug           String   @unique
+  name           String
+  iconUrl        String
+  totalQuestions Int
+  quizzes        Quiz[]
+  createdAt      DateTime @default(now())
+}
+
+model Quiz {
+  id             String  @id @default(cuid())
+  title          String
+  description    String?
+  difficulty     String
+  totalQuestions Int
+
+  categoryId String
+  category   QuizCategory @relation(fields: [categoryId], references: [id])
+  questions  Question[]
+  createdAt  DateTime     @default(now())
+}
+
+model Question {
+  id      String @id @default(uuid())
+  quizId  String
+  quiz    Quiz   @relation(fields: [quizId], references: [id])
+  text    String
+  options Json // ["A", "B", "C", "D"]
+  correct Int // index of correct option
+}
+
+model QuizAttempt {
+  id        String   @id @default(uuid())
+  userId    String
+  quizId    String
+  score     Int
+  total     Int
+  createdAt DateTime @default(now())
+}
+
+model Bookmark {
+  id          String   @id @default(uuid())
+  userId      String
+  title       String
+  url         String
+  description String?
+  category    String   @default("General")
+  tags        String[] @default([])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, url])
+  @@index([userId])
+  @@index([category])
 }

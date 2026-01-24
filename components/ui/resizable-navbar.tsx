@@ -86,16 +86,16 @@ export const Navbar = ({ children, className }: NavbarProps) => {
         damping: 30,
       }}
       className={cn(
-        "fixed inset-x-0 top-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-50 w-full",
+        "fixed inset-x-0 top-4 sm:top-6 mx-auto px-2 sm:px-4 md:px-6 lg:px-8 z-50 max-w-[calc(100vw-1rem)] sm:max-w-[calc(100vw-2rem)] lg:max-w-screen-2xl",
         className
       )}
     >
       {React.Children.map(children, (child) =>
         React.isValidElement(child)
           ? React.cloneElement(
-              child as React.ReactElement<{ visible?: boolean }>,
-              { visible }
-            )
+            child as React.ReactElement<{ visible?: boolean }>,
+            { visible }
+          )
           : child
       )}
     </motion.div>
@@ -122,7 +122,7 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
         boxShadow: "0 8px 40px rgba(14, 165, 233, 0.2)",
       }}
       className={cn(
-        "relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full px-8 py-3 lg:flex",
+        "relative z-[60] mx-auto hidden w-full flex-row items-center justify-between self-start rounded-full px-4 md:px-6 lg:px-8 py-3 lg:flex",
         "bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl",
         "shadow-lg transition-shadow duration-300",
         "border border-gray-200/50 dark:border-gray-700/50",
@@ -175,10 +175,6 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
     <motion.div
       animate={{
         boxShadow: visible ? "0 4px 30px rgba(0, 0, 0, 0.1)" : "none",
-        width: "95%",
-        paddingRight: "16px",
-        paddingLeft: "16px",
-        borderRadius: "1.5rem",
         y: 0,
       }}
       transition={{
@@ -187,7 +183,7 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
         damping: 50,
       }}
       className={cn(
-        "fixed top-6 left-1/2 -translate-x-1/2 z-50 flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between px-0 py-2.5 lg:hidden",
+        "fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-50 flex w-[calc(100%-1rem)] sm:w-[calc(100%-2rem)] max-w-[600px] flex-col items-center justify-between px-3 sm:px-4 py-2.5 lg:hidden rounded-2xl sm:rounded-3xl",
         "bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl",
         "border border-gray-200/50 dark:border-gray-700/50",
         "shadow-lg",
@@ -230,9 +226,9 @@ export const MobileNavMenu = ({
           exit={{ opacity: 0, y: -20 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
           className={cn(
-            "absolute inset-x-0 top-16 z-50 flex w-full flex-col items-start justify-start gap-6 rounded-2xl",
+            "absolute inset-x-0 top-16 z-50 flex w-full flex-col items-start justify-start gap-4 sm:gap-6 rounded-2xl",
             "bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl",
-            "px-6 py-8 shadow-2xl",
+            "px-4 sm:px-6 py-6 sm:py-8 shadow-2xl",
             "border border-gray-200/50 dark:border-gray-700/50",
             className
           )}
@@ -314,9 +310,9 @@ export const NavbarButton = ({
   className?: string;
   variant?: "primary" | "secondary" | "dark" | "gradient";
 } & (
-  | React.ComponentPropsWithoutRef<"a">
-  | React.ComponentPropsWithoutRef<"button">
-)) => {
+    | React.ComponentPropsWithoutRef<"a">
+    | React.ComponentPropsWithoutRef<"button">
+  )) => {
   const baseStyles =
     "px-6 py-2.5 rounded-full text-sm font-semibold relative cursor-pointer transition-all duration-300 inline-block text-center";
 
