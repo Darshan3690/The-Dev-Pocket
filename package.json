@@ -10,12 +10,13 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build --turbopack",
+    "build": "prisma generate && next build --turbopack",
     "start": "next start",
     "lint": "eslint",
     "test": "jest --passWithNoTests --runInBand",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.36.5",
