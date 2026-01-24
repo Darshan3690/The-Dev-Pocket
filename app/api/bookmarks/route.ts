@@ -54,9 +54,9 @@ export async function POST(request: NextRequest) {
     })
 
     return NextResponse.json({ bookmark }, { status: 201 })
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error creating bookmark:', error)
-    if (error.code === 'P2002') {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
       return NextResponse.json({ error: 'Bookmark already exists' }, { status: 409 })
     }
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

@@ -4,10 +4,11 @@ import { prisma } from '@/lib/prisma'
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await auth()
+    const { id } = await params
     
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -15,7 +16,7 @@ export async function DELETE(
 
     const bookmark = await prisma.bookmark.findFirst({
       where: {
-        id: params.id,
+        id,
         userId
       }
     })
@@ -25,7 +26,7 @@ export async function DELETE(
     }
 
     await prisma.bookmark.delete({
-      where: { id: params.id }
+      where: { id }
     })
 
     return NextResponse.json({ success: true })
