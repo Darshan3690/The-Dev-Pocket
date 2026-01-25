@@ -3,6 +3,23 @@
 import { useState, useEffect } from "react"
 import { useUser } from "@clerk/nextjs"
 import Link from "next/link";
+import {
+  LineChart,
+  Line,
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell
+} from 'recharts';
 
 interface UserStats {
   points: number;
@@ -13,15 +30,37 @@ interface UserStats {
   tasksTotal: number;
 }
 
+interface DetailedStats {
+  quizChartData: Array<{ date: string; averageScore: number; attempts: number }>;
+  bookmarkChartData: Array<{ date: string; bookmarks: number }>;
+  activityChartData: Array<{ date: string; quizzes: number; bookmarks: number; totalActivity: number }>;
+  categoryChartData: Array<{ category: string; averageScore: number; attempts: number }>;
+  recentQuizzes: Array<any>;
+  recentBookmarks: Array<any>;
+  insights: {
+    totalQuizzes: number;
+    totalBookmarks: number;
+    averageQuizScore: number;
+    streakDays: number;
+    mostActiveDay: { date: string; totalActivity: number };
+    topCategory: { category: string; attempts: number };
+  };
+}
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
+
 export default function DashboardPage() {
   const [studyBuddyOpen, setStudyBuddyOpen] = useState(false)
   const { isLoaded, user } = useUser()
   const [stats, setStats] = useState<UserStats | null>(null)
+  const [detailedStats, setDetailedStats] = useState<DetailedStats | null>(null)
   const [loading, setLoading] = useState(true)
+  const [detailedLoading, setDetailedLoading] = useState(true)
 
   useEffect(() => {
     if (isLoaded && user) {
       fetchUserStats()
+      fetchDetailedStats()
     }
   }, [isLoaded, user])
 
@@ -58,6 +97,18 @@ export default function DashboardPage() {
     }
   }
 
+  const fetchDetailedStats = async () => {
+    try {
+      const response = await fetch('/api/user-stats/detailed')
+      const data = await response.json()
+      setDetailedStats(data)
+    } catch (error) {
+      console.error('Error fetching detailed stats:', error)
+    } finally {
+      setDetailedLoading(false)
+    }
+  }
+
   const dailyGoalPercentage = stats 
     ? Math.min(100, Math.round((stats.dailyGoalProgress / stats.dailyGoalTarget) * 100))
     : 0
@@ -79,7 +130,7 @@ export default function DashboardPage() {
             <p className="text-xs text-gray-400 mt-1">Complete tasks to earn points</p>
           )}
         </div>
-        
+
         <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
           <p className="text-sm text-gray-500 font-medium mb-2">Streak</p>
           {loading ? (
@@ -104,7 +155,7 @@ export default function DashboardPage() {
             </>
           )}
         </div>
-        
+
         <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
           <p className="text-sm text-gray-500 font-medium mb-2">Daily Goal</p>
           {loading ? (
@@ -124,8 +175,8 @@ export default function DashboardPage() {
                     {dailyGoalPercentage}%
                   </h3>
                   <div className="w-full bg-gray-200 rounded-full h-2.5">
-                    <div 
-                      className="bg-blue-600 h-2.5 rounded-full transition-all duration-500" 
+                    <div
+                      className="bg-blue-600 h-2.5 rounded-full transition-all duration-500"
                       style={{ width: `${dailyGoalPercentage}%` }}
                     ></div>
                   </div>
@@ -134,7 +185,7 @@ export default function DashboardPage() {
             </>
           )}
         </div>
-        
+
         <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
           <p className="text-sm text-gray-500 font-medium mb-2">Tasks Done</p>
           {loading ? (
@@ -154,8 +205,8 @@ export default function DashboardPage() {
                     {stats?.tasksCompleted || 0}/{stats?.tasksTotal || 0}
                   </h3>
                   <p className="text-xs text-gray-400 mt-1">
-                    {stats?.tasksCompleted === stats?.tasksTotal 
-                      ? "All done! 🎉" 
+                    {stats?.tasksCompleted === stats?.tasksTotal
+                      ? "All done! 🎉"
                       : `${(stats?.tasksTotal || 0) - (stats?.tasksCompleted || 0)} remaining`}
                   </p>
                 </>
@@ -164,6 +215,126 @@ export default function DashboardPage() {
           )}
         </div>
       </div>
+
+      {/* Charts Section */}
+      {!detailedLoading && detailedStats && (
+        <div className="space-y-6">
+          {/* Activity Overview */}
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Activity Overview (Last 30 Days)</h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <AreaChart data={detailedStats.activityChartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Area type="monotone" dataKey="quizzes" stackId="1" stroke="#8884d8" fill="#8884d8" />
+                <Area type="monotone" dataKey="bookmarks" stackId="1" stroke="#82ca9d" fill="#82ca9d" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Quiz Performance */}
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Quiz Performance Trend</h3>
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={detailedStats.quizChartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis domain={[0, 100]} />
+                  <Tooltip formatter={(value) => [`${value}%`, 'Average Score']} />
+                  <Line type="monotone" dataKey="averageScore" stroke="#ff7300" strokeWidth={2} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Performance by Category</h3>
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={detailedStats.categoryChartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="category" />
+                  <YAxis domain={[0, 100]} />
+                  <Tooltip formatter={(value) => [`${value}%`, 'Average Score']} />
+                  <Bar dataKey="averageScore" fill="#8884d8" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Insights Cards */}
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg">
+              <h4 className="font-semibold text-blue-900 mb-2">Quiz Insights</h4>
+              <p className="text-2xl font-bold text-blue-600">{detailedStats.insights.totalQuizzes}</p>
+              <p className="text-sm text-blue-700">Total Quizzes Taken</p>
+              <p className="text-sm text-blue-600 mt-1">Avg Score: {detailedStats.insights.averageQuizScore}%</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-lg">
+              <h4 className="font-semibold text-green-900 mb-2">Bookmark Insights</h4>
+              <p className="text-2xl font-bold text-green-600">{detailedStats.insights.totalBookmarks}</p>
+              <p className="text-sm text-green-700">Resources Bookmarked</p>
+              <p className="text-sm text-green-600 mt-1">Most active: {detailedStats.insights.mostActiveDay.date || 'N/A'}</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-lg">
+              <h4 className="font-semibold text-purple-900 mb-2">Learning Streak</h4>
+              <p className="text-2xl font-bold text-purple-600">{detailedStats.insights.streakDays}</p>
+              <p className="text-sm text-purple-700">Days in a row</p>
+              <p className="text-sm text-purple-600 mt-1">Top category: {detailedStats.insights.topCategory.category || 'N/A'}</p>
+            </div>
+          </div>
+
+          {/* Recent Activity */}
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Quiz Attempts</h3>
+              <div className="space-y-3">
+                {detailedStats.recentQuizzes.length > 0 ? (
+                  detailedStats.recentQuizzes.map((quiz, index) => (
+                    <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                      <div>
+                        <p className="font-medium text-gray-900">{quiz.quiz.title}</p>
+                        <p className="text-sm text-gray-600">{quiz.quiz.category.name}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold text-blue-600">{quiz.score}/{quiz.total}</p>
+                        <p className="text-xs text-gray-500">
+                          {new Date(quiz.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-gray-500 text-center py-4">No recent quiz attempts</p>
+                )}
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Bookmarks</h3>
+              <div className="space-y-3">
+                {detailedStats.recentBookmarks.length > 0 ? (
+                  detailedStats.recentBookmarks.map((bookmark, index) => (
+                    <div key={index} className="p-3 bg-gray-50 rounded">
+                      <p className="font-medium text-gray-900 truncate">{bookmark.title}</p>
+                      <p className="text-sm text-gray-600 truncate">{bookmark.url}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {new Date(bookmark.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-gray-500 text-center py-4">No recent bookmarks</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Quick Actions */}
       <div className="space-y-4">
@@ -186,7 +357,7 @@ export default function DashboardPage() {
                 Create personalized learning paths with AI assistance based on your goals and experience level.
               </p>
               <div className="mt-4 flex items-center text-blue-600 text-sm font-medium group-hover:text-blue-700">
-                Create Roadmap 
+                Create Roadmap
                 <span className="ml-1 group-hover:translate-x-1 transition-transform">→</span>
               </div>
             </div>
@@ -207,7 +378,7 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          <button 
+          <button
             onClick={() => setStudyBuddyOpen(true)}
             className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-200 text-left group"
           >
@@ -227,7 +398,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      
+
       {/* AI Study Buddy Modal (simplified) */}
       {studyBuddyOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
