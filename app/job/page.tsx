@@ -161,9 +161,9 @@ export default function JobSearchPage() {
     } else {
       newSaved.add(jobId);
     }
-    setSavedJobs(newSaved);
     try {
       localStorage.setItem('savedJobs', JSON.stringify(Array.from(newSaved)));
+      setSavedJobs(newSaved);
     } catch (error) {
       console.error('Failed to save jobs:', error);
       showError('Failed to save job. Please free up storage or try again.');
