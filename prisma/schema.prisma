@@ -15,6 +15,7 @@ model User {
   createdAt DateTime   @default(now())
   projects  Project[]
   stats     UserStats?
+  bookmarks Bookmark[]
 }
 
 model UserStats {
