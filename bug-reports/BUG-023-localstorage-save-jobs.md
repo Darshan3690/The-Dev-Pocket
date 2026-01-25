@@ -36,14 +36,24 @@ Saving a job should be wrapped in try-catch. On failure, the app should log the 
 
 ## 📸 Proof / Code Excerpt
 
+The current implementation already includes try-catch error handling:
+
 ```tsx
 // app/job/page.tsx
 const toggleSaveJob = (jobId: string) => {
   const newSaved = new Set(savedJobs);
-  // ... mutate set
-  setSavedJobs(newSaved);
-  // ❌ No error handling
-  localStorage.setItem('savedJobs', JSON.stringify(Array.from(newSaved)));
+  if (newSaved.has(jobId)) {
+    newSaved.delete(jobId);
+  } else {
+    newSaved.add(jobId);
+  }
+  try {
+    localStorage.setItem('savedJobs', JSON.stringify(Array.from(newSaved)));
+    setSavedJobs(newSaved);
+  } catch (error) {
+    console.error('Failed to save jobs:', error);
+    showError('Failed to save job. Please free up storage or try again.');
+  }
 };
 ```
 
@@ -55,30 +65,22 @@ const toggleSaveJob = (jobId: string) => {
 |------|-------|
 | **OS** | Any |
 | **Node** | N/A |
-| **Severity** | 🟠 Moderate - UI reliability |
+| **Severity** | ✅ Resolved - Error handling implemented |
 
 ---
 
-## 🛠 Suggested Fix
+## 🛠 Status
 
-Wrap the `localStorage.setItem` call in try-catch and show a helpful error message on failure. Example:
-
-```tsx
-try {
-  localStorage.setItem('savedJobs', JSON.stringify(Array.from(newSaved)));
-} catch (error) {
-  console.error('Failed to save jobs:', error);
-  showError('Failed to save job. Please free up storage or try again.');
-}
-```
+The fix has been implemented. The toggleSaveJob function now handles localStorage errors gracefully, logging errors and showing a user-friendly toast without breaking the UI. The setSavedJobs is inside the try block to keep UI state consistent.
 
 ---
 
 ## ✨ Checklist
 
 - [x] Repro steps provided
-- [x] Fix suggestion provided
+- [x] Fix implemented and tested
+- [x] Bug report updated to reflect current status
 
 ---
 
-I'll open a PR that applies this fix and adds a test mocking `localStorage.setItem` to throw and verifying behavior.
+This bug has been resolved. No further action required.
