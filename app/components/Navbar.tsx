@@ -20,6 +20,7 @@ export default function Navbar() {
     { name: "Features", link: "#features" },
     { name: "Resources", link: "/resources" },
     { name: "Practice Hub", link: "/practice-hub" },
+    { name: "Career Guidance", link: "/career-guidance" },
     { name: "Pricing", link: "#pricing" },
     { name: "About", link: "/about" },
   ];
