@@ -19,6 +19,7 @@ export default function Navbar() {
   const navItems = [
     { name: "Features", link: "#features" },
     { name: "Resources", link: "/resources" },
+    { name: "Practice Hub", link: "/practice-hub" },
     { name: "Pricing", link: "#pricing" },
     { name: "About", link: "/about" },
   ];
