@@ -35,6 +35,20 @@
 
 ---
 
+## 📑 Table of Contents
+
+- [🌟 Features](#-features-that-set-us-apart)
+- [🛠️ Tech Stack](#-tech-stack)
+- [🚀 Getting Started](#-getting-started-developer-mode)
+- [🤝 Contributing](#-contributing)
+- [🎯 Hacktoberfest 2025](#-hacktoberfest-2025)
+- [👥 Contributors](#-our-amazing-contributors)
+- [👨‍💻 Project Maintainer](#-project-maintainer)
+- [📄 License](#-license)
+- [⭐ Show Your Support](#-show-your-support)
+
+---
+
 ## 🌟 Features That Set Us Apart
 
 <table>
