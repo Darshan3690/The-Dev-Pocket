@@ -17,9 +17,11 @@
 <br/>
 
 ![Hacktoberfest Badge](https://img.shields.io/badge/Hacktoberfest-2025-blueviolet?style=for-the-badge&logo=hackaday)
+![EWOCS Badge](https://img.shields.io/badge/EWOCS-2026-violet?style=for-the-badge&logo=hackaday)
 ![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=for-the-badge)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
 ![GitHub Repo stars](https://img.shields.io/github/stars/Darshan3690/The-Dev-Pocket?style=for-the-badge&color=gold)
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=Darshan3690.The-Dev-Pocket)
 ![GitHub forks](https://img.shields.io/github/forks/Darshan3690/The-Dev-Pocket?style=for-the-badge&color=blue)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg?style=for-the-badge)
 
@@ -33,9 +35,8 @@
 
 </div>
 
----
+# ARCHITECHTURE
 
-## 🌟 Features That Set Us Apart
 
 <table>
 <tr>
