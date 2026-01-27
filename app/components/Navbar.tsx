@@ -21,6 +21,7 @@ export default function Navbar() {
     { name: "Resources", link: "/resources" },
     { name: "Practice Hub", link: "/practice-hub" },
     { name: "Tech Stacks", link: "/tech-stack-explorer" },
+    { name: "Learning Paths", link: "/learning-paths" },
     { name: "Pricing", link: "#pricing" },
     { name: "About", link: "/about" },
   ];

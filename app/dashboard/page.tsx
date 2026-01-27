@@ -418,6 +418,29 @@ export default function DashboardPage() {
               </div>
             </div>
           </Link>
+
+          <Link href="/learning-paths" className="group block">
+            <div className="bg-gradient-to-br from-rose-50 to-pink-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border border-rose-200">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-12 h-12 bg-rose-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white text-xl">📚</span>
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900 group-hover:text-rose-600 transition-colors">
+                    Learning Path Recommender
+                  </h3>
+                  <p className="text-sm text-rose-600 font-medium">Personalized journey</p>
+                </div>
+              </div>
+              <p className="text-gray-600 text-sm">
+                Get personalized learning paths with skill assessments, weekly milestones, and progress tracking.
+              </p>
+              <div className="mt-4 flex items-center text-rose-600 text-sm font-medium group-hover:text-rose-700">
+                Start Learning
+                <span className="ml-1 group-hover:translate-x-1 transition-transform">→</span>
+              </div>
+            </div>
+          </Link>
         </div>
       </div>
 
