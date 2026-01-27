@@ -395,6 +395,29 @@ export default function DashboardPage() {
               Get instant help with coding questions and study guidance.
             </p>
           </button>
+
+          <Link href="/tech-stack-explorer" className="group block">
+            <div className="bg-gradient-to-br from-amber-50 to-orange-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border border-amber-200">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-12 h-12 bg-amber-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white text-xl">🛠️</span>
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900 group-hover:text-amber-600 transition-colors">
+                    Tech Stack Explorer
+                  </h3>
+                  <p className="text-sm text-amber-600 font-medium">Choose wisely</p>
+                </div>
+              </div>
+              <p className="text-gray-600 text-sm">
+                Explore popular tech stacks, compare features, and discover which stack is perfect for your project.
+              </p>
+              <div className="mt-4 flex items-center text-amber-600 text-sm font-medium group-hover:text-amber-700">
+                Explore Stacks
+                <span className="ml-1 group-hover:translate-x-1 transition-transform">→</span>
+              </div>
+            </div>
+          </Link>
         </div>
       </div>
 
