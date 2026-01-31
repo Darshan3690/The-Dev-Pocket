@@ -35,12 +35,11 @@
 
 </div>
 
-# ARCHITECHTURE
-
 ## 📑 Table of Contents
 
 - [🌟 Features](#-features-that-set-us-apart)
 - [🛠️ Tech Stack](#-tech-stack)
+- [System Architecture](#-system-architecture)
 - [🚀 Getting Started](#-getting-started-developer-mode)
 - [🤝 Contributing](#-contributing)
 - [🎯 Hacktoberfest 2025](#-hacktoberfest-2025)
@@ -114,6 +113,38 @@ graph LR
 | **Deployment** | ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white) |
 
 </div>
+
+---
+
+## 🏗️ System Architecture
+
+To help contributors understand how **The Dev Pocket** handles data and authentication, here is a visual representation of our tech stack integration:
+
+<div align="center">
+
+```mermaid
+graph LR
+    User((User)) -- Interacts --> NextJS[Next.js Frontend]
+    
+    subgraph "Application Logic"
+        NextJS -- Auth Request --> Clerk[Clerk Auth]
+        NextJS -- Query --> Prisma[Prisma Client]
+    end
+
+    subgraph "Data Layer"
+        Prisma -- Session Pooling --> Supabase[(Supabase DB)]
+        Prisma -- Direct Connect --> Migrations[DB Migrations]
+    end
+
+    Clerk -- Session Tokens --> NextJS
+    Supabase -- Data Results --> Prisma
+    Prisma -- Typed Response --> NextJS
+
+    style NextJS fill:#000,color:#fff,stroke:#333
+    style Clerk fill:#6C47FF,color:#fff
+    style Supabase fill:#3ECF8E,color:#fff
+    style Prisma fill:#2D3748,color:#fff
+```
 
 ---
 
