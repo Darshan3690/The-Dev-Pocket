@@ -139,20 +139,14 @@ export default function OnboardingTutorial() {
       {isOpen && (
         <>
           {/* Overlay */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+          <div
             className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[100]"
             onClick={handleSkip}
           />
 
           {/* Highlight Target Element */}
           {currentStepData.target && currentStepData.highlight && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+            <div
               className="fixed z-[101] pointer-events-none"
               style={{
                 boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.2)",
@@ -162,11 +156,7 @@ export default function OnboardingTutorial() {
           )}
 
           {/* Tutorial Card */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+          <div
             className={`fixed z-[102] w-full max-w-md mx-auto ${
               currentStepData.position === "center"
                 ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
@@ -180,11 +170,9 @@ export default function OnboardingTutorial() {
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border-2 border-blue-500 dark:border-blue-600 overflow-hidden">
               {/* Progress Bar */}
               <div className="h-1.5 bg-gray-200 dark:bg-gray-700">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progress}%` }}
-                  transition={{ duration: 0.3 }}
+                <div
                   className="h-full bg-gradient-to-r from-blue-500 to-purple-600"
+                  style={{ width: `${progress}%` }}
                 />
               </div>
 
@@ -275,7 +263,7 @@ export default function OnboardingTutorial() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>

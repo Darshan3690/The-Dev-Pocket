@@ -58,55 +58,29 @@ export function HeroWithMockup({
         <div className="relative z-10 flex flex-col items-start max-w-4xl mx-auto min-h-[60vh] justify-center pb-16 sm:pb-20 pt-12 sm:pt-16 md:pt-20">
 
           {/* Small Label */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 mb-5"
-          >
+          <div className="inline-flex items-center gap-2 mb-5">
             <div className="h-px w-8 bg-gradient-to-r from-sky-600 to-transparent"></div>
             <span className="text-xs sm:text-sm font-medium tracking-wider text-gray-600 dark:text-gray-400 uppercase">
               Developer Platform
             </span>
-          </motion.div>
+          </div>
 
           {/* Main Heading - Left Aligned, Better Typography */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="space-y-2 mb-6"
-          >
+          <div className="space-y-2 mb-6">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-left">
               <span className="block text-gray-900 dark:text-white leading-[1.15]">
-                The AI-Powered
-              </span>
-              <span className="block text-gray-900 dark:text-white leading-[1.15] text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
-                Platform for
-              </span>
-              <span className="block bg-gradient-to-r from-sky-600 via-blue-600 to-purple-600 dark:from-sky-400 dark:via-blue-400 dark:to-purple-400 bg-clip-text text-transparent leading-[1.15] text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
-                Your Dev Career
+                {title}
               </span>
             </h1>
-          </motion.div>
+          </div>
 
           {/* Description */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed mb-8 text-left"
-          >
-            Centralize learning, personalized roadmaps, job updates, and powerful resume tools—all in one smart dashboard.
-          </motion.p>
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed mb-8 text-left">
+            {description}
+          </p>
 
           {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.5 }}
-            className="flex flex-col sm:flex-row items-start sm:items-center gap-3"
-          >
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
             <Button
               asChild
               size="lg"
@@ -126,7 +100,7 @@ export function HeroWithMockup({
                 {secondaryCta.text}
               </a>
             </Button>
-          </motion.div>
+          </div>
         </div>
 
         {/* Mockup Section - Starts below hero content, visible in same viewport */}

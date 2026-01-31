@@ -171,17 +171,16 @@ const App = () => {
         />
       </section>
 
-      <motion.section
+      <section
         ref={featuresRef}
         id="features"
-        initial={{ opacity: 0, y: 40 }}
-        animate={featuresVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="py-16 sm:py-24 text-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        className={`py-16 sm:py-24 text-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-700 ease-out ${
+          featuresVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        }`}
       >
 <h2
   className={`text-3xl sm:text-4xl font-bold mb-4 ${
-    isDark ? "text-dark" : "text-white"
+    isDark ? "text-white" : "text-gray-800"
   }`}
 >
   All the Tools You Need, in <span className="text-sky-500">One Place</span>
@@ -195,6 +194,31 @@ const App = () => {
   className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left items-stretch"
   role="list"
 >
+  <FeatureCard
+    title="Placement Preparation Arena"
+    href="/placement-prep"
+    iconLabel="Target icon representing placement preparation"
+    icon={
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-10 w-10"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+    }
+  >
+    Complete placement companion with DSA practice, company questions, and interview prep.
+  </FeatureCard>
+
   <FeatureCard
     title="Personalized Roadmaps"
     href="/create-roadmap"
@@ -296,10 +320,10 @@ const App = () => {
   </FeatureCard>
 </div>
 
-      </motion.section>
+      </section>
 
   
-        <FeaturesSectionWithHoverEffects />
+
       <section
         ref={howItWorksRef}
         id="how-it-works"
@@ -313,7 +337,7 @@ const App = () => {
         <h2
           id="how-it-works-heading"
           className={`text-3xl sm:text-4xl font-bold mb-3 ${
-            isDark ? "text-black" : "text-white"
+            isDark ? "text-white" : "text-gray-800"
           }`}
         >
           Get Started in{" "}

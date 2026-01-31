@@ -165,7 +165,8 @@ export default function JobSearchPage() {
       localStorage.setItem('savedJobs', JSON.stringify(Array.from(newSaved)));
     } catch (error) {
       console.error('Failed to save jobs:', error);
-      showError('Failed to save job. Please free up storage or try again.');
+      // Could add toast notification here in the future
+      alert('Failed to save job. Please free up storage or try again.');
     }
   };
 
