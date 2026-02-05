@@ -153,3 +153,30 @@ model Bookmark {
   @@index([category])
   @@index([createdAt])
 }
+
+model Roadmap {
+  id          String      @id @default(uuid())
+  title       String
+  description String?
+  milestones  Milestone[]
+  createdAt   DateTime    @default(now())
+}
+
+model Milestone {
+  id        String        @id @default(uuid())
+  title     String
+  roadmapId String
+  roadmap   Roadmap      @relation(fields: [roadmapId], references: [id])
+  progress  UserProgress[]
+}
+
+model UserProgress {
+  id          String   @id @default(uuid())
+  userId      String   // Clerk userId
+  milestoneId String
+  milestone   Milestone @relation(fields: [milestoneId], references: [id])
+  completed   Boolean  @default(false)
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, milestoneId])
+}
