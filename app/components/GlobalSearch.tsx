@@ -13,6 +13,7 @@ interface SearchResult {
   category: "page" | "resource" | "feature" | "documentation";
   url: string;
   icon?: React.ReactNode;
+  type?: "static" | "resource";
 }
 
 // All searchable content
@@ -42,33 +43,63 @@ export default function GlobalSearch() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [showRecent, setShowRecent] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  // Search function with fuzzy matching
-  const performSearch = useCallback((searchQuery: string) => {
+  // Search function with fuzzy matching and API integration
+  const performSearch = useCallback(async (searchQuery: string) => {
     if (!searchQuery.trim()) {
       setResults([]);
       return;
     }
 
     const lowercaseQuery = searchQuery.toLowerCase();
-    const filtered = searchableContent.filter((item) => {
+
+    // Static content search
+    const staticResults = searchableContent.filter((item) => {
       const titleMatch = item.title.toLowerCase().includes(lowercaseQuery);
       const descMatch = item.description.toLowerCase().includes(lowercaseQuery);
       const categoryMatch = item.category.toLowerCase().includes(lowercaseQuery);
       return titleMatch || descMatch || categoryMatch;
-    });
+    }).map(item => ({ ...item, type: "static" as const }));
 
-    // Sort by relevance (title matches first)
-    filtered.sort((a, b) => {
+    let combinedResults = [...staticResults];
+
+    // Fetch resources from API if query is at least 2 characters
+    if (searchQuery.length >= 2) {
+      try {
+        const response = await fetch(`/api/resources?search=${encodeURIComponent(searchQuery)}&limit=5`);
+        const data = await response.json();
+        const resourceResults = data.resources.map((resource: any) => ({
+          id: `resource-${resource.id}`,
+          title: resource.title,
+          description: resource.description || resource.category,
+          category: "resource" as const,
+          url: `/resources/${resource.id}`,
+          icon: <BookOpen className="w-4 h-4" />,
+          type: "resource" as const,
+        }));
+        combinedResults = [...staticResults, ...resourceResults];
+      } catch (error) {
+        console.error('Error fetching resources:', error);
+      }
+    }
+
+    // Sort by relevance (title matches first, then static before resources)
+    combinedResults.sort((a, b) => {
       const aTitle = a.title.toLowerCase().startsWith(lowercaseQuery) ? 1 : 0;
       const bTitle = b.title.toLowerCase().startsWith(lowercaseQuery) ? 1 : 0;
-      return bTitle - aTitle;
+      if (aTitle !== bTitle) return bTitle - aTitle;
+      // Prefer static results
+      if (a.type === "static" && b.type === "resource") return -1;
+      if (a.type === "resource" && b.type === "static") return 1;
+      return 0;
     });
 
-    setResults(filtered.slice(0, 8)); // Limit to 8 results
+    setResults(combinedResults.slice(0, 8)); // Limit to 8 results
     setSelectedIndex(0);
   }, []);
 
@@ -207,6 +238,12 @@ export default function GlobalSearch() {
                 type="text"
                 value={query}
                 onChange={handleInputChange}
+                onFocus={() => {
+                  if (!query && recentSearches.length > 0) {
+                    setShowRecent(true);
+                  }
+                }}
+                onBlur={() => setTimeout(() => setShowRecent(false), 200)}
                 placeholder="Search pages, resources, features..."
                 className="flex-1 bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 outline-none text-lg font-medium"
                 autoComplete="off"
