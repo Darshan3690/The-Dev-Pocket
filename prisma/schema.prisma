@@ -15,6 +15,7 @@ model User {
   createdAt DateTime   @default(now())
   projects  Project[]
   stats     UserStats?
+  bookmarks Bookmark[]
 }
 
 model UserStats {
@@ -95,6 +96,7 @@ model Quiz {
   categoryId String
   category   QuizCategory @relation(fields: [categoryId], references: [id])
   questions  Question[]
+  attempts   QuizAttempt[]
   createdAt  DateTime     @default(now())
 }
 
@@ -114,6 +116,69 @@ model QuizAttempt {
   score     Int
   total     Int
   createdAt DateTime @default(now())
+  quiz      Quiz     @relation(fields: [quizId], references: [id])
+}
+
+model Resource {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  url         String
+  category    String
+  tags        Json?    // Array of strings like ["javascript", "tutorial"]
+  author      String?
+  difficulty  String?  // e.g., "beginner", "intermediate", "advanced"
+  readingTime Int?     // in minutes
+  rating      Float?   // average rating, e.g., 4.5
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([tags])
+}
+
+model Bookmark {
+  id          String   @id @default(uuid())
+  userId      String
+  title       String
+  url         String
+  description String?
+  category    String   @default("General")
+  tags        Json?    // Array of strings
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([category])
+  @@index([createdAt])
+}
+
+model Roadmap {
+  id          String      @id @default(uuid())
+  title       String
+  description String?
+  milestones  Milestone[]
+  createdAt   DateTime    @default(now())
+}
+
+model Milestone {
+  id        String        @id @default(uuid())
+  title     String
+  roadmapId String
+  roadmap   Roadmap      @relation(fields: [roadmapId], references: [id])
+  progress  UserProgress[]
+}
+
+model UserProgress {
+  id          String   @id @default(uuid())
+  userId      String   // Clerk userId
+  milestoneId String
+  milestone   Milestone @relation(fields: [milestoneId], references: [id])
+  completed   Boolean  @default(false)
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, milestoneId])
 }
 
 model Resource {

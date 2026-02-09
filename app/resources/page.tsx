@@ -6,10 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Search, ExternalLink, Clock, Star, Filter, X, CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
-import { format } from 'date-fns';
+import { Search, ExternalLink, Clock, Star } from 'lucide-react';
 
 interface Resource {
   id: string;
@@ -38,15 +35,7 @@ export default function ResourcesPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [difficulty, setDifficulty] = useState('');
-  const [author, setAuthor] = useState('');
-  const [dateFrom, setDateFrom] = useState<Date | undefined>();
-  const [dateTo, setDateTo] = useState<Date | undefined>();
-  const [sortBy, setSortBy] = useState('date');
-  const [sortOrder, setSortOrder] = useState('desc');
   const [page, setPage] = useState(1);
-  const [showFilters, setShowFilters] = useState(false);
 
   const fetchResources = async () => {
     setLoading(true);
@@ -54,16 +43,9 @@ export default function ResourcesPage() {
       const params = new URLSearchParams({
         page: page.toString(),
         limit: '12',
-        sortBy,
-        sortOrder,
       });
       if (search) params.append('search', search);
       if (category) params.append('category', category);
-      if (selectedTags.length > 0) params.append('tags', selectedTags.join(','));
-      if (difficulty) params.append('difficulty', difficulty);
-      if (author) params.append('author', author);
-      if (dateFrom) params.append('dateFrom', format(dateFrom, 'yyyy-MM-dd'));
-      if (dateTo) params.append('dateTo', format(dateTo, 'yyyy-MM-dd'));
 
       const response = await fetch(`/api/resources?${params}`);
       const data = await response.json();
@@ -78,7 +60,7 @@ export default function ResourcesPage() {
 
   useEffect(() => {
     fetchResources();
-  }, [search, category, selectedTags, difficulty, author, dateFrom, dateTo, sortBy, sortOrder, page]);
+  }, [search, category, page]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -118,159 +100,20 @@ export default function ResourcesPage() {
             </div>
           </form>
 
-          <div className="flex gap-2">
-            <Select value={category} onValueChange={(value) => { setCategory(value); setPage(1); }}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="All Categories" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">All Categories</SelectItem>
-                {categories.map((cat) => (
-                  <SelectItem key={cat} value={cat.toLowerCase()}>
-                    {cat}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Button
-              variant="outline"
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2"
-            >
-              <Filter className="h-4 w-4" />
-              Filters
-              {(selectedTags.length > 0 || difficulty || author || dateFrom || dateTo) && (
-                <Badge variant="secondary" className="ml-1 h-5 w-5 p-0 text-xs">
-                  {(selectedTags.length > 0 ? 1 : 0) + (difficulty ? 1 : 0) + (author ? 1 : 0) + ((dateFrom || dateTo) ? 1 : 0)}
-                </Badge>
-              )}
-            </Button>
-          </div>
+          <Select value={category} onValueChange={(value) => { setCategory(value); setPage(1); }}>
+            <SelectTrigger className="w-full md:w-48">
+              <SelectValue placeholder="All Categories" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">All Categories</SelectItem>
+              {categories.map((cat) => (
+                <SelectItem key={cat} value={cat.toLowerCase()}>
+                  {cat}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
-
-        {/* Advanced Filters */}
-        {showFilters && (
-          <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 mb-6 border">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-              {/* Difficulty */}
-              <div>
-                <label className="block text-sm font-medium mb-2">Difficulty</label>
-                <Select value={difficulty} onValueChange={(value) => { setDifficulty(value); setPage(1); }}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="All Levels" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="">All Levels</SelectItem>
-                    <SelectItem value="beginner">Beginner</SelectItem>
-                    <SelectItem value="intermediate">Intermediate</SelectItem>
-                    <SelectItem value="advanced">Advanced</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Author */}
-              <div>
-                <label className="block text-sm font-medium mb-2">Author</label>
-                <Input
-                  placeholder="Filter by author"
-                  value={author}
-                  onChange={(e) => { setAuthor(e.target.value); setPage(1); }}
-                />
-              </div>
-
-              {/* Date From */}
-              <div>
-                <label className="block text-sm font-medium mb-2">From Date</label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start text-left font-normal">
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {dateFrom ? format(dateFrom, "PPP") : "Select date"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={dateFrom}
-                      onSelect={(date) => { setDateFrom(date); setPage(1); }}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              {/* Date To */}
-              <div>
-                <label className="block text-sm font-medium mb-2">To Date</label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start text-left font-normal">
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {dateTo ? format(dateTo, "PPP") : "Select date"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={dateTo}
-                      onSelect={(date) => { setDateTo(date); setPage(1); }}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-            </div>
-
-            {/* Sort Options */}
-            <div className="flex flex-wrap gap-4 items-end">
-              <div>
-                <label className="block text-sm font-medium mb-2">Sort By</label>
-                <Select value={sortBy} onValueChange={(value) => { setSortBy(value); setPage(1); }}>
-                  <SelectTrigger className="w-32">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="date">Date</SelectItem>
-                    <SelectItem value="rating">Rating</SelectItem>
-                    <SelectItem value="popularity">Popularity</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Order</label>
-                <Select value={sortOrder} onValueChange={(value) => { setSortOrder(value); setPage(1); }}>
-                  <SelectTrigger className="w-24">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="desc">Desc</SelectItem>
-                    <SelectItem value="asc">Asc</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setSelectedTags([]);
-                  setDifficulty('');
-                  setAuthor('');
-                  setDateFrom(undefined);
-                  setDateTo(undefined);
-                  setSortBy('date');
-                  setSortOrder('desc');
-                  setPage(1);
-                }}
-                className="flex items-center gap-2"
-              >
-                <X className="h-4 w-4" />
-                Clear Filters
-              </Button>
-            </div>
-          </div>
-        )}
       </div>
 
       {loading ? (

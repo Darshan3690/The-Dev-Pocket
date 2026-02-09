@@ -20,7 +20,8 @@ import {
   UserPlus,
   Zap,
   MapPin,
-  ArrowRight
+  ArrowRight,
+  Bookmark
 } from "lucide-react"
 
 import { UserButton } from "@clerk/nextjs";
@@ -31,6 +32,7 @@ const sidebarLinks = [
   { name: "AI Project Recommender", href: "/dashboard/projects", icon: Bot, tooltip: "Get AI project suggestions" },
   { name: "Quiz Center", href: "/dashboard/quiz", icon: Brain, tooltip: "Test your knowledge" },
   { name: "Resume Builder", href: "/dashboard/resume", icon: FileText, tooltip: "Build your resume" },
+  { name: "My Bookmarks", href: "/dashboard/bookmarks", icon: Bookmark, tooltip: "Saved resources" },
   { name: "Community Forum", href: "/dashboard/forum", icon: Users, tooltip: "Connect with others" },
   { name: "Notes / To-Do", href: "/dashboard/notes", icon: StickyNote, tooltip: "Manage your tasks" },
   { name: "Calendar", href: "/dashboard/calendar", icon: Calendar, tooltip: "Schedule events" }
