@@ -180,3 +180,21 @@ model UserProgress {
 
   @@unique([userId, milestoneId])
 }
+
+model Resource {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  url         String
+  category    String
+  tags        Json?    // Array of strings like ["javascript", "tutorial"]
+  author      String?
+  difficulty  String?  // e.g., "beginner", "intermediate", "advanced"
+  readingTime Int?     // in minutes
+  rating      Float?   // average rating, e.g., 4.5
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([tags])
+}
