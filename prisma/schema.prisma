@@ -213,3 +213,19 @@ model UserProfile {
   @@index([username])
   @@index([isPublic])
 }
+
+// Search History for tracking user searches
+model SearchHistory {
+  id            String   @id @default(uuid())
+  userId        String?  // Optional - null for anonymous searches
+  query         String
+  resultsCount  Int      @default(0)
+  isZeroResult  Boolean  @default(false)
+  category      String?  // Optional - what category was searched
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+  @@index([query])
+  @@index([createdAt])
+  @@index([isZeroResult])
+}

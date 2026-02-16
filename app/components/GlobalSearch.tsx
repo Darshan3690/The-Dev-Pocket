@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Search, X, Command, ArrowRight, FileText, BookOpen, Code, User } from "lucide-react";
+import { Search, X, Command, ArrowRight, FileText, BookOpen, Code, User, TrendingUp } from "lucide-react";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -45,9 +46,30 @@ export default function GlobalSearch() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [showRecent, setShowRecent] = useState(false);
+  const [popularSearches, setPopularSearches] = useState<{query: string, count: number}[]>([]);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+
+  // Fetch popular searches
+  useEffect(() => {
+    const fetchPopularSearches = async () => {
+      try {
+        const response = await fetch('/api/search-analytics?type=popular&limit=5');
+        const data = await response.json();
+        if (data.searches) {
+          setPopularSearches(data.searches);
+        }
+      } catch (error) {
+        console.error('Error fetching popular searches:', error);
+      }
+    };
+
+    if (isOpen) {
+      fetchPopularSearches();
+    }
+  }, [isOpen]);
+
 
   // Search function with fuzzy matching and API integration
   const performSearch = useCallback(async (searchQuery: string) => {
@@ -271,7 +293,7 @@ export default function GlobalSearch() {
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-2xl" />
                   </div>
                   <p className="text-lg font-semibold text-gray-700 dark:text-gray-300">
-                    No results found for &quot;{query}&quot;
+                    No results found for "{query}"
                   </p>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                     Try different keywords or check your spelling
@@ -337,7 +359,7 @@ export default function GlobalSearch() {
                   ))}
                 </div>
               ) : (
-                <div className="px-6 py-12 text-center">
+                <div className="px-6 py-8 text-center">
                   <div className="relative inline-flex mb-4">
                     <Search className="w-16 h-16 text-gray-300 dark:text-gray-600" />
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-2xl animate-pulse" />
@@ -348,6 +370,35 @@ export default function GlobalSearch() {
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
                     Search for pages, resources, or features
                   </p>
+                  
+                  {/* Popular Searches */}
+                  {popularSearches.length > 0 && (
+                    <div className="mb-6">
+                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center justify-center gap-2">
+                        <TrendingUp className="h-4 w-4 text-orange-500" />
+                        Popular Searches
+                      </h3>
+                      <div className="flex flex-wrap justify-center gap-2">
+                        {popularSearches.map((search) => (
+                          <button
+                            key={search.query}
+                            onClick={() => {
+                              setQuery(search.query);
+                              performSearch(search.query);
+                            }}
+                            className="px-3 py-1.5 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 
+                                     border border-orange-200 dark:border-orange-800 rounded-full text-sm 
+                                     hover:from-orange-100 hover:to-red-100 dark:hover:from-orange-900/30 dark:hover:to-red-900/30 
+                                     transition-all duration-200 flex items-center gap-2"
+                          >
+                            <span className="text-orange-700 dark:text-orange-300">{search.query}</span>
+                            <span className="text-xs text-orange-500 dark:text-orange-400">({search.count})</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <div className="flex flex-wrap justify-center gap-3">
                     <div className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 rounded-lg border-2 border-gray-200 dark:border-gray-700 shadow-sm">
                       <kbd className="px-2.5 py-1 text-xs font-bold bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 rounded border border-gray-300 dark:border-gray-600">
@@ -370,6 +421,7 @@ export default function GlobalSearch() {
                   </div>
                 </div>
               )}
+
             </div>
           </div>
         </div>
