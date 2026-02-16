@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react"
 import { useUser } from "@clerk/nextjs"
-import Link from "next/link";
+import Link from "next/link"
+import { motion } from "framer-motion"
+
 
 interface UserStats {
   points: number;
@@ -18,12 +20,17 @@ export default function DashboardPage() {
   const { isLoaded, user } = useUser()
   const [stats, setStats] = useState<UserStats | null>(null)
   const [loading, setLoading] = useState(true)
+  const [recentBadges, setRecentBadges] = useState<any[]>([])
+  const [badgesLoading, setBadgesLoading] = useState(true)
+
 
   useEffect(() => {
     if (isLoaded && user) {
       fetchUserStats()
+      fetchRecentBadges()
     }
   }, [isLoaded, user])
+
 
   const fetchUserStats = async () => {
     try {
@@ -57,6 +64,21 @@ export default function DashboardPage() {
       setLoading(false)
     }
   }
+
+  const fetchRecentBadges = async () => {
+    try {
+      const response = await fetch('/api/user-badges?limit=3')
+      const data = await response.json()
+      if (data.badges) {
+        setRecentBadges(data.badges.slice(0, 3))
+      }
+    } catch (error) {
+      console.error('Error fetching badges:', error)
+    } finally {
+      setBadgesLoading(false)
+    }
+  }
+
 
   const dailyGoalPercentage = stats 
     ? Math.min(100, Math.round((stats.dailyGoalProgress / stats.dailyGoalTarget) * 100))
@@ -165,9 +187,63 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* Recent Badges */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-gray-900">Recent Achievements</h2>
+          <Link 
+            href="/dashboard/achievements" 
+            className="text-violet-600 hover:text-violet-700 text-sm font-medium"
+          >
+            View All →
+          </Link>
+        </div>
+        
+        {badgesLoading ? (
+          <div className="grid gap-4 sm:grid-cols-3">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-24 bg-gray-200 rounded-xl animate-pulse" />
+            ))}
+          </div>
+        ) : recentBadges.length > 0 ? (
+          <div className="grid gap-4 sm:grid-cols-3">
+            {recentBadges.map((badge, index) => (
+              <motion.div
+                key={badge.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-gradient-to-br from-violet-50 to-purple-50 p-4 rounded-xl border border-violet-200 flex items-center gap-3"
+              >
+                <div className="w-12 h-12 bg-white rounded-lg shadow flex items-center justify-center text-2xl">
+                  {badge.badge.icon}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-gray-900 truncate">{badge.badge.name}</h3>
+                  <p className="text-xs text-gray-500">+{badge.badge.points} points</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <div className="bg-gradient-to-r from-violet-50 to-purple-50 rounded-xl p-6 text-center border border-violet-100">
+            <div className="text-4xl mb-2">🏆</div>
+            <h3 className="font-semibold text-gray-900 mb-1">No badges yet</h3>
+            <p className="text-sm text-gray-600 mb-3">Complete quizzes and activities to earn your first badge!</p>
+            <Link 
+              href="/dashboard/quiz" 
+              className="inline-flex items-center px-4 py-2 bg-violet-600 text-white rounded-lg text-sm font-medium hover:bg-violet-700 transition"
+            >
+              Start Learning
+            </Link>
+          </div>
+        )}
+      </div>
+
       {/* Quick Actions */}
       <div className="space-y-4">
         <h2 className="text-xl font-semibold text-gray-900">Quick Actions</h2>
+
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <Link href="/create-roadmap" className="group block">
             <div className="bg-gradient-to-br from-blue-50 to-indigo-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border border-blue-200">
