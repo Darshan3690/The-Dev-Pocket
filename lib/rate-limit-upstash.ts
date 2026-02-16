@@ -2,8 +2,37 @@ import type { RateLimitConfig, RateLimitResult } from './rate-limit';
 import { Redis } from '@upstash/redis';
 import type { Ratelimit as RatelimitClient } from '@upstash/ratelimit';
 import { Ratelimit } from '@upstash/ratelimit';
+import type { NextRequest } from 'next/server';
 
 let cached: { client?: any; limiter?: any } = {};
+
+/**
+ * Extracts the client IP address from a Next.js request
+ * Checks various headers that may contain the real client IP when behind proxies
+ */
+export function getClientIP(request: NextRequest): string {
+  // Check for forwarded headers (common in production with load balancers/proxies)
+  const forwarded = request.headers.get('x-forwarded-for');
+  if (forwarded) {
+    // x-forwarded-for can contain multiple IPs, get the first one (client IP)
+    return forwarded.split(',')[0].trim();
+  }
+
+  // Check for real IP header (used by some proxies like Nginx)
+  const realIP = request.headers.get('x-real-ip');
+  if (realIP) {
+    return realIP.trim();
+  }
+
+  // Check for Vercel-specific header
+  const vercelIP = request.headers.get('x-vercel-forwarded-for');
+  if (vercelIP) {
+    return vercelIP.split(',')[0].trim();
+  }
+
+  // Fallback to a default identifier if no IP can be determined
+  return 'unknown-ip';
+}
 
 export async function upstashLimit(identifier: string, config: RateLimitConfig): Promise<RateLimitResult> {
   if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {

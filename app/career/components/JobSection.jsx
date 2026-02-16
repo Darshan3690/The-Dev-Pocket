@@ -1,4 +1,6 @@
+"use client";
 import jobs from "../data/jobs";
+import BookmarkButton from "@/app/components/BookmarkButton";
 
 export default function JobSection({ sort, search }) {
   const filteredJobs = jobs
@@ -17,9 +19,20 @@ export default function JobSection({ sort, search }) {
 
       {filteredJobs.map(job => (
         <div key={job.id} style={cardStyle}>
-          <h3>{job.title}</h3>
-          <p>{job.company} — {job.location}</p>
-          <span style={jobTag}>Job</span>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div style={{ flex: 1 }}>
+              <h3>{job.title}</h3>
+              <p>{job.company} — {job.location}</p>
+              <span style={jobTag}>Job</span>
+            </div>
+            <BookmarkButton
+              title={`${job.title} at ${job.company}`}
+              url={job.url || `#job-${job.id}`}
+              description={`${job.title} position at ${job.company} in ${job.location}`}
+              category="General"
+              size="sm"
+            />
+          </div>
         </div>
       ))}
     </section>
