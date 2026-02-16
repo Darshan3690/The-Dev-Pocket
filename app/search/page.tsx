@@ -10,8 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Search, ExternalLink, Clock, Star, Filter, X, CalendarIcon, ChevronLeft, ChevronRight, History, TrendingUp } from 'lucide-react';
-
+import { Search, ExternalLink, Clock, Star, Filter, X, CalendarIcon, ChevronLeft, ChevronRight, History } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 
@@ -75,9 +74,6 @@ export default function AdvancedSearchPage() {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(parseInt(searchParams.get('page') || '1'));
 
-  // Popular searches
-  const [popularSearches, setPopularSearches] = useState<{query: string, count: number}[]>([]);
-
   // Load recent searches from localStorage
   useEffect(() => {
     const stored = localStorage.getItem('recentSearches');
@@ -85,24 +81,6 @@ export default function AdvancedSearchPage() {
       setRecentSearches(JSON.parse(stored));
     }
   }, []);
-
-  // Fetch popular searches
-  useEffect(() => {
-    const fetchPopularSearches = async () => {
-      try {
-        const response = await fetch('/api/search-analytics?type=popular&limit=5');
-        const data = await response.json();
-        if (data.searches) {
-          setPopularSearches(data.searches);
-        }
-      } catch (error) {
-        console.error('Error fetching popular searches:', error);
-      }
-    };
-
-    fetchPopularSearches();
-  }, []);
-
 
   // Update URL params
   const updateURL = useCallback(() => {
@@ -274,92 +252,8 @@ export default function AdvancedSearchPage() {
           )}
         </div>
 
-        {/* Active Filter Chips */}
-        {(category || selectedTags.length > 0 || difficulty || author || dateFrom || dateTo) && (
-          <div className="flex flex-wrap gap-2 mb-4">
-            <span className="text-sm text-gray-500 dark:text-gray-400 mr-2">Active filters:</span>
-            {category && (
-              <Badge variant="secondary" className="flex items-center gap-1">
-                Category: {category}
-                <button onClick={() => setCategory('')} className="ml-1 hover:text-red-500">
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            )}
-            {selectedTags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="flex items-center gap-1">
-                Tag: {tag}
-                <button onClick={() => setSelectedTags(selectedTags.filter(t => t !== tag))} className="ml-1 hover:text-red-500">
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            ))}
-            {difficulty && (
-              <Badge variant="secondary" className="flex items-center gap-1">
-                Difficulty: {difficulty}
-                <button onClick={() => setDifficulty('')} className="ml-1 hover:text-red-500">
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            )}
-            {author && (
-              <Badge variant="secondary" className="flex items-center gap-1">
-                Author: {author}
-                <button onClick={() => setAuthor('')} className="ml-1 hover:text-red-500">
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            )}
-            {dateFrom && (
-              <Badge variant="secondary" className="flex items-center gap-1">
-                From: {format(dateFrom, 'MMM d, yyyy')}
-                <button onClick={() => setDateFrom(undefined)} className="ml-1 hover:text-red-500">
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            )}
-            {dateTo && (
-              <Badge variant="secondary" className="flex items-center gap-1">
-                To: {format(dateTo, 'MMM d, yyyy')}
-                <button onClick={() => setDateTo(undefined)} className="ml-1 hover:text-red-500">
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            )}
-          </div>
-        )}
-
-        {/* Popular Searches */}
-        {!query && popularSearches.length > 0 && (
-          <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-orange-500" />
-              Popular Searches
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {popularSearches.map((search) => (
-                <button
-                  key={search.query}
-                  onClick={() => {
-                    setQuery(search.query);
-                    performSearch();
-                  }}
-                  className="px-3 py-1.5 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 
-                           border border-orange-200 dark:border-orange-800 rounded-full text-sm 
-                           hover:from-orange-100 hover:to-red-100 dark:hover:from-orange-900/30 dark:hover:to-red-900/30 
-                           transition-all duration-200 flex items-center gap-2"
-                >
-                  <span className="text-orange-700 dark:text-orange-300">{search.query}</span>
-                  <span className="text-xs text-orange-500 dark:text-orange-400">({search.count})</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Filters Row */}
         <div className="flex flex-wrap gap-4 mb-6">
-
           <Select value={category} onValueChange={setCategory}>
             <SelectTrigger className="w-48">
               <SelectValue placeholder="All Categories" />

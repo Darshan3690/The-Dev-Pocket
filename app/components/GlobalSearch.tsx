@@ -46,30 +46,9 @@ export default function GlobalSearch() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [showRecent, setShowRecent] = useState(false);
-  const [popularSearches, setPopularSearches] = useState<{query: string, count: number}[]>([]);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
-
-  // Fetch popular searches
-  useEffect(() => {
-    const fetchPopularSearches = async () => {
-      try {
-        const response = await fetch('/api/search-analytics?type=popular&limit=5');
-        const data = await response.json();
-        if (data.searches) {
-          setPopularSearches(data.searches);
-        }
-      } catch (error) {
-        console.error('Error fetching popular searches:', error);
-      }
-    };
-
-    if (isOpen) {
-      fetchPopularSearches();
-    }
-  }, [isOpen]);
-
 
   // Search function with fuzzy matching and API integration
   const performSearch = useCallback(async (searchQuery: string) => {
