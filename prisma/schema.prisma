@@ -18,6 +18,8 @@ model User {
   bookmarks Bookmark[]
 }
 
+
+
 model UserStats {
   id                String    @id @default(uuid())
   userId            String    @unique
@@ -197,4 +199,98 @@ model Resource {
 
   @@index([category])
   @@index([tags])
+}
+
+model Resource {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  url         String
+  category    String
+  tags        Json?    // Array of strings like ["javascript", "tutorial"]
+  author      String?
+  difficulty  String?  // e.g., "beginner", "intermediate", "advanced"
+  readingTime Int?     // in minutes
+  rating      Float?   // average rating, e.g., 4.5
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([tags])
+}
+
+// Badge Categories: LEARNING, STREAK, SOCIAL, MILESTONE
+enum BadgeCategory {
+  LEARNING
+  STREAK
+  SOCIAL
+  MILESTONE
+}
+
+// Badge Rarity Levels
+enum BadgeRarity {
+  COMMON
+  UNCOMMON
+  RARE
+  EPIC
+  LEGENDARY
+}
+
+model Badge {
+  id          String        @id @default(uuid())
+  slug        String        @unique
+  name        String
+  description String
+  icon        String        // Emoji or icon URL
+  category    BadgeCategory
+  criteria    Json          // Badge unlock conditions
+  points      Int           @default(10)
+  rarity      BadgeRarity   @default(COMMON)
+  order       Int           @default(0) // For display ordering
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  userBadges  UserBadge[]
+
+  @@index([category])
+  @@index([rarity])
+  @@index([isActive])
+}
+
+model UserBadge {
+  id        String   @id @default(uuid())
+  userId    String
+  badgeId   String
+  earnedAt  DateTime @default(now())
+  progress  Int?     // For multi-step badges (e.g., 5/10 completed)
+  metadata  Json?    // Additional context about how badge was earned
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge     Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeId]) // Prevent duplicate badges
+  @@index([userId])
+  @@index([badgeId])
+  @@index([earnedAt])
+}
+
+model UserProfile {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  username    String   @unique
+  bio         String?
+  avatar      String?
+  skills      Json?    // Array of skill strings
+  socialLinks Json?    // { github, linkedin, twitter, website }
+  isPublic    Boolean  @default(true)
+  location    String?
+  title       String?  // Job title
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([username])
+  @@index([isPublic])
 }

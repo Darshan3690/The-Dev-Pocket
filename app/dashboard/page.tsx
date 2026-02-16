@@ -64,6 +64,7 @@ export default function DashboardPage() {
     }
   }, [isLoaded, user])
 
+
   const fetchUserStats = async () => {
     try {
       const response = await fetch('/api/user-stats')
@@ -339,6 +340,7 @@ export default function DashboardPage() {
       {/* Quick Actions */}
       <div className="space-y-4">
         <h2 className="text-xl font-semibold text-gray-900">Quick Actions</h2>
+
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <Link href="/create-roadmap" className="group block">
             <div className="bg-gradient-to-br from-blue-50 to-indigo-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border border-blue-200">
