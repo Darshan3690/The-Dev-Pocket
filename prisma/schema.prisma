@@ -19,6 +19,7 @@ model User {
 }
 
 
+
 model UserStats {
   id                String    @id @default(uuid())
   userId            String    @unique
@@ -272,4 +273,24 @@ model UserBadge {
   @@index([userId])
   @@index([badgeId])
   @@index([earnedAt])
+}
+
+model UserProfile {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  username    String   @unique
+  bio         String?
+  avatar      String?
+  skills      Json?    // Array of skill strings
+  socialLinks Json?    // { github, linkedin, twitter, website }
+  isPublic    Boolean  @default(true)
+  location    String?
+  title       String?  // Job title
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([username])
+  @@index([isPublic])
 }
