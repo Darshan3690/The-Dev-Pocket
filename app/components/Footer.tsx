@@ -245,7 +245,7 @@ export default function Footer() {
           </div>
 
           {/* Newsletter Section */}
-          <div className="flex flex-col items-start">
+          <div className="flex flex-col items-start md:pr-8 lg:pr-16">
             <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
               Stay Updated
             </h4>
