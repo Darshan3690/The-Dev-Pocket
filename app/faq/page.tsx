@@ -11,11 +11,76 @@ const FAQ_ITEMS = [
     answer: (
       <>
         <p>Welcome! To get started:</p>
-        <ol>
+        <ol className="list-decimal ml-5 space-y-1 mt-2">
           <li>Sign up or sign in using the top-right authentication controls.</li>
           <li>Visit your dashboard to create a roadmap or explore curated resources.</li>
           <li>Use the AI Study Buddy to get help with study plans and code explanations.</li>
         </ol>
+      </>
+    ),
+  },
+  {
+    id: "personalization",
+    question: "How does Dev Pocket personalize insights?",
+    answer: (
+      <>
+        <p>
+          Dev Pocket analyzes your selected goals, experience level, and learning pace
+          to generate tailored roadmaps and suggestions. AI models recommend tasks,
+          timelines, and relevant resources to match your objectives.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: "free-plan",
+    question: "Is there a free plan available?",
+    answer: (
+      <>
+        <p>
+          Yes! Dev Pocket offers a free tier that provides access to essential features
+          like roadmap creation and selected AI tools. Premium plans unlock advanced
+          analytics and additional AI capabilities.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: "data-security",
+    question: "How is user data secured?",
+    answer: (
+      <>
+        <p>
+          User data is encrypted in transit and securely stored. We follow best
+          practices for authentication and database protection. You can review
+          our <Link href="/privacy">Privacy Policy</Link> for more details.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: "export-roadmap",
+    question: "Can I export my roadmap?",
+    answer: (
+      <>
+        <p>
+          Yes. Users can export roadmap progress and learning summaries for
+          offline tracking and sharing. Additional export formats may be
+          available in premium plans.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: "cancel-subscription",
+    question: "How do I cancel my subscription?",
+    answer: (
+      <>
+        <p>
+          You can manage or cancel your subscription from the billing section
+          inside your dashboard settings. Changes take effect at the end of
+          your billing cycle.
+        </p>
       </>
     ),
   },
@@ -25,20 +90,8 @@ const FAQ_ITEMS = [
     answer: (
       <>
         <p>
-          The dashboard provides quick access to stats, your learning roadmap, calendar,
-          notes, resume builder, and AI features to help you learn efficiently.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: "privacy",
-    question: "How is my data stored and used?",
-    answer: (
-      <>
-        <p>
-          We use Supabase/PostgreSQL as the primary data store. Sensitive information is
-          encrypted in transit and at rest where applicable. See the <Link href="/privacy">privacy page</Link> for full details.
+          The dashboard provides quick access to stats, your learning roadmap,
+          calendar, notes, resume builder, and AI-powered features.
         </p>
       </>
     ),
@@ -49,9 +102,9 @@ const FAQ_ITEMS = [
     answer: (
       <>
         <p>
-          The AI Roadmap Generator uses heuristics and AI models to recommend a personalized
-          learning path based on your background, goals, and time commitment. It suggests
-          resources, tasks, and estimated durations.
+          The AI Roadmap Generator evaluates your background, goals, and time
+          commitment to create a structured learning path with suggested
+          milestones and timelines.
         </p>
       </>
     ),
@@ -62,7 +115,15 @@ const FAQ_ITEMS = [
     answer: (
       <>
         <p>
-          Contributions are welcome! Check out the <Link href="https://github.com/Darshan3690/The-Dev-Pocket/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">contributing guide</Link> and open a PR on GitHub.
+          Contributions are welcome! Check the{" "}
+          <Link
+            href="https://github.com/Darshan3690/The-Dev-Pocket/blob/main/CONTRIBUTING.md"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            contributing guide
+          </Link>{" "}
+          and submit a PR.
         </p>
       </>
     ),
@@ -134,8 +195,15 @@ export default function FAQPage() {
               </p>
             </div>
           ) : (
-            <Accordion items={filtered.map((f) => ({ id: f.id, question: f.question, answer: f.answer }))} />
-          )}
+<div className="space-y-4">
+  <Accordion
+    items={filtered.map((f) => ({
+      id: f.id,
+      question: f.question,
+      answer: f.answer,
+    }))}
+  />
+</div>          )}
         </section>
       </div>
     </main>
