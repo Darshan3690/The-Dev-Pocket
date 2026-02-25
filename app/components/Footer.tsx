@@ -187,6 +187,15 @@ export default function Footer() {
                   Dashboard
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/feedback"
+                  className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 flex items-center group"
+                >
+                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  Feedback
+                </Link>
+              </li>
             </ul>
           </div>
 
