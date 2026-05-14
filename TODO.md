@@ -1,8 +1,21 @@
-# TODO: Implement Upstash Rate Limiting on API Routes
+# TODO: Implement Resource Management System
 
-## Tasks
-- [x] Update `/api/contact` POST to use Upstash rate limiter (5 requests/hour per IP)
-- [x] Update `/api/newsletter` POST to use Upstash rate limiter (3 requests/hour per IP)
-- [x] Add rate limiting to `/api/newsletter` DELETE (5 requests/hour per IP)
-- [x] Update `/api/user-stats` GET to use Upstash rate limiter (60 requests/minute per user)
-- [x] Test the changes to ensure rate limiting works correctly
+## Database Model
+- [ ] Add Resource model to prisma/schema.prisma with fields: id, title, description, url, category, tags (Json array), author, createdAt, updatedAt
+
+## API Routes
+- [ ] Create app/api/resources/route.ts for GET (list with search/filter/pagination) and POST (create)
+- [ ] Create app/api/resources/[id]/route.ts for GET, PUT, DELETE individual resources
+
+## Pages
+- [ ] Create app/resources/page.tsx for listing resources with UI for search, filtering by category, pagination
+- [ ] Create app/resources/[id]/page.tsx for viewing individual resource details
+
+## Admin Dashboard
+- [ ] Create app/dashboard/resources/page.tsx for admins to add/edit resources
+
+## Followup Steps
+- [ ] Set up environment variables (DATABASE_URL and DIRECT_URL) in .env file
+- [ ] Run prisma generate and migrate
+- [ ] Test API endpoints
+- [ ] Ensure UI works with search and pagination

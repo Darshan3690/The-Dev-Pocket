@@ -29,7 +29,8 @@ export default async function QuizPlayPage({ params }: PageProps) {
         Quiz ({questions.length} questions)
       </h1>
 
-      <QuizRunner questions={questions as any} />
+      <QuizRunner questions={questions as any} quizId={quizId} />
+
     </div>
   )
 }

@@ -16,10 +16,13 @@
 
 <br/>
 
+![GSSoC Badge](https://img.shields.io/badge/GSSoC-2026-orange?style=for-the-badge&logo=git&logoColor=white)
 ![Hacktoberfest Badge](https://img.shields.io/badge/Hacktoberfest-2025-blueviolet?style=for-the-badge&logo=hackaday)
+![EWOCS Badge](https://img.shields.io/badge/ECWoC-2026-violet?style=for-the-badge&logo=hackaday)
 ![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=for-the-badge)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
 ![GitHub Repo stars](https://img.shields.io/github/stars/Darshan3690/The-Dev-Pocket?style=for-the-badge&color=gold)
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=Darshan3690.The-Dev-Pocket)
 ![GitHub forks](https://img.shields.io/github/forks/Darshan3690/The-Dev-Pocket?style=for-the-badge&color=blue)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg?style=for-the-badge)
 
@@ -32,6 +35,19 @@
 ```
 
 </div>
+
+## 📑 Table of Contents
+
+- [🌟 Features](#-features-that-set-us-apart)
+- [🛠️ Tech Stack](#-tech-stack)
+- [System Architecture](#-system-architecture)
+- [🚀 Getting Started](#-getting-started-developer-mode)
+- [🤝 Contributing](#-contributing)
+- [🎯 Open Source Programs](#-open-source-programs)
+- [👥 Contributors](#-our-amazing-contributors)
+- [👨‍💻 Project Maintainer](#-project-maintainer)
+- [📄 License](#-license)
+- [⭐ Show Your Support](#-show-your-support)
 
 ---
 
@@ -62,7 +78,7 @@ Crystal-clear paths for developers at every stage of their journey
 <td width="50%">
 
 ### 🌍 Community-Powered
-Built by developers, for developers with **Hacktoberfest** spirit
+Built by developers, for developers with open source spirit
 
 </td>
 </tr>
@@ -98,6 +114,38 @@ graph LR
 | **Deployment** | ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white) |
 
 </div>
+
+---
+
+## 🏗️ System Architecture
+
+To help contributors understand how **The Dev Pocket** handles data and authentication, here is a visual representation of our tech stack integration:
+
+<div align="center">
+
+```mermaid
+graph LR
+    User((User)) -- Interacts --> NextJS[Next.js Frontend]
+    
+    subgraph "Application Logic"
+        NextJS -- Auth Request --> Clerk[Clerk Auth]
+        NextJS -- Query --> Prisma[Prisma Client]
+    end
+
+    subgraph "Data Layer"
+        Prisma -- Session Pooling --> Supabase[(Supabase DB)]
+        Prisma -- Direct Connect --> Migrations[DB Migrations]
+    end
+
+    Clerk -- Session Tokens --> NextJS
+    Supabase -- Data Results --> Prisma
+    Prisma -- Typed Response --> NextJS
+
+    style NextJS fill:#000,color:#fff,stroke:#333
+    style Clerk fill:#6C47FF,color:#fff
+    style Supabase fill:#3ECF8E,color:#fff
+    style Prisma fill:#2D3748,color:#fff
+```
 
 ---
 
@@ -247,32 +295,57 @@ git push origin feature-amazing-feature
 
 ---
 
-## 🎯 Hacktoberfest 2025
+## 🎯 Open Source Programs
 
 <div align="center">
 
-### 🌍 Join the Global Open Source Celebration! ✨
+### 🌍 This project is part of the following open source programs!
 
 </div>
 
 <table align="center">
 <tr>
-<td align="center" width="50%">
 
-### 🎁 Rewards
-Submit **6 quality PRs** to win official Hacktoberfest swag
+<td align="center" width="33%">
+
+### 🟠 GSSoC 2026
+**GirlScript Summer of Code**
+<br/>
+Contribute to real-world projects and grow your open source skills this summer!
+<br/><br/>
+![GSSoC](https://img.shields.io/badge/GSSoC-2026-orange?style=for-the-badge&logo=git&logoColor=white)
 
 </td>
-<td align="center" width="50%">
 
-### 🏷️ Find Issues
-Check labels: `hacktoberfest`, `good first issue`, `help wanted`
+<td align="center" width="33%">
+
+### 🟣 Hacktoberfest 2025
+**Global Open Source Celebration**
+<br/>
+Submit **6 quality PRs** to win official Hacktoberfest swag!
+<br/><br/>
+![Hacktoberfest](https://img.shields.io/badge/Hacktoberfest-2025-blueviolet?style=for-the-badge&logo=hackaday)
 
 </td>
+
+<td align="center" width="33%">
+
+### 🟡 ECWoC 2026
+**Exciting Campus Winter of Code**
+<br/>
+Dive into open source during the winter and build your contributor profile!
+<br/><br/>
+![ECWoC](https://img.shields.io/badge/ECWoC-2026-violet?style=for-the-badge&logo=hackaday)
+
+</td>
+
 </tr>
 </table>
 
 <div align="center">
+
+### 🏷️ Find Issues
+Check labels: `gssoc`, `hacktoberfest`, `ecwoc`, `good first issue`, `help wanted`
 
 **[🔍 Browse Open Issues →](https://github.com/Darshan3690/The-Dev-Pocket/issues)**
 
