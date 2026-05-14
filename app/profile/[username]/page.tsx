@@ -53,7 +53,7 @@ export default async function PublicProfilePage({ params }: ProfilePageProps) {
             id: true,
             name: true,
             stats: true,
-            badges: {
+            userBadges: {
               include: {
                 badge: true,
               },
@@ -72,7 +72,7 @@ export default async function PublicProfilePage({ params }: ProfilePageProps) {
     }
 
     // Format badges for the BadgeGrid component
-    const formattedBadges = profile.user.badges.map((userBadge) => ({
+    const formattedBadges = profile.user.userBadges.map((userBadge) => ({
       id: userBadge.badge.id,
       name: userBadge.badge.name,
       description: userBadge.badge.description,

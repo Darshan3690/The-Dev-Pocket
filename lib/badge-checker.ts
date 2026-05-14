@@ -1,4 +1,4 @@
-import { PrismaClient, Badge, UserBadge, UserStats } from "@prisma/client"
+import { Prisma, PrismaClient, Badge } from "@prisma/client"
 import {
   BADGE_DEFINITIONS,
   BadgeDefinition,
@@ -105,7 +105,7 @@ export class BadgeChecker {
       case "QUIZ_COMPLETED":
         return (
           (context.totalQuizzesCompleted || 0) >= criteria.count ||
-          (context.quizCompleted &&
+          (!!context.quizCompleted &&
             (context.totalQuizzesCompleted || 1) >= criteria.count)
         )
 
@@ -164,7 +164,9 @@ export class BadgeChecker {
         data: {
           userId,
           badgeId,
-          metadata: metadata || {},
+          metadata: metadata
+            ? (JSON.parse(JSON.stringify(metadata)) as Prisma.InputJsonValue)
+            : Prisma.JsonNull,
         },
         include: { badge: true },
       })

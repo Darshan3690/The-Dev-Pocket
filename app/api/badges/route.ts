@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { upstashLimit } from "@/lib/rate-limit-upstash"
 import { auth } from "@clerk/nextjs/server"
+import { BadgeCategory, BadgeRarity } from "@prisma/client"
 
 export async function GET(request: NextRequest) {
   try {
@@ -36,21 +37,21 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get("category")
     const rarity = searchParams.get("rarity")
 
-    // Build where clause
+
+    // Updated where clause to use enums
     const where: {
       isActive: boolean
-      category?: { equals: string }
-      rarity?: { equals: string }
+      category?: BadgeCategory
+      rarity?: BadgeRarity
     } = { isActive: true }
 
     if (category) {
-      where.category = { equals: category.toUpperCase() }
+      where.category = category.toUpperCase() as BadgeCategory
     }
 
     if (rarity) {
-      where.rarity = { equals: rarity.toUpperCase() }
+      where.rarity = rarity.toUpperCase() as BadgeRarity
     }
-
     // Fetch all badges
     const badges = await prisma.badge.findMany({
       where,

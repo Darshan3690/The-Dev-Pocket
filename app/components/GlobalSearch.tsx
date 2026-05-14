@@ -45,11 +45,17 @@ export default function GlobalSearch() {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
+
   const [showRecent, setShowRecent] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
-
+  
+  const popularSearches = [
+    { query: "dashboard", count: 1024 },
+    { query: "learning path", count: 856 },
+    { query: "resources", count: 742 },
+  ];
   // Search function with fuzzy matching and API integration
   const performSearch = useCallback(async (searchQuery: string) => {
     if (!searchQuery.trim()) {
@@ -65,10 +71,11 @@ export default function GlobalSearch() {
       const descMatch = item.description.toLowerCase().includes(lowercaseQuery);
       const categoryMatch = item.category.toLowerCase().includes(lowercaseQuery);
       return titleMatch || descMatch || categoryMatch;
+
+
     }).map(item => ({ ...item, type: "static" as const }));
 
-    let combinedResults = [...staticResults];
-
+    let combinedResults: (SearchResult & { type: "static" | "resource" })[] = [...staticResults];
     // Fetch resources from API if query is at least 2 characters
     if (searchQuery.length >= 2) {
       try {

@@ -21,27 +21,27 @@ export async function GET(
     }
 
     // Get profile with user data
-    const profile = await prisma.userProfile.findUnique({
-      where: { username: username.toLowerCase() },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            stats: true,
-            badges: {
-              include: {
-                badge: true,
-              },
-              orderBy: {
-                earnedAt: "desc",
+      const profile = await prisma.userProfile.findUnique({
+        where: { username: username.toLowerCase() },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              stats: true,
+              userBadges: {
+                include: {
+                  badge: true,
+                },
+                orderBy: {
+                  earnedAt: "desc",
+                },
               },
             },
           },
         },
-      },
-    })
+      })
 
     if (!profile) {
       return NextResponse.json(
@@ -68,7 +68,7 @@ export async function GET(
       socialLinks: profile.socialLinks,
       location: profile.location,
       title: profile.title,
-      badges: profile.user.badges.map((userBadge) => ({
+      badges: profile.user.userBadges.map((userBadge) => ({
         id: userBadge.badge.id,
         name: userBadge.badge.name,
         description: userBadge.badge.description,
