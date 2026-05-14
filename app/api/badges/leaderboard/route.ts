@@ -55,11 +55,6 @@ export async function GET(request: NextRequest) {
       _count: {
         badgeId: true,
       },
-      _sum: {
-        badge: {
-          points: true,
-        },
-      },
       orderBy: [
         {
           _count: {
@@ -78,6 +73,12 @@ export async function GET(request: NextRequest) {
           select: { id: true, name: true, email: true },
         })
 
+        const allUserBadges = await prisma.userBadge.findMany({
+          where: { userId: entry.userId },
+          include: { badge: true },
+          orderBy: { earnedAt: "desc" },
+        })
+
         // Get user's rarest badge
         const rarestBadge = await prisma.userBadge.findFirst({
           where: { userId: entry.userId },
@@ -90,12 +91,7 @@ export async function GET(request: NextRequest) {
         })
 
         // Get recent badges (last 3)
-        const recentBadges = await prisma.userBadge.findMany({
-          where: { userId: entry.userId },
-          include: { badge: true },
-          orderBy: { earnedAt: "desc" },
-          take: 3,
-        })
+        const recentBadges = allUserBadges.slice(0, 3)
 
         return {
           rank: index + 1,
@@ -106,7 +102,7 @@ export async function GET(request: NextRequest) {
           },
           stats: {
             totalBadges: entry._count.badgeId,
-            totalPoints: entry._sum.badge?.points || 0,
+            totalPoints: allUserBadges.reduce((sum, ub) => sum + ub.badge.points, 0),
           },
           rarestBadge: rarestBadge?.badge || null,
           recentBadges: recentBadges.map((ub) => ub.badge),

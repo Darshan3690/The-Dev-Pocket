@@ -1,8 +1,9 @@
+
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { upstashLimit } from "@/lib/rate-limit-upstash"
 import { auth } from "@clerk/nextjs/server"
-
+import { BadgeCategory } from "@prisma/client"
 export async function GET(request: NextRequest) {
   try {
     const { userId } = await auth()
@@ -35,18 +36,18 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const category = searchParams.get("category")
 
+
     // Fetch user's badges with badge details
     const where: {
       userId: string
-      badge?: { category?: { equals: string } }
+      badge?: { category?: BadgeCategory }
     } = { userId }
 
     if (category) {
       where.badge = {
-        category: { equals: category.toUpperCase() },
+        category: category.toUpperCase() as BadgeCategory,
       }
     }
-
     const userBadges = await prisma.userBadge.findMany({
       where,
       include: {

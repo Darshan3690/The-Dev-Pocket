@@ -2,8 +2,55 @@
 
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import Confetti from "react-confetti"
 import { BadgeRarity } from "@prisma/client"
+
+interface ConfettiProps {
+  width: number
+  height: number
+  recycle?: boolean
+  numberOfPieces?: number
+  gravity?: number
+  colors?: string[]
+}
+
+function Confetti({
+  width,
+  height,
+  numberOfPieces = 24,
+  gravity = 0.3,
+  colors = ["#FFD700", "#FFA500", "#FF6347", "#FF69B4", "#9370DB"],
+}: ConfettiProps) {
+  const pieceCount = Math.min(numberOfPieces, 120)
+  const pieces = Array.from({ length: pieceCount }, (_, index) => ({
+    left: `${(index * 37) % 100}%`,
+    top: `${(index * 53) % 100}%`,
+    delay: `${(index % 8) * 0.12}s`,
+    color: colors[index % colors.length],
+    fallDistance: Math.max(height, 600) * gravity,
+  }))
+
+  return (
+    <div
+      className="pointer-events-none fixed inset-0 z-40 overflow-hidden"
+      style={{ width, height }}
+    >
+      {pieces.map((piece, index) => (
+        <span
+          key={index}
+          className="absolute h-2 w-2 rounded-sm"
+          style={{
+            left: piece.left,
+            top: piece.top,
+            backgroundColor: piece.color,
+            transform: `translateY(${piece.fallDistance}px) rotate(${index * 17}deg)`,
+            transition: "transform 1.2s ease-in, opacity 1.2s ease-in",
+            transitionDelay: piece.delay,
+          }}
+        />
+      ))}
+    </div>
+  )
+}
 
 interface BadgeCelebrationProps {
   isOpen: boolean

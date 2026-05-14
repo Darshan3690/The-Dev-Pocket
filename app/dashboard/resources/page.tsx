@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Plus, Edit, Trash2, ExternalLink } from 'lucide-react';
-import { toast } from '@/lib/toast';
+import { showSuccess, showError } from '@/lib/toast';
 
 interface Resource {
   id: string;
@@ -67,7 +67,7 @@ export default function ResourcesDashboard() {
       setResources(data.resources);
     } catch (error) {
       console.error('Error fetching resources:', error);
-      toast.error('Failed to fetch resources');
+      showError('Failed to fetch resources');
     } finally {
       setLoading(false);
     }
@@ -98,18 +98,18 @@ export default function ResourcesDashboard() {
       });
 
       if (response.ok) {
-        toast.success(editingResource ? 'Resource updated successfully' : 'Resource created successfully');
+        showSuccess(editingResource ? 'Resource updated successfully' : 'Resource created successfully');
         setIsDialogOpen(false);
         setEditingResource(null);
         form.reset();
         fetchResources();
       } else {
         const error = await response.json();
-        toast.error(error.error || 'Failed to save resource');
+        showError(error.error || 'Failed to save resource');
       }
     } catch (error) {
       console.error('Error saving resource:', error);
-      toast.error('Failed to save resource');
+      showError('Failed to save resource');
     }
   };
 
@@ -138,14 +138,14 @@ export default function ResourcesDashboard() {
       });
 
       if (response.ok) {
-        toast.success('Resource deleted successfully');
+        showSuccess('Resource deleted successfully');
         fetchResources();
       } else {
-        toast.error('Failed to delete resource');
+        showError('Failed to delete resource');
       }
     } catch (error) {
       console.error('Error deleting resource:', error);
-      toast.error('Failed to delete resource');
+      showError('Failed to delete resource');
     }
   };
 

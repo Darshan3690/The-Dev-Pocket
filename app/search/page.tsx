@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { Suspense, useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -47,7 +47,18 @@ interface SearchResult {
   facets: Facets;
 }
 
-export default function AdvancedSearchPage() {
+function SearchFallback() {
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="mb-8">
+        <div className="h-9 w-64 rounded bg-gray-200 dark:bg-gray-800" />
+        <div className="mt-4 h-10 w-full rounded bg-gray-200 dark:bg-gray-800" />
+      </div>
+    </div>
+  );
+}
+
+function AdvancedSearchContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -510,5 +521,13 @@ export default function AdvancedSearchPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AdvancedSearchPage() {
+  return (
+    <Suspense fallback={<SearchFallback />}>
+      <AdvancedSearchContent />
+    </Suspense>
   );
 }
