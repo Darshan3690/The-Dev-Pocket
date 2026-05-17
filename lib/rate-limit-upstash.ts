@@ -3,8 +3,11 @@ import { Redis } from '@upstash/redis';
 import type { Ratelimit as RatelimitClient } from '@upstash/ratelimit';
 import { Ratelimit } from '@upstash/ratelimit';
 import type { NextRequest } from 'next/server';
+import validateEnv from './env';
 
 let cached: { client?: any; limiter?: any } = {};
+
+if (process.env.NODE_ENV !== 'test') validateEnv();
 
 /**
  * Extracts the client IP address from a Next.js request

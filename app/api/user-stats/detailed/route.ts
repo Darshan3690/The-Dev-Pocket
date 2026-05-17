@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { PrismaClient } from '@prisma/client';
+import { upstashLimit } from '@/lib/rate-limit-upstash';
 
 // Singleton pattern for Prisma Client
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
@@ -15,7 +16,27 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // TODO: Add rate limiting back when path resolution is fixed
+    const rateLimitResult = await upstashLimit(userId + ':stats:detailed', {
+      maxRequests: 60,
+      windowMs: 60 * 1000,
+    });
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Too many requests. Please slow down.',
+          resetAt: new Date(rateLimitResult.reset).toISOString(),
+        },
+        {
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': '60',
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+          },
+        }
+      );
+    }
 
     // Get user activity over the last 30 days
     const thirtyDaysAgo = new Date();
@@ -147,7 +168,12 @@ export async function GET() {
       recentBookmarks,
       insights
     }, {
-      status: 200
+      status: 200,
+      headers: {
+        'X-RateLimit-Limit': '60',
+        'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+        'X-RateLimit-Reset': rateLimitResult.reset.toString(),
+      },
     });
 
   } catch (error) {
