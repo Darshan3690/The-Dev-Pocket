@@ -103,6 +103,8 @@ function getSpotlightRect(target: string): SpotlightRect | null {
 /**
  * Decide where to anchor the tooltip card relative to the spotlight rect.
  * Falls back to center-of-viewport if no target.
+ * FIX (P1): Uses actual rendered tooltip dimensions instead of hardcoded values,
+ * and clamps left/top so the card never goes off-screen on narrow viewports.
  */
 function computeTooltipPosition(
   rect: SpotlightRect | null,
@@ -113,10 +115,16 @@ function computeTooltipPosition(
   const vw = window.innerWidth;
   const vh = window.innerHeight;
 
+  // FIX (P1): Clamp helpers that account for actual viewport width
+  const clampX = (v: number) => Math.max(8, Math.min(v, vw - tooltipW - 8));
+  const clampY = (v: number) => Math.max(8, Math.min(v, vh - tooltipH - 8));
+
   if (!rect || position === "center") {
     return {
-      top: vh / 2 - tooltipH / 2,
-      left: vw / 2 - tooltipW / 2,
+      // FIX (P1): clamp centered position so it never produces negative offset
+      // on viewports narrower than tooltipW (e.g. mobile < 400px)
+      top: clampY(vh / 2 - tooltipH / 2),
+      left: clampX(vw / 2 - tooltipW / 2),
       transformOrigin: "center center",
     };
   }
@@ -130,9 +138,6 @@ function computeTooltipPosition(
   let left = 0;
   let transformOrigin = "top center";
 
-  // Clamp helper
-  const clampX = (v: number) => Math.max(12, Math.min(v, vw - tooltipW - 12));
-  const clampY = (v: number) => Math.max(12, Math.min(v, vh - tooltipH - 12));
   const centeredX = rect.x + rect.width / 2 - tooltipW / 2;
 
   if (position === "bottom" && spaceBelow >= tooltipH + TOOLTIP_GAP) {
@@ -152,7 +157,6 @@ function computeTooltipPosition(
     left = rect.x - tooltipW - TOOLTIP_GAP;
     transformOrigin = "right center";
   } else if (spaceBelow >= tooltipH + TOOLTIP_GAP) {
-    // best-effort fallback
     top = rect.y + rect.height + TOOLTIP_GAP;
     left = centeredX;
     transformOrigin = "top center";
@@ -176,31 +180,61 @@ export default function OnboardingTutorial() {
   });
 
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const TOOLTIP_W = 400; // approx max-w
-  const TOOLTIP_H = 260; // approx height estimate
+  const TOOLTIP_H_FALLBACK = 260;
 
-  /** Recalculate spotlight + tooltip positions for the given step */
-  const recalcLayout = useCallback(
-    (stepIndex: number) => {
-      const step = tutorialSteps[stepIndex];
-      const rect = step.target && step.highlight ? getSpotlightRect(step.target) : null;
-      setSpotlightRect(rect);
+  /** Recalculate spotlight + tooltip positions for the given step.
+   *  FIX (P1): reads actual rendered width from tooltipRef instead of
+   *  using a hardcoded 400px constant, preventing negative left offset
+   *  on viewports narrower than the hardcoded value.
+   */
+  const recalcLayout = useCallback((stepIndex: number) => {
+    const step = tutorialSteps[stepIndex];
+    const rect = step.target && step.highlight ? getSpotlightRect(step.target) : null;
+    setSpotlightRect(rect);
 
-      const tooltipH = tooltipRef.current?.offsetHeight ?? TOOLTIP_H;
-      const pos = computeTooltipPosition(rect, step.position, TOOLTIP_W, tooltipH);
-      setTooltipPos(pos);
-    },
-    []
-  );
+    // Use actual rendered dimensions; fall back to estimates if ref not ready
+    const actualW = tooltipRef.current?.offsetWidth ?? 400;
+    const actualH = tooltipRef.current?.offsetHeight ?? TOOLTIP_H_FALLBACK;
+    const pos = computeTooltipPosition(rect, step.position, actualW, actualH);
+    setTooltipPos(pos);
+  }, []);
 
-  // Recalc on step change and on resize
+  // FIX (P2): Wait for smooth scrolling to finish before recalculating layout.
+  // Uses the `scrollend` event (supported in modern browsers) so getBoundingClientRect()
+  // is never captured mid-scroll. Falls back to a 600ms timeout for older browsers.
+  // A `settled` guard prevents double-firing when both fire.
   useEffect(() => {
     if (!isOpen) return;
-    // Small delay so DOM can settle after scrollIntoView
-    const t = setTimeout(() => recalcLayout(currentStep), 150);
-    return () => clearTimeout(t);
+
+    const step = tutorialSteps[currentStep];
+
+    // If no scroll needed, recalc immediately after a short DOM-settle delay
+    if (!step.target) {
+      const t = setTimeout(() => recalcLayout(currentStep), 50);
+      return () => clearTimeout(t);
+    }
+
+    let settled = false;
+
+    const onScrollEnd = () => {
+      if (settled) return;
+      settled = true;
+      recalcLayout(currentStep);
+    };
+
+    // Primary: fire as soon as scrolling stops
+    window.addEventListener("scrollend", onScrollEnd, { once: true });
+
+    // Fallback: for browsers that don't support `scrollend` (e.g. Safari < 17)
+    const fallbackTimer = setTimeout(onScrollEnd, 600);
+
+    return () => {
+      clearTimeout(fallbackTimer);
+      window.removeEventListener("scrollend", onScrollEnd);
+    };
   }, [isOpen, currentStep, recalcLayout]);
 
+  // Recalc on window resize
   useEffect(() => {
     if (!isOpen) return;
     const onResize = () => recalcLayout(currentStep);
@@ -370,7 +404,7 @@ export default function OnboardingTutorial() {
             style={{
               top: tooltipPos.top,
               left: tooltipPos.left,
-              maxWidth: `${TOOLTIP_W}px`,
+              maxWidth: `min(400px, calc(100vw - 16px))`, // FIX (P1): never exceed viewport width
               transformOrigin: tooltipPos.transformOrigin,
               pointerEvents: "auto",
             }}
