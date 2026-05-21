@@ -1,4 +1,4 @@
-import { AnimatedTestimonials } from '@/components/ui/animated-testimonials'
+﻿import { AnimatedTestimonials } from '@/components/ui/animated-testimonials'
 import React from 'react'
 
 const testimonials = [
@@ -23,51 +23,48 @@ const testimonials = [
     designation: "Junior Full-Stack Developer",
     src: "https://images.unsplash.com/photo-1623582854588-d60de57fa33f?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
-];
-
+]
 
 function Testimonials() {
   return (
-    <>
     <section
-        id="testimonials"
-        className="relative py-20 sm:py-28 bg-gradient-to-r from-sky-50 via-[#135b85]/10 to-sky-50 dark:from-gray-950 dark:via-[#135b85]/20 dark:to-gray-950"
-      >
-        {/* 🔹 Top Wave Divider */}
-        <div className="absolute top-0 left-0 w-full overflow-hidden leading-none">
-          <svg
-            data-name="Layer 1"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 1200 120"
-            preserveAspectRatio="none"
-            className="w-full h-20 fill-white dark:fill-gray-900"
-          >
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
-          </svg>
+      id="testimonials"
+      className="relative overflow-hidden bg-gradient-to-r from-sky-50 via-cyan-50 to-white py-20 sm:py-28"
+    >
+      <div className="absolute top-0 left-0 w-full overflow-hidden leading-none">
+        <svg
+          data-name="Layer 1"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+          focusable="false"
+          className="h-20 w-full fill-white"
+        >
+          <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+        </svg>
+      </div>
+
+      <div className="pointer-events-none absolute inset-x-0 top-28 h-40 bg-[radial-gradient(circle_at_top,rgba(14,165,233,0.18),transparent_68%)]" />
+
+      <div className="relative z-10 mx-auto max-w-6xl px-4 text-center">
+        <h2 className="mb-5 text-4xl font-extrabold leading-tight text-slate-900 sm:text-5xl">
+          <span className="bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            Loved by Developers Worldwide
+          </span>
+        </h2>
+        <p className="mx-auto mb-12 max-w-3xl text-lg font-medium leading-relaxed text-slate-700 sm:text-xl">
+          Here&apos;s how <span className="font-semibold text-sky-700">Dev Pocket</span> is transforming careers
+          across the globe.
+        </p>
+
+        <div className="rounded-3xl border border-sky-100 bg-white/85 p-4 shadow-[0_24px_80px_rgba(14,116,144,0.14)] backdrop-blur sm:p-6">
+          <AnimatedTestimonials testimonials={testimonials} />
         </div>
-
-        {/* 🔹 Content */}
-        <div className="relative max-w-6xl mx-auto text-center z-10 px-4">
-        <h2 className="text-4xl sm:text-5xl font-extrabold mb-5 leading-tight">
-        <span className="bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 bg-clip-text text-transparent drop-shadow-lg">
-               Loved by Developers Worldwide
-    </span>
-  </h2>
-<p className="text-lg sm:text-xl text-slate-700 dark:text-cyan-300 max-w-3xl mx-auto leading-relaxed mb-12 font-semibold">
-  Here’s how{" "}
-  <span className="text-sky-600 dark:text-sky-400 font-bold">Dev Pocket</span>{" "}
-  is transforming careers across the globe.
-</p>
-
-  {/* ✅ Animated Testimonials */}
-  <div className="backdrop-blur-md bg-white/5 border border-white/10 rounded-3xl p-4 sm:p-6 shadow-2xl">
-    <AnimatedTestimonials testimonials={testimonials} />
-  </div>
-</div>
-      </section>
-
-    </>
+      </div>
+    </section>
   )
 }
 
 export default Testimonials
+
