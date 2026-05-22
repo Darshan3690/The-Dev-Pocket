@@ -33,9 +33,10 @@ interface FeatureCardProps {
 const FeatureCard = ({ icon, iconLabel, title, children, href }: FeatureCardProps) => (
   <Link href={href}>
     <article
-      className="h-full flex flex-col justify-between bg-white dark:bg-gray-800 p-6 rounded-2xl 
-                 shadow-lg border border-gray-100 dark:border-gray-700 
-                 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 
+      className="h-full flex flex-col justify-between rounded-3xl border border-slate-200/70
+                 bg-white/95 p-6 shadow-md shadow-slate-900/5 dark:border-slate-700/80
+                 dark:bg-slate-900/80
+                 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-sky-900/10
                  transform cursor-pointer group"
     >
       <div>
@@ -49,16 +50,16 @@ const FeatureCard = ({ icon, iconLabel, title, children, href }: FeatureCardProp
           {icon}
         </div>
 
-        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2 group-hover:text-sky-600 transition-colors">
+        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-3 group-hover:text-sky-600 transition-colors">
           {title}
         </h3>
 
-        <p className="text-gray-500 dark:text-gray-400 leading-relaxed mb-3">
+        <p className="text-gray-600 dark:text-gray-300 leading-7">
           {children}
         </p>
       </div>
 
-      <div className="flex items-center text-sky-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity mt-auto">
+      <div className="mt-6 flex items-center text-sky-600 font-semibold opacity-0 transition-opacity group-hover:opacity-100">
         <span className="text-sm">Learn more</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -178,19 +179,24 @@ const App = () => {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="py-16 sm:py-24 text-center max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8"
       >
+        <div className="mx-auto max-w-4xl">
+          <span className="inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-4 py-1 text-sm font-semibold uppercase tracking-[0.22em] text-sky-700 dark:border-sky-800 dark:bg-sky-950/60 dark:text-sky-300">
+            Career Growth Hub
+          </span>
         <h2
-          className={`text-3xl sm:text-4xl font-bold mb-4 ${isDark ? "text-dark" : "text-white"
+          className={`mt-5 text-3xl sm:text-4xl font-bold ${isDark ? "text-dark" : "text-white"
             }`}
         >
-          All the Tools You Need, in <span className="text-sky-500">One Place</span>
+          Everything You Need to Build Your <span className="text-sky-500">Developer Career</span>
         </h2>
 
-        <p className={`text-base sm:text-lg mb-8 max-w-3xl mx-auto ${isDark ? "text-gray-400" : "text-gray-600"}`}>
-          Stop juggling multiple platforms. Dev Pocket brings everything
-          together to accelerate your growth.
+        <p className={`mt-4 text-base sm:text-lg max-w-3xl mx-auto ${isDark ? "text-gray-400" : "text-gray-600"}`}>
+          Learn, plan, build, and apply from one focused workspace. Dev Pocket keeps your roadmap, resources,
+          practice, and job search aligned so your next step is always clear.
         </p>
+        </div>
         <div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 text-left items-stretch"
+          className="mt-10 grid grid-cols-1 gap-5 text-left items-stretch sm:grid-cols-2 lg:grid-cols-4 sm:gap-6"
           role="list"
         >
           <FeatureCard
