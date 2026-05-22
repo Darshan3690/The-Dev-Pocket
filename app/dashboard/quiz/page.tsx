@@ -19,33 +19,33 @@ export default function QuizPage() {
 
 
   useEffect(() => {
-  async function fetchCategories() {
+    async function fetchCategories() {
+      try {
+        const res = await fetch("/api/quiz/categories")
+        const data = await res.json()
+        setQuizCategories(data)
+      } catch (err) {
+        console.error("Failed to fetch quiz categories", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchCategories()
+  }, [])
+
+  const handleSelectCategory = async (slug: string) => {
+    setSelectedQuiz(slug)
+
+
     try {
-      const res = await fetch("/api/quiz/categories")
+      const res = await fetch(`/api/quiz/by-category/${slug}`)
       const data = await res.json()
-      setQuizCategories(data)
+      setQuizzes(data)
     } catch (err) {
-      console.error("Failed to fetch quiz categories", err)
-    } finally {
-      setLoading(false)
+      console.error("Failed to fetch quizzes", err)
     }
   }
-
-  fetchCategories()
-}, [])
-
-const handleSelectCategory = async (slug: string) => {
-  setSelectedQuiz(slug)
-
-
-  try {
-    const res = await fetch(`/api/quiz/by-category/${slug}`)
-    const data = await res.json()
-    setQuizzes(data)
-  } catch (err) {
-    console.error("Failed to fetch quizzes", err)
-  }
-}
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto">
@@ -84,24 +84,27 @@ const handleSelectCategory = async (slug: string) => {
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {loading ? (
             <p className="text-slate-500">Loading quizzes...</p>
-          ) : (
+          ) : Array.isArray(quizCategories) ? (
             quizCategories.map((quiz) => (
 
-            <QuizCard
-              key={quiz.id}
-              name={quiz.name}
-              icon={quiz.iconUrl}
-              questions={quiz.totalQuestions}
-              color="from-violet-400 to-purple-500"
-              selected={selectedQuiz === quiz.id}
-              onSelect={() => {
-                console.log("ROUTING TO:", `/dashboard/quiz/${quiz.slug}/${quiz.id}`)
-                router.push(`/dashboard/quiz/${quiz.slug}/${quiz.id}`)
-              }}
-            />
+              <QuizCard
+                key={quiz.id}
+                name={quiz.name}
+                icon={quiz.iconUrl}
+                questions={quiz.totalQuestions}
+                color="from-violet-400 to-purple-500"
+                selected={selectedQuiz === quiz.id}
+                onSelect={() => {
+                  console.log("ROUTING TO:", `/dashboard/quiz/${quiz.slug}/${quiz.id}`)
+                  router.push(`/dashboard/quiz/${quiz.slug}/${quiz.id}`)
+                }}
+              />
 
             ))
-          )}
+          ) : (
+            <p className="text-slate-500">No quiz categories found.</p>
+          )
+          }
         </div>
       </div>
 
