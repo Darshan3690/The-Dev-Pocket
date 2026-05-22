@@ -397,8 +397,10 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
+        </div>
+      )}
 
-          {/* Quick Actions */}
+      {/* Quick Actions */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-gray-900">
               Quick Actions
@@ -515,8 +517,6 @@ export default function DashboardPage() {
                 </div>
               </div>
             )}
-        </div>
-      )}
     </div>
   )
 }
