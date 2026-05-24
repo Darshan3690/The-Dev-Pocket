@@ -1,11 +1,16 @@
 import type { RateLimitConfig, RateLimitResult } from './rate-limit';
 import { Redis } from '@upstash/redis';
-import type { Ratelimit as RatelimitClient } from '@upstash/ratelimit';
 import { Ratelimit } from '@upstash/ratelimit';
 import type { NextRequest } from 'next/server';
 import validateEnv from './env';
 
-let cached: { client?: any; limiter?: any } = {};
+type RedisClient = InstanceType<typeof Redis>;
+type UpstashLimiter = InstanceType<typeof Ratelimit>;
+
+const MAX_CACHED_POLICIES = 50;
+
+let redisClient: RedisClient | undefined;
+const limiterCache = new Map<string, UpstashLimiter>();
 
 if (process.env.NODE_ENV !== 'test') validateEnv();
 
@@ -42,31 +47,41 @@ export async function upstashLimit(identifier: string, config: RateLimitConfig):
     throw new Error('Missing Upstash configuration');
   }
 
-  if (!cached.limiter) {
-    const client = new Redis({
+  if (!redisClient) {
+    redisClient = new Redis({
       url: process.env.UPSTASH_REDIS_REST_URL,
       token: process.env.UPSTASH_REDIS_REST_TOKEN,
     });
-
-    const limiter = new Ratelimit({
-      redis: client,
-      // sliding window expects a string like "60s"; convert from ms
-      slidingWindow: Math.max(1, Math.floor(config.windowMs / 1000)) + 's',
-      limit: config.maxRequests,
-    } as any) as unknown as RatelimitClient;
-
-    cached = { client, limiter };
   }
 
-  const res = await cached.limiter.limit(identifier);
+  const windowSeconds = Math.max(1, Math.ceil(config.windowMs / 1000));
+  const policyKey = `${config.maxRequests}:${config.windowMs}:${windowSeconds}`;
+  let limiter = limiterCache.get(policyKey);
 
-  // map upstash result to RateLimitResult
-  const now = Date.now();
-  const resetAfter = (res.resetAfter && typeof res.resetAfter === 'number') ? res.resetAfter : 0;
+  if (!limiter) {
+    limiter = new Ratelimit({
+      redis: redisClient,
+      limiter: Ratelimit.slidingWindow(config.maxRequests, `${windowSeconds} s`),
+    });
+
+    if (limiterCache.size >= MAX_CACHED_POLICIES) {
+      const oldestKey = limiterCache.keys().next().value;
+      if (oldestKey) limiterCache.delete(oldestKey);
+    }
+
+    limiterCache.set(policyKey, limiter);
+  }
+
+  const res = await limiter.limit(identifier);
 
   return {
-    success: !!res.success,
-    remaining: typeof res.remaining === 'number' ? res.remaining : 0,
-    reset: now + resetAfter,
+    success: res.success,
+    remaining: res.remaining,
+    reset: res.reset,
   };
+}
+
+export function __resetUpstashLimitCacheForTests(): void {
+  redisClient = undefined;
+  limiterCache.clear();
 }
