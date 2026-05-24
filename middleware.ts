@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
 import validateEnv from './lib/env';
 
 const isPublicRoute = createRouteMatcher([
@@ -10,18 +11,96 @@ const isPublicRoute = createRouteMatcher([
   // Add other public routes here
 ])
 
+function buildCsp(): string {
+  if (process.env.CONTENT_SECURITY_POLICY?.trim()) {
+    return process.env.CONTENT_SECURITY_POLICY.trim();
+  }
+
+  const isDev = process.env.NODE_ENV !== 'production';
+  const clerkFrontendApi = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
+  const clerkFrontendApiHost = clerkFrontendApi ? `https://${clerkFrontendApi}` : null;
+
+  const scriptSrc = [
+    "'self'",
+    "'unsafe-inline'", // Required by next-themes bootstrap script unless nonce/hash is added
+    'https://js.clerk.com',
+    ...(isDev ? ["'unsafe-eval'"] : []),
+  ];
+
+  const styleSrc = [
+    "'self'",
+    "'unsafe-inline'", // Required by several component libraries and Clerk widgets
+    'https://fonts.googleapis.com',
+  ];
+
+  const connectSrc = [
+    "'self'",
+    'https://api.clerk.com',
+    'https://clerk.com',
+    'https://*.clerk.accounts.dev',
+    ...(clerkFrontendApiHost ? [clerkFrontendApiHost] : []),
+  ];
+
+  const frameSrc = [
+    "'self'",
+    'https://clerk.com',
+    'https://*.clerk.accounts.dev',
+  ];
+
+  const directives = [
+    "default-src 'self'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    "object-src 'none'",
+    `script-src ${scriptSrc.join(' ')}`,
+    `style-src ${styleSrc.join(' ')}`,
+    "img-src 'self' data: blob: https:",
+    "font-src 'self' data: https://fonts.gstatic.com",
+    `connect-src ${connectSrc.join(' ')}`,
+    `frame-src ${frameSrc.join(' ')}`,
+    "worker-src 'self' blob:",
+    "manifest-src 'self'",
+    ...(isDev ? [] : ['upgrade-insecure-requests']),
+  ];
+
+  return directives.join('; ');
+}
+
+function applySecurityHeaders(response: Response): Response {
+  response.headers.set('Content-Security-Policy', buildCsp());
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('Permissions-Policy', 'accelerometer=(), autoplay=(), camera=(), display-capture=(), geolocation=(), gyroscope=(), microphone=(), midi=(), payment=(), publickey-credentials-get=(), usb=()');
+  response.headers.set('Cross-Origin-Opener-Policy', 'same-origin');
+  response.headers.set('Cross-Origin-Resource-Policy', 'same-site');
+  response.headers.set('X-DNS-Prefetch-Control', 'off');
+
+  if (process.env.NODE_ENV === 'production') {
+    response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  }
+
+  return response;
+}
+
 // Validate environment early in non-test runtimes so misconfiguration fails fast
 if (process.env.NODE_ENV !== 'test') validateEnv();
 
 export default clerkMiddleware(async (auth, req) => {
   // Skip auth check if using dummy keys (CI environment)
   if (process.env.CLERK_SECRET_KEY === 'dummy') {
-    return;
+    return applySecurityHeaders(NextResponse.next());
   }
   
   if (!isPublicRoute(req)) {
-    await auth.protect()
+    const authResponse = await auth.protect()
+    if (authResponse) {
+      return applySecurityHeaders(authResponse);
+    }
   }
+
+  return applySecurityHeaders(NextResponse.next());
 })
 export const config = {
   matcher: [
