@@ -100,9 +100,25 @@ export default function DashboardPage() {
 
   const fetchDetailedStats = async () => {
     try {
-      const response = await fetch('/api/user-stats/detailed')
-      const data = await response.json()
+    const response = await fetch('/api/user-stats/detailed')
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch detailed stats')
+    }
+
+    const data = await response.json()
+
+    if (
+      data &&
+      Array.isArray(data.quizChartData) &&
+      Array.isArray(data.bookmarkChartData) &&
+      Array.isArray(data.activityChartData) &&
+      Array.isArray(data.categoryChartData)
+    ) {
       setDetailedStats(data)
+    } else {
+      setDetailedStats(null)
+    }
     } catch (error) {
       console.error('Error fetching detailed stats:', error)
     } finally {
@@ -110,7 +126,7 @@ export default function DashboardPage() {
     }
   }
 
-  const dailyGoalPercentage = stats 
+  const dailyGoalPercentage = stats
     ? Math.min(100, Math.round((stats.dailyGoalProgress / stats.dailyGoalTarget) * 100))
     : 0
 
@@ -268,41 +284,91 @@ export default function DashboardPage() {
           {/* Insights Cards */}
           <div className="grid gap-4 md:grid-cols-3">
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg">
-              <h4 className="font-semibold text-blue-900 mb-2">Quiz Insights</h4>
-              <p className="text-2xl font-bold text-blue-600">{detailedStats.insights.totalQuizzes}</p>
-              <p className="text-sm text-blue-700">Total Quizzes Taken</p>
-              <p className="text-sm text-blue-600 mt-1">Avg Score: {detailedStats.insights.averageQuizScore}%</p>
+              <h4 className="font-semibold text-blue-900 mb-2">
+                Quiz Insights
+              </h4>
+
+              <p className="text-2xl font-bold text-blue-600">
+                {detailedStats?.insights?.totalQuizzes ?? 0}
+              </p>
+
+              <p className="text-sm text-blue-700">
+                Total Quizzes Taken
+              </p>
+
+              <p className="text-sm text-blue-600 mt-1">
+                Avg Score: {detailedStats?.insights?.averageQuizScore ?? 0}%
+              </p>
             </div>
 
             <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-lg">
-              <h4 className="font-semibold text-green-900 mb-2">Bookmark Insights</h4>
-              <p className="text-2xl font-bold text-green-600">{detailedStats.insights.totalBookmarks}</p>
-              <p className="text-sm text-green-700">Resources Bookmarked</p>
-              <p className="text-sm text-green-600 mt-1">Most active: {detailedStats.insights.mostActiveDay.date || 'N/A'}</p>
+              <h4 className="font-semibold text-green-900 mb-2">
+                Bookmark Insights
+              </h4>
+
+              <p className="text-2xl font-bold text-green-600">
+                {detailedStats?.insights?.totalBookmarks ?? 0}
+              </p>
+
+              <p className="text-sm text-green-700">
+                Resources Bookmarked
+              </p>
+
+              <p className="text-sm text-green-600 mt-1">
+                Most active:{" "}
+                {detailedStats?.insights?.mostActiveDay?.date || "N/A"}
+              </p>
             </div>
 
             <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-lg">
-              <h4 className="font-semibold text-purple-900 mb-2">Learning Streak</h4>
-              <p className="text-2xl font-bold text-purple-600">{detailedStats.insights.streakDays}</p>
-              <p className="text-sm text-purple-700">Days in a row</p>
-              <p className="text-sm text-purple-600 mt-1">Top category: {detailedStats.insights.topCategory.category || 'N/A'}</p>
+              <h4 className="font-semibold text-purple-900 mb-2">
+                Learning Streak
+              </h4>
+
+              <p className="text-2xl font-bold text-purple-600">
+                {detailedStats?.insights?.streakDays ?? 0}
+              </p>
+
+              <p className="text-sm text-purple-700">
+                Days in a row
+              </p>
+
+              <p className="text-sm text-purple-600 mt-1">
+                Top category:{" "}
+                {detailedStats?.insights?.topCategory?.category || "N/A"}
+              </p>
             </div>
           </div>
 
           {/* Recent Activity */}
           <div className="grid gap-6 md:grid-cols-2">
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Quiz Attempts</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Recent Quiz Attempts
+              </h3>
+
               <div className="space-y-3">
-                {detailedStats.recentQuizzes.length > 0 ? (
-                  detailedStats.recentQuizzes.map((quiz, index) => (
-                    <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                {detailedStats?.recentQuizzes?.length > 0 ? (
+                  detailedStats?.recentQuizzes?.map((quiz, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-between items-center p-3 bg-gray-50 rounded"
+                    >
                       <div>
-                        <p className="font-medium text-gray-900">{quiz.quiz.title}</p>
-                        <p className="text-sm text-gray-600">{quiz.quiz.category.name}</p>
+                        <p className="font-medium text-gray-900">
+                          {quiz.quiz.title}
+                        </p>
+
+                        <p className="text-sm text-gray-600">
+                          {quiz.quiz.category.name}
+                        </p>
                       </div>
+
                       <div className="text-right">
-                        <p className="font-semibold text-blue-600">{quiz.score}/{quiz.total}</p>
+                        <p className="font-semibold text-blue-600">
+                          {quiz.score}/{quiz.total}
+                        </p>
+
                         <p className="text-xs text-gray-500">
                           {new Date(quiz.createdAt).toLocaleDateString()}
                         </p>
@@ -310,26 +376,39 @@ export default function DashboardPage() {
                     </div>
                   ))
                 ) : (
-                  <p className="text-gray-500 text-center py-4">No recent quiz attempts</p>
+                  <p className="text-gray-500 text-center py-4">
+                    No recent quiz attempts
+                  </p>
                 )}
               </div>
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Bookmarks</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Recent Bookmarks
+              </h3>
+
               <div className="space-y-3">
-                {detailedStats.recentBookmarks.length > 0 ? (
-                  detailedStats.recentBookmarks.map((bookmark, index) => (
+                {detailedStats?.recentBookmarks?.length > 0 ? (
+                  detailedStats?.recentBookmarks?.map((bookmark, index) => (
                     <div key={index} className="p-3 bg-gray-50 rounded">
-                      <p className="font-medium text-gray-900 truncate">{bookmark.title}</p>
-                      <p className="text-sm text-gray-600 truncate">{bookmark.url}</p>
+                      <p className="font-medium text-gray-900 truncate">
+                        {bookmark.title}
+                      </p>
+
+                      <p className="text-sm text-gray-600 truncate">
+                        {bookmark.url}
+                      </p>
+
                       <p className="text-xs text-gray-500 mt-1">
                         {new Date(bookmark.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                   ))
                 ) : (
-                  <p className="text-gray-500 text-center py-4">No recent bookmarks</p>
+                  <p className="text-gray-500 text-center py-4">
+                    No recent bookmarks
+                  </p>
                 )}
               </div>
             </div>
@@ -338,88 +417,122 @@ export default function DashboardPage() {
       )}
 
       {/* Quick Actions */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-gray-900">Quick Actions</h2>
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-gray-900">
+              Quick Actions
+            </h2>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Link href="/create-roadmap" className="group block">
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border border-blue-200">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white text-xl">✨</span>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Link href="/create-roadmap" className="group block">
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border border-blue-200">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                      <span className="text-white text-xl">✨</span>
+                    </div>
+
+                    <div>
+                      <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                        AI Roadmap Generator
+                      </h3>
+
+                      <p className="text-sm text-blue-600 font-medium">
+                        New Feature!
+                      </p>
+                    </div>
+                  </div>
+
+                  <p className="text-gray-600 text-sm">
+                    Create personalized learning paths with AI assistance based
+                    on your goals and experience level.
+                  </p>
+
+                  <div className="mt-4 flex items-center text-blue-600 text-sm font-medium group-hover:text-blue-700">
+                    Create Roadmap
+
+                    <span className="ml-1 group-hover:translate-x-1 transition-transform">
+                      →
+                    </span>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-                    AI Roadmap Generator
-                  </h3>
-                  <p className="text-sm text-blue-600 font-medium">New Feature!</p>
+              </Link>
+
+              <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-200">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-xl">📚</span>
+                  </div>
+
+                  <div>
+                    <h3 className="font-bold text-gray-900">
+                      Study Resources
+                    </h3>
+
+                    <p className="text-sm text-gray-500">
+                      Browse library
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <p className="text-gray-600 text-sm">
-                Create personalized learning paths with AI assistance based on your goals and experience level.
-              </p>
-              <div className="mt-4 flex items-center text-blue-600 text-sm font-medium group-hover:text-blue-700">
-                Create Roadmap
-                <span className="ml-1 group-hover:translate-x-1 transition-transform">→</span>
-              </div>
-            </div>
-          </Link>
 
-          <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-200">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center">
-                <span className="text-white text-xl">📚</span>
+                <p className="text-gray-600 text-sm">
+                  Access curated learning materials, tutorials, and
+                  documentation.
+                </p>
               </div>
-              <div>
-                <h3 className="font-bold text-gray-900">Study Resources</h3>
-                <p className="text-sm text-gray-500">Browse library</p>
-              </div>
-            </div>
-            <p className="text-gray-600 text-sm">
-              Access curated learning materials, tutorials, and documentation.
-            </p>
-          </div>
 
-          <button
-            onClick={() => setStudyBuddyOpen(true)}
-            className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-200 text-left group"
-          >
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white text-xl">🤖</span>
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors">Study Buddy</h3>
-                <p className="text-sm text-gray-500">AI Assistant</p>
-              </div>
-            </div>
-            <p className="text-gray-600 text-sm">
-              Get instant help with coding questions and study guidance.
-            </p>
-          </button>
-        </div>
-      </div>
+              <button
+                onClick={() => setStudyBuddyOpen(true)}
+                className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-200 text-left group"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-xl">🤖</span>
+                  </div>
 
+                  <div>
+                    <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors">
+                      Study Buddy
+                    </h3>
 
-      {/* AI Study Buddy Modal (simplified) */}
-      {studyBuddyOpen && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
-            <h2 className="text-lg font-semibold mb-4">Study Buddy 🤖</h2>
-            <textarea
-              className="w-full border p-2 rounded-md mb-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              rows={4}
-              placeholder="Ask me anything..."
-            />
-            <div className="flex justify-end gap-2">
-              <button onClick={() => setStudyBuddyOpen(false)} className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition">
-                Close
+                    <p className="text-sm text-gray-500">
+                      AI Assistant
+                    </p>
+                  </div>
+                </div>
+
+                <p className="text-gray-600 text-sm">
+                  Get instant help with coding questions and study guidance.
+                </p>
               </button>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Send</button>
             </div>
           </div>
-        </div>
-      )}
+
+
+          {/* AI Study Buddy Modal (simplified) */}
+          {
+            studyBuddyOpen && (
+              <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+                <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+                  <h2 className="text-lg font-semibold mb-4">Study Buddy 🤖</h2>
+                  <textarea
+                    className="w-full border p-2 rounded-md mb-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    rows={4}
+                    placeholder="Ask me anything..."
+                  />
+                  <div className="flex justify-end gap-2">
+                    <button
+                      onClick={() => setStudyBuddyOpen(false)}
+                      className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
+                    >
+                      Close
+                    </button>
+
+                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                      Send
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
     </div>
   )
 }
