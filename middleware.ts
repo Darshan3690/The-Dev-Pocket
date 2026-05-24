@@ -67,13 +67,15 @@ function buildCsp(): string {
   return directives.join('; ');
 }
 
+const contentSecurityPolicy = buildCsp();
+
 function applySecurityHeaders(response: Response): Response {
-  response.headers.set('Content-Security-Policy', buildCsp());
+  response.headers.set('Content-Security-Policy', contentSecurityPolicy);
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('X-Frame-Options', 'DENY');
-  response.headers.set('Permissions-Policy', 'accelerometer=(), autoplay=(), camera=(), display-capture=(), geolocation=(), gyroscope=(), microphone=(), midi=(), payment=(), publickey-credentials-get=(), usb=()');
-  response.headers.set('Cross-Origin-Opener-Policy', 'same-origin');
+  response.headers.set('Permissions-Policy', 'accelerometer=(), autoplay=(), camera=(), display-capture=(), geolocation=(), gyroscope=(), microphone=(), midi=(), payment=(), usb=()');
+  response.headers.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
   response.headers.set('Cross-Origin-Resource-Policy', 'same-site');
   response.headers.set('X-DNS-Prefetch-Control', 'off');
 
