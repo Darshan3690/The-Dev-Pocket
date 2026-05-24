@@ -35,17 +35,18 @@ export default function QuizPage() {
   }, [])
 
   const handleSelectCategory = async (slug: string) => {
-    setSelectedQuiz(slug)
+  setSelectedQuiz(slug)
 
+  try {
+    const res = await fetch(`/api/quiz/by-category/${slug}`)
+    const data = await res.json()
 
-    try {
-      const res = await fetch(`/api/quiz/by-category/${slug}`)
-      const data = await res.json()
-      setQuizzes(data)
-    } catch (err) {
-      console.error("Failed to fetch quizzes", err)
-    }
+    setQuizzes(Array.isArray(data?.quizzes) ? data.quizzes : [])
+  } catch (err) {
+    console.error("Failed to fetch quizzes", err)
+    setQuizzes([])
   }
+}
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto">
@@ -84,7 +85,7 @@ export default function QuizPage() {
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {loading ? (
             <p className="text-slate-500">Loading quizzes...</p>
-          ) : Array.isArray(quizCategories) ? (
+          ) : Array.isArray(quizCategories) && quizCategories.length > 0 ? (
             quizCategories.map((quiz) => (
 
               <QuizCard
@@ -95,7 +96,6 @@ export default function QuizPage() {
                 color="from-violet-400 to-purple-500"
                 selected={selectedQuiz === quiz.id}
                 onSelect={() => {
-                  console.log("ROUTING TO:", `/dashboard/quiz/${quiz.slug}/${quiz.id}`)
                   router.push(`/dashboard/quiz/${quiz.slug}/${quiz.id}`)
                 }}
               />

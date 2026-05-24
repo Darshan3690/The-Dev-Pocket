@@ -100,9 +100,25 @@ export default function DashboardPage() {
 
   const fetchDetailedStats = async () => {
     try {
-      const response = await fetch('/api/user-stats/detailed')
-      const data = await response.json()
+    const response = await fetch('/api/user-stats/detailed')
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch detailed stats')
+    }
+
+    const data = await response.json()
+
+    if (
+      data &&
+      Array.isArray(data.quizChartData) &&
+      Array.isArray(data.bookmarkChartData) &&
+      Array.isArray(data.activityChartData) &&
+      Array.isArray(data.categoryChartData)
+    ) {
       setDetailedStats(data)
+    } else {
+      setDetailedStats(null)
+    }
     } catch (error) {
       console.error('Error fetching detailed stats:', error)
     } finally {
