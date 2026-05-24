@@ -11,9 +11,11 @@ const isPublicRoute = createRouteMatcher([
   // Add other public routes here
 ])
 
-function buildCsp(): string {
-  if (process.env.CONTENT_SECURITY_POLICY?.trim()) {
-    return process.env.CONTENT_SECURITY_POLICY.trim();
+export function buildCsp(): string {
+  const cspOverride = process.env.CONTENT_SECURITY_POLICY?.trim();
+
+  if (cspOverride) {
+    return cspOverride.replace(/[\r\n]+/g, ' ').replace(/\s{2,}/g, ' ');
   }
 
   const isDev = process.env.NODE_ENV !== 'production';
@@ -39,6 +41,7 @@ function buildCsp(): string {
     'https://clerk.com',
     'https://*.clerk.accounts.dev',
     ...(clerkFrontendApiHost ? [clerkFrontendApiHost] : []),
+    ...(isDev ? ['ws:', 'wss:'] : []),
   ];
 
   const frameSrc = [
@@ -68,6 +71,7 @@ function buildCsp(): string {
 }
 
 const contentSecurityPolicy = buildCsp();
+export const crossOriginOpenerPolicy = 'same-origin';
 
 function applySecurityHeaders(response: Response): Response {
   response.headers.set('Content-Security-Policy', contentSecurityPolicy);
@@ -75,7 +79,7 @@ function applySecurityHeaders(response: Response): Response {
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('Permissions-Policy', 'accelerometer=(), autoplay=(), camera=(), display-capture=(), geolocation=(), gyroscope=(), microphone=(), midi=(), payment=(), usb=()');
-  response.headers.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+  response.headers.set('Cross-Origin-Opener-Policy', crossOriginOpenerPolicy);
   response.headers.set('Cross-Origin-Resource-Policy', 'same-site');
   response.headers.set('X-DNS-Prefetch-Control', 'off');
 
