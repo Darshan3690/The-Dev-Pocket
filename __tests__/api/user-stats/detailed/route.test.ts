@@ -1,25 +1,37 @@
 import { auth } from '@clerk/nextjs/server';
 import { upstashLimit } from '@/lib/rate-limit-upstash';
-import { GET } from '@/app/api/user-stats/detailed/route';
 
 jest.mock('@clerk/nextjs/server', () => ({
   auth: jest.fn(),
 }));
 
-const mockPrismaClient = {
+let mockPrismaClient: {
   quizAttempt: {
-    findMany: jest.fn(),
-  },
+    findMany: jest.Mock;
+  };
   bookmark: {
-    findMany: jest.fn(),
-  },
+    findMany: jest.Mock;
+  };
   userStats: {
-    findUnique: jest.fn(),
-  },
+    findUnique: jest.Mock;
+  };
 };
 
 jest.mock('@prisma/client', () => ({
-  PrismaClient: jest.fn(() => mockPrismaClient),
+  PrismaClient: jest.fn(() => {
+    mockPrismaClient = {
+      quizAttempt: {
+        findMany: jest.fn(),
+      },
+      bookmark: {
+        findMany: jest.fn(),
+      },
+      userStats: {
+        findUnique: jest.fn(),
+      },
+    };
+    return mockPrismaClient;
+  }),
 }));
 
 jest.mock('@/lib/rate-limit-upstash', () => ({
@@ -32,7 +44,9 @@ describe('GET /api/user-stats/detailed', () => {
   });
 
   it('returns 429 when the request exceeds the rate limit', async () => {
-    (auth as jest.Mock).mockResolvedValue({ userId: 'user_123' });
+    const { GET } = await import('@/app/api/user-stats/detailed/route');
+
+    (auth as unknown as jest.Mock).mockResolvedValue({ userId: 'user_123' });
     (upstashLimit as jest.Mock).mockResolvedValue({
       success: false,
       remaining: 0,
@@ -57,7 +71,9 @@ describe('GET /api/user-stats/detailed', () => {
   });
 
   it('returns detailed stats with rate limit headers when allowed', async () => {
-    (auth as jest.Mock).mockResolvedValue({ userId: 'user_123' });
+    const { GET } = await import('@/app/api/user-stats/detailed/route');
+
+    (auth as unknown as jest.Mock).mockResolvedValue({ userId: 'user_123' });
     (upstashLimit as jest.Mock).mockResolvedValue({
       success: true,
       remaining: 59,
