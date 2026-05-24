@@ -17,9 +17,9 @@ import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 export default function Navbar() {
   const navItems = [
-    { name: "Features", link: "#features" },
+    { name: "Features", link: "/#features" },
     { name: "Placement Arena", link: "/placement" },
-    { name: "Pricing", link: "#pricing" },
+    { name: "Pricing", link: "/#pricing" },
     { name: "About", link: "/about" },
   ];
 
@@ -72,14 +72,14 @@ export default function Navbar() {
           onClose={() => setIsMobileMenuOpen(false)}
         >
           {navItems.map((item, idx) => (
-            <a
+            <Link
               key={`mobile-link-${idx}`}
               href={item.link}
               onClick={() => setIsMobileMenuOpen(false)}
               className="relative text-gray-700 dark:text-gray-200 font-medium text-base hover:text-sky-600 dark:hover:text-sky-400 transition-colors py-2 w-full"
             >
               {item.name}
-            </a>
+            </Link>
           ))}
 
           {/* Mobile Auth Section */}

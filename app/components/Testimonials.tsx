@@ -47,17 +47,25 @@ function Testimonials() {
         </div>
 
         {/* 🔹 Content */}
-        <div className="relative max-w-6xl mx-auto text-center z-10">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Loved by Developers Worldwide
-          </h2>
-          <p className="text-lg text-gray-300 mb-12">
-            Here’s how Dev Pocket is transforming careers across the globe.
-          </p>
+        <div className="relative max-w-6xl mx-auto text-center z-10 px-4">
+        <h2 className="text-4xl sm:text-5xl font-extrabold mb-5 leading-tight">
+        <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent drop-shadow-lg">
+               Loved by Developers Worldwide
+    </span>
+  </h2>
+<p className="text-lg sm:text-xl text-white max-w-3xl mx-auto leading-relaxed mb-12 font-semibold drop-shadow-[0_2px_10px_rgba(255,255,255,0.4)]">
+    <span className="text-cyan-300">
+  Here’s how{" "}
+    Dev Pocket
+  is transforming careers across the globe.
+    </span>{" "}
+</p>
 
-          {/* ✅ Animated Testimonials */}
-          <AnimatedTestimonials testimonials={testimonials} />
-        </div>
+  {/* ✅ Animated Testimonials */}
+  <div className="backdrop-blur-md bg-white/5 border border-white/10 rounded-3xl p-4 sm:p-6 shadow-2xl">
+    <AnimatedTestimonials testimonials={testimonials} />
+  </div>
+</div>
       </section>
 
     </>
