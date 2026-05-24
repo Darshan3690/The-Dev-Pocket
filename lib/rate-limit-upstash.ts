@@ -54,8 +54,8 @@ export async function upstashLimit(identifier: string, config: RateLimitConfig):
     });
   }
 
-  const windowSeconds = Math.max(1, Math.floor(config.windowMs / 1000));
-  const policyKey = `${config.maxRequests}:${windowSeconds}`;
+  const windowSeconds = Math.max(1, Math.ceil(config.windowMs / 1000));
+  const policyKey = `${config.maxRequests}:${config.windowMs}:${windowSeconds}`;
   let limiter = limiterCache.get(policyKey);
 
   if (!limiter) {
