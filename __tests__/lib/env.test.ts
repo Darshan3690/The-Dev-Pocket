@@ -28,7 +28,7 @@ describe('env validation', () => {
   });
 
   test('requires DATABASE_URL and CLERK_SECRET_KEY in production', () => {
-    process.env.NODE_ENV = 'production';
+    Object.assign(process.env, { NODE_ENV: 'production' });
     delete process.env.DATABASE_URL;
     delete process.env.CLERK_SECRET_KEY;
 
@@ -43,7 +43,7 @@ describe('env validation', () => {
   });
 
   test('returns typed env when everything is provided', () => {
-    process.env.NODE_ENV = 'production';
+    Object.assign(process.env, { NODE_ENV: 'production' });
     process.env.DATABASE_URL = 'postgresql://user:pass@localhost/testdb';
     process.env.CLERK_SECRET_KEY = 'secret';
     process.env.RATE_LIMIT_MODE = 'INMEM';

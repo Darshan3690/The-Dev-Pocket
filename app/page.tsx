@@ -178,16 +178,12 @@ const App = () => {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="py-16 sm:py-24 text-center max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8"
       >
-        <h2
-          className={`text-3xl sm:text-4xl font-bold mb-4 ${isDark ? "text-dark" : "text-white"
-            }`}
-        >
-          All the Tools You Need, in <span className="text-sky-500">One Place</span>
+        <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 max-w-4xl mx-auto leading-tight ${isDark ? "text-white" : "text-slate-900"}`}>
+          <span className="text-sky-500 block mt-2 sm:mt-3">Everything You Need in One Place</span>
         </h2>
 
-        <p className={`text-base sm:text-lg mb-8 max-w-3xl mx-auto ${isDark ? "text-gray-400" : "text-gray-600"}`}>
-          Stop juggling multiple platforms. Dev Pocket brings everything
-          together to accelerate your growth.
+        <p className={`text-base sm:text-lg mb-8 max-w-2xl mx-auto ${isDark ? "text-gray-400" : "text-gray-600"}`}>
+          Stop juggling multiple platforms. Dev Pocket brings everything together to accelerate your growth.
         </p>
         <div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 text-left items-stretch"
