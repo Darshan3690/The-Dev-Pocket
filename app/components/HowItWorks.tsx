@@ -35,13 +35,13 @@ function HowItWorks() {
       id="how-it-works"
       className={`py-12 sm:py-20 lg:py-28 text-center transition-all max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 duration-700 ease-out ${
         howItWorksVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
-      } bg-gradient-to-b from-white to-gray-50`}
+      } bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950`}
     >
-      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4 sm:mb-6 tracking-tight">
+      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 sm:mb-6 tracking-tight">
         Launch Your Career in Three Bold Steps
       </h2>
 
-      <p className="text-base sm:text-lg text-gray-600 mb-10 sm:mb-12 max-w-3xl mx-auto leading-relaxed">
+      <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-10 sm:mb-12 max-w-3xl mx-auto leading-relaxed">
         Transform your ambitions into reality with our dynamic, AI-driven process designed for success.
       </p>
 
@@ -88,13 +88,13 @@ function StepCard({
   description: string;
 }) {
   return (
-    <div className="relative group flex-1 min-w-[250px] max-w-[320px] bg-white rounded-3xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
-      <div className="w-14 h-14 sm:w-16 sm:h-16 bg-indigo-600 rounded-full flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4 sm:mb-6 ring-4 ring-indigo-100 ring-opacity-50 group-hover:ring-opacity-75 transition-all">
+    <div className="relative group flex-1 min-w-[250px] max-w-[320px] bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700/60">
+      <div className="w-14 h-14 sm:w-16 sm:h-16 bg-indigo-600 rounded-full flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4 sm:mb-6 ring-4 ring-indigo-100 dark:ring-indigo-900/50 ring-opacity-50 dark:ring-opacity-40 group-hover:ring-opacity-75 transition-all">
         {number}
       </div>
-      <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2 sm:mb-3">{title}</h3>
-      <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{description}</p>
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-indigo-50 to-transparent rounded-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+      <h3 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2 sm:mb-3">{title}</h3>
+      <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed">{description}</p>
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-indigo-50 dark:from-indigo-950/20 to-transparent rounded-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
     </div>
   );
 }
