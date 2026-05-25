@@ -94,7 +94,7 @@ export const AnimatedTestimonials = ({
             </AnimatePresence>
           </div>
         </div>
-        <div className="flex flex-col justify-between rounded-[28px] bg-white/90 px-6 py-8 shadow-[0_18px_48px_rgba(15,23,42,0.08)] ring-1 ring-slate-100 md:px-8">
+        <div className="flex flex-col justify-between rounded-[28px] bg-white/90 px-6 py-8 shadow-[0_18px_48px_rgba(15,23,42,0.08)] ring-1 ring-slate-100 dark:bg-slate-900/90 dark:ring-slate-700 md:px-8">
           <motion.div
             key={active}
             initial={{
@@ -149,15 +149,17 @@ export const AnimatedTestimonials = ({
           <div className="flex gap-4 pt-12 md:pt-0">
             <button
               onClick={handlePrev}
-              className="group/button flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-800 shadow-sm transition-colors hover:border-sky-200 hover:bg-sky-50 dark:bg-neutral-800"
+              aria-label="Previous testimonial"
+              className="group/button flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-800 shadow-sm transition-colors hover:border-sky-200 hover:bg-sky-50 dark:border-slate-700 dark:bg-neutral-800 dark:text-slate-100 dark:hover:border-sky-500/60 dark:hover:bg-slate-800"
             >
-              <IconArrowLeft className="h-5 w-5 text-slate-800 transition-transform duration-300 group-hover/button:rotate-12 dark:text-neutral-400" />
+              <IconArrowLeft className="h-5 w-5 text-slate-800 transition-transform duration-300 group-hover/button:rotate-12 dark:text-slate-100" />
             </button>
             <button
               onClick={handleNext}
-              className="group/button flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-800 shadow-sm transition-colors hover:border-sky-200 hover:bg-sky-50 dark:bg-neutral-800"
+              aria-label="Next testimonial"
+              className="group/button flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-800 shadow-sm transition-colors hover:border-sky-200 hover:bg-sky-50 dark:border-slate-700 dark:bg-neutral-800 dark:text-slate-100 dark:hover:border-sky-500/60 dark:hover:bg-slate-800"
             >
-              <IconArrowRight className="h-5 w-5 text-slate-800 transition-transform duration-300 group-hover/button:-rotate-12 dark:text-neutral-400" />
+              <IconArrowRight className="h-5 w-5 text-slate-800 transition-transform duration-300 group-hover/button:-rotate-12 dark:text-slate-100" />
             </button>
           </div>
         </div>
