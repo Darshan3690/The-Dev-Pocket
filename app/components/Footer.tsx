@@ -107,7 +107,7 @@ export default function Footer() {
                 <FaLinkedin className="w-4 h-4" />
               </a>
               <a
-                href="https://github.com"
+                href="https://github.com/Darshan3690/The-Dev-Pocket"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 bg-white dark:bg-gray-800 rounded-lg hover:bg-gray-700 hover:text-white dark:hover:bg-gray-600 transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-1"
