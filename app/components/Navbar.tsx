@@ -14,6 +14,7 @@ import {
 import { useState } from "react";
 import Link from "next/link";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import GlobalSearch from "./GlobalSearch";
 
 export default function Navbar() {
   const navItems = [
@@ -34,6 +35,8 @@ export default function Navbar() {
 
         {/* Auth Section */}
         <div className="flex items-center gap-5">
+          <GlobalSearch />
+
           <SignedOut>
             <NavbarButton as={Link} href="/sign-in" variant="primary">
               Login
@@ -84,6 +87,8 @@ export default function Navbar() {
 
           {/* Mobile Auth Section */}
           <div className="flex w-full flex-col gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <GlobalSearch />
+
             <SignedOut>
               <NavbarButton
                 as={Link}

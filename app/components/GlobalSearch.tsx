@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Search, X, Command, ArrowRight, FileText, BookOpen, Code, User, TrendingUp } from "lucide-react";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 // Search result type
@@ -15,38 +14,114 @@ interface SearchResult {
   url: string;
   icon?: React.ReactNode;
   type?: "static" | "resource";
+  keywords?: string[];
+  score?: number;
+}
+
+interface ApiResource {
+  id: string | number;
+  title: string;
+  description?: string | null;
+  category?: string | null;
+  tags?: string[] | null;
 }
 
 // All searchable content
 const searchableContent: SearchResult[] = [
   // Pages
-  { id: "1", title: "Dashboard", description: "View your learning progress and stats", category: "page", url: "/dashboard", icon: <FileText className="w-4 h-4" /> },
-  { id: "2", title: "Create Roadmap", description: "Generate AI-powered learning roadmaps", category: "page", url: "/create-roadmap", icon: <Code className="w-4 h-4" /> },
-  { id: "3", title: "Calendar", description: "Manage your study schedule", category: "page", url: "/dashboard/calendar", icon: <FileText className="w-4 h-4" /> },
-  { id: "4", title: "Notes", description: "Take and organize learning notes", category: "page", url: "/dashboard/notes", icon: <FileText className="w-4 h-4" /> },
-  { id: "5", title: "Resume Builder", description: "Create professional resumes", category: "page", url: "/dashboard/resume", icon: <FileText className="w-4 h-4" /> },
-  { id: "6", title: "Settings", description: "Manage your account settings", category: "page", url: "/settings", icon: <User className="w-4 h-4" /> },
-  { id: "7", title: "About", description: "Learn more about Dev Pocket", category: "page", url: "/about", icon: <BookOpen className="w-4 h-4" /> },
+  { id: "1", title: "Home", description: "Explore Dev Pocket features, resources, and roadmaps", category: "page", url: "/", icon: <FileText className="w-4 h-4" />, keywords: ["landing", "overview", "features"] },
+  { id: "2", title: "Dashboard", description: "View your learning progress and stats", category: "page", url: "/dashboard", icon: <FileText className="w-4 h-4" />, keywords: ["progress", "stats", "profile"] },
+  { id: "3", title: "Create Roadmap", description: "Generate AI-powered learning roadmaps", category: "page", url: "/create-roadmap", icon: <Code className="w-4 h-4" />, keywords: ["roadmap", "ai", "learning path"] },
+  { id: "4", title: "Calendar", description: "Manage your study schedule", category: "page", url: "/dashboard/calendar", icon: <FileText className="w-4 h-4" />, keywords: ["schedule", "planner", "study"] },
+  { id: "5", title: "Notes", description: "Take and organize learning notes", category: "page", url: "/dashboard/notes", icon: <FileText className="w-4 h-4" />, keywords: ["memo", "study notes", "writing"] },
+  { id: "6", title: "Resume Builder", description: "Create professional resumes", category: "page", url: "/dashboard/resume", icon: <FileText className="w-4 h-4" />, keywords: ["cv", "career", "portfolio"] },
+  { id: "7", title: "Settings", description: "Manage your account settings", category: "page", url: "/settings", icon: <User className="w-4 h-4" />, keywords: ["account", "preferences", "profile"] },
+  { id: "8", title: "About", description: "Learn more about Dev Pocket", category: "page", url: "/about", icon: <BookOpen className="w-4 h-4" />, keywords: ["team", "mission", "project"] },
+  { id: "9", title: "Advanced Search", description: "Find resources with filters, tags, dates, and sorting", category: "page", url: "/search", icon: <Search className="w-4 h-4" />, keywords: ["filter", "facets", "resource search"] },
+  { id: "10", title: "Resources", description: "Browse tutorials, articles, videos, courses, books, and tools", category: "page", url: "/resources", icon: <BookOpen className="w-4 h-4" />, keywords: ["tutorial", "article", "video", "course", "book", "tool"] },
+  { id: "11", title: "Practice Hub", description: "Practice coding and interview skills", category: "page", url: "/practice-hub", icon: <Code className="w-4 h-4" />, keywords: ["coding", "interview", "questions"] },
+  { id: "12", title: "Career Guidance", description: "Explore guidance for career growth and job readiness", category: "page", url: "/career-guidance", icon: <TrendingUp className="w-4 h-4" />, keywords: ["career", "job", "placement"] },
+  { id: "13", title: "Jobs", description: "Discover job opportunities and career resources", category: "page", url: "/job", icon: <TrendingUp className="w-4 h-4" />, keywords: ["jobs", "internship", "placement"] },
+  { id: "14", title: "FAQ", description: "Answers to common questions", category: "documentation", url: "/faq", icon: <BookOpen className="w-4 h-4" />, keywords: ["help", "questions", "support"] },
+  { id: "15", title: "Contact", description: "Contact the Dev Pocket team", category: "page", url: "/contact", icon: <User className="w-4 h-4" />, keywords: ["support", "feedback", "message"] },
   
   // Features
-  { id: "8", title: "AI Study Buddy", description: "Get help from AI assistant", category: "feature", url: "/dashboard", icon: <Code className="w-4 h-4" /> },
-  { id: "9", title: "Progress Tracking", description: "Track your learning progress", category: "feature", url: "/dashboard", icon: <FileText className="w-4 h-4" /> },
-  { id: "10", title: "Streak Counter", description: "Maintain your learning streak", category: "feature", url: "/dashboard", icon: <FileText className="w-4 h-4" /> },
+  { id: "16", title: "AI Study Buddy", description: "Get help from AI assistant", category: "feature", url: "/dashboard/study-buddy", icon: <Code className="w-4 h-4" />, keywords: ["assistant", "ai tutor", "help"] },
+  { id: "17", title: "Progress Tracking", description: "Track your learning progress", category: "feature", url: "/dashboard", icon: <FileText className="w-4 h-4" />, keywords: ["analytics", "stats", "learning"] },
+  { id: "18", title: "Bookmarks", description: "Save and revisit useful developer resources", category: "feature", url: "/dashboard/bookmarks", icon: <BookOpen className="w-4 h-4" />, keywords: ["saved", "favorites", "resources"] },
+  { id: "19", title: "Quiz", description: "Test your knowledge with developer quizzes", category: "feature", url: "/dashboard/quiz", icon: <Code className="w-4 h-4" />, keywords: ["test", "questions", "practice"] },
+  { id: "20", title: "Projects", description: "Organize practical projects and learning work", category: "feature", url: "/dashboard/projects", icon: <Code className="w-4 h-4" />, keywords: ["build", "portfolio", "tasks"] },
   
   // Documentation/Resources
-  { id: "11", title: "Web Development", description: "Learn web development from scratch", category: "resource", url: "/", icon: <BookOpen className="w-4 h-4" /> },
-  { id: "12", title: "Data Structures & Algorithms", description: "Master DSA concepts", category: "resource", url: "/", icon: <BookOpen className="w-4 h-4" /> },
-  { id: "13", title: "AI & Machine Learning", description: "Explore AI/ML technologies", category: "resource", url: "/", icon: <BookOpen className="w-4 h-4" /> },
+  { id: "21", title: "Web Development", description: "Learn web development from scratch", category: "resource", url: "/web-dev", icon: <BookOpen className="w-4 h-4" />, keywords: ["frontend", "backend", "javascript", "react", "next"] },
+  { id: "22", title: "Data Structures & Algorithms", description: "Master DSA concepts", category: "resource", url: "/resources?category=dsa", icon: <BookOpen className="w-4 h-4" />, keywords: ["dsa", "algorithms", "interview"] },
+  { id: "23", title: "AI & Machine Learning", description: "Explore AI/ML technologies", category: "resource", url: "/resources?search=machine%20learning", icon: <BookOpen className="w-4 h-4" />, keywords: ["ai", "ml", "machine learning", "data science"] },
 ];
+
+const normalizeSearchText = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+
+const levenshteinDistance = (left: string, right: string) => {
+  const previous = Array.from({ length: right.length + 1 }, (_, index) => index);
+
+  for (let i = 0; i < left.length; i += 1) {
+    let lastDiagonal = previous[0];
+    previous[0] = i + 1;
+
+    for (let j = 0; j < right.length; j += 1) {
+      const oldDiagonal = previous[j + 1];
+      const cost = left[i] === right[j] ? 0 : 1;
+      previous[j + 1] = Math.min(
+        previous[j + 1] + 1,
+        previous[j] + 1,
+        lastDiagonal + cost
+      );
+      lastDiagonal = oldDiagonal;
+    }
+  }
+
+  return previous[right.length];
+};
+
+const scoreText = (query: string, target: string) => {
+  const normalizedTarget = normalizeSearchText(target);
+  if (!query || !normalizedTarget) return 0;
+  if (normalizedTarget === query) return 120;
+  if (normalizedTarget.startsWith(query)) return 100;
+  if (normalizedTarget.includes(query)) return 80;
+
+  const queryTokens = query.split(" ").filter(Boolean);
+  const targetTokens = normalizedTarget.split(" ").filter(Boolean);
+
+  return queryTokens.reduce((score, queryToken) => {
+    const bestTokenScore = targetTokens.reduce((best, targetToken) => {
+      if (targetToken === queryToken) return Math.max(best, 35);
+      if (targetToken.startsWith(queryToken)) return Math.max(best, 28);
+      if (targetToken.includes(queryToken)) return Math.max(best, 20);
+
+      const typoDistance = levenshteinDistance(queryToken, targetToken);
+      if (queryToken.length >= 6 && typoDistance <= 2) return Math.max(best, 16);
+      if (queryToken.length >= 4 && typoDistance <= 1) return Math.max(best, 12);
+      return best;
+    }, 0);
+    return score + bestTokenScore;
+  }, 0);
+};
+
+const scoreResult = (query: string, item: SearchResult) => {
+  const keywordText = item.keywords?.join(" ") ?? "";
+  return (
+    scoreText(query, item.title) * 3 +
+    scoreText(query, item.description) * 1.5 +
+    scoreText(query, item.category) +
+    scoreText(query, keywordText) * 1.25
+  );
+};
 
 export default function GlobalSearch() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [recentSearches, setRecentSearches] = useState<string[]>([]);
-
-  const [showRecent, setShowRecent] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -63,17 +138,12 @@ export default function GlobalSearch() {
       return;
     }
 
-    const lowercaseQuery = searchQuery.toLowerCase();
+    const normalizedQuery = normalizeSearchText(searchQuery);
 
     // Static content search
-    const staticResults = searchableContent.filter((item) => {
-      const titleMatch = item.title.toLowerCase().includes(lowercaseQuery);
-      const descMatch = item.description.toLowerCase().includes(lowercaseQuery);
-      const categoryMatch = item.category.toLowerCase().includes(lowercaseQuery);
-      return titleMatch || descMatch || categoryMatch;
-
-
-    }).map(item => ({ ...item, type: "static" as const }));
+    const staticResults = searchableContent
+      .map((item) => ({ ...item, score: scoreResult(normalizedQuery, item), type: "static" as const }))
+      .filter((item) => item.score > 0);
 
     let combinedResults: (SearchResult & { type: "static" | "resource" })[] = [...staticResults];
     // Fetch resources from API if query is at least 2 characters
@@ -81,27 +151,29 @@ export default function GlobalSearch() {
       try {
         const response = await fetch(`/api/resources?search=${encodeURIComponent(searchQuery)}&limit=5`);
         const data = await response.json();
-        const resourceResults = data.resources.map((resource: any) => ({
-          id: `resource-${resource.id}`,
-          title: resource.title,
-          description: resource.description || resource.category,
-          category: "resource" as const,
-          url: `/resources/${resource.id}`,
-          icon: <BookOpen className="w-4 h-4" />,
-          type: "resource" as const,
-        }));
+        const apiResources: ApiResource[] = Array.isArray(data.resources) ? data.resources : [];
+        const resourceResults = apiResources.map((resource) => {
+          const result: SearchResult & { type: "resource" } = {
+            id: `resource-${resource.id}`,
+            title: resource.title,
+            description: resource.description || resource.category || "Learning resource",
+            category: "resource" as const,
+            url: `/resources/${resource.id}`,
+            icon: <BookOpen className="w-4 h-4" />,
+            type: "resource" as const,
+            keywords: resource.tags ?? [],
+          };
+          return { ...result, score: scoreResult(normalizedQuery, result) };
+        });
         combinedResults = [...staticResults, ...resourceResults];
       } catch (error) {
         console.error('Error fetching resources:', error);
       }
     }
 
-    // Sort by relevance (title matches first, then static before resources)
+    // Sort by fuzzy relevance, then keep static navigation targets above equal API results.
     combinedResults.sort((a, b) => {
-      const aTitle = a.title.toLowerCase().startsWith(lowercaseQuery) ? 1 : 0;
-      const bTitle = b.title.toLowerCase().startsWith(lowercaseQuery) ? 1 : 0;
-      if (aTitle !== bTitle) return bTitle - aTitle;
-      // Prefer static results
+      if ((b.score ?? 0) !== (a.score ?? 0)) return (b.score ?? 0) - (a.score ?? 0);
       if (a.type === "static" && b.type === "resource") return -1;
       if (a.type === "resource" && b.type === "static") return 1;
       return 0;
@@ -246,12 +318,6 @@ export default function GlobalSearch() {
                 type="text"
                 value={query}
                 onChange={handleInputChange}
-                onFocus={() => {
-                  if (!query && recentSearches.length > 0) {
-                    setShowRecent(true);
-                  }
-                }}
-                onBlur={() => setTimeout(() => setShowRecent(false), 200)}
                 placeholder="Search pages, resources, features..."
                 className="flex-1 bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 outline-none text-lg font-medium"
                 autoComplete="off"
@@ -279,7 +345,7 @@ export default function GlobalSearch() {
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-2xl" />
                   </div>
                   <p className="text-lg font-semibold text-gray-700 dark:text-gray-300">
-                    No results found for "{query}"
+                    No results found for &quot;{query}&quot;
                   </p>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                     Try different keywords or check your spelling
