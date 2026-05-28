@@ -31,7 +31,7 @@ function Testimonials() {
     <>
     <section
         id="testimonials"
-        className="relative py-20 sm:py-28 bg-gradient-to-r from-sky-50 via-[#135b85]/10 to-sky-50"
+        className="relative py-20 sm:py-28 bg-gradient-to-r from-sky-50 via-[#135b85]/10 to-sky-50 dark:from-gray-950 dark:via-[#135b85]/20 dark:to-gray-950"
       >
         {/* 🔹 Top Wave Divider */}
         <div className="absolute top-0 left-0 w-full overflow-hidden leading-none">
@@ -40,7 +40,7 @@ function Testimonials() {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 1200 120"
             preserveAspectRatio="none"
-            className="w-full h-20 fill-white"
+            className="w-full h-20 fill-white dark:fill-gray-900"
           >
             <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
           </svg>
@@ -49,16 +49,14 @@ function Testimonials() {
         {/* 🔹 Content */}
         <div className="relative max-w-6xl mx-auto text-center z-10 px-4">
         <h2 className="text-4xl sm:text-5xl font-extrabold mb-5 leading-tight">
-        <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent drop-shadow-lg">
+        <span className="bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 bg-clip-text text-transparent drop-shadow-lg">
                Loved by Developers Worldwide
     </span>
   </h2>
-<p className="text-lg sm:text-xl text-white max-w-3xl mx-auto leading-relaxed mb-12 font-semibold drop-shadow-[0_2px_10px_rgba(255,255,255,0.4)]">
-    <span className="text-cyan-300">
+<p className="text-lg sm:text-xl text-slate-700 dark:text-cyan-300 max-w-3xl mx-auto leading-relaxed mb-12 font-semibold">
   Here’s how{" "}
-    Dev Pocket
+  <span className="text-sky-600 dark:text-sky-400 font-bold">Dev Pocket</span>{" "}
   is transforming careers across the globe.
-    </span>{" "}
 </p>
 
   {/* ✅ Animated Testimonials */}
