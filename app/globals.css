@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: 0 0% 100%;
   --foreground: 0 0% 3.9%;
@@ -63,3 +65,12 @@ body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
 }
+
+/* Smooth theme transitions */
+body, header, footer, nav, section, article, aside, main, input, textarea, select, button, div {
+  transition: background-color 0.3s ease, border-color 0.3s ease, text-decoration-color 0.3s ease, fill 0.3s ease, stroke 0.3s ease;
+}
+
+h1, h2, h3, h4, h5, h6, p, span, a, label, svg {
+  transition: color 0.3s ease, fill 0.3s ease, stroke 0.3s ease, border-color 0.3s ease;
+}

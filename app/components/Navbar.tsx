@@ -14,6 +14,7 @@ import {
 import { useState } from "react";
 import Link from "next/link";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { ThemeSwitcher } from "../ThemeSwitcher";
 
 export default function Navbar() {
   const navItems = [
@@ -32,7 +33,7 @@ export default function Navbar() {
         <NavbarLogo />
         <NavItems items={navItems} />
 
-        {/* Auth Section */}
+        {/* Auth & Theme Section */}
         <div className="flex items-center gap-5">
           <SignedOut>
             <NavbarButton as={Link} href="/sign-in" variant="primary">
@@ -54,6 +55,8 @@ export default function Navbar() {
               Dashboard
             </NavbarButton>
           </SignedIn>
+
+          <ThemeSwitcher />
         </div>
       </NavBody>
 
@@ -82,8 +85,15 @@ export default function Navbar() {
             </Link>
           ))}
 
-          {/* Mobile Auth Section */}
+          {/* Mobile Auth & Theme Section */}
           <div className="flex w-full flex-col gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between w-full px-1">
+              <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                Appearance
+              </span>
+              <ThemeSwitcher />
+            </div>
+
             <SignedOut>
               <NavbarButton
                 as={Link}
@@ -116,3 +126,4 @@ export default function Navbar() {
     </ResizableNavbar>
   );
 }
+
