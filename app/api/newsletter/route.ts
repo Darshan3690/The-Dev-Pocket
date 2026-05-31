@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { PrismaClient } from "@prisma/client";
 import { upstashLimit } from "@/lib/rate-limit-upstash";
 import { getClientIP } from "@/lib/rate-limit";
@@ -208,6 +208,11 @@ export async function GET(_request: NextRequest) {
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const user = await clerkClient.users.getUser(userId);
+    if (user.publicMetadata?.role !== "admin") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     const totalSubscribers = await prisma.newsletterSubscriber.count({
