@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 import { PrismaClient } from "@prisma/client";
 import { upstashLimit } from "@/lib/rate-limit-upstash";
 import { getClientIP } from "@/lib/rate-limit";
@@ -201,8 +202,14 @@ export async function DELETE(request: NextRequest) {
 }
 
 // GET /api/newsletter/stats - Get newsletter statistics (admin only)
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const totalSubscribers = await prisma.newsletterSubscriber.count({
       where: { status: "active" },
     });
