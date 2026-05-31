@@ -49,8 +49,8 @@ export function validateEnv(opts?: { throwOnMissing?: boolean }): AppEnv {
     errors.push(`RATE_LIMIT_MODE has invalid value: ${rawRateLimitMode}. Expected 'INMEM' or 'UPSTASH'.`);
   }
 
-  // Production-only sanity checks
-  if (parsed.NODE_ENV === 'production') {
+  // Production-only sanity checks (skip during Next.js build — env vars aren't available in CI)
+  if (parsed.NODE_ENV === 'production' && process.env.NEXT_PHASE !== 'phase-production-build') {
     if (!parsed.DATABASE_URL) errors.push('DATABASE_URL is required in production.');
     if (!parsed.CLERK_SECRET_KEY) errors.push('CLERK_SECRET_KEY is required in production.');
   }
