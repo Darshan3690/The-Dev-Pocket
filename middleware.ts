@@ -100,10 +100,7 @@ export default clerkMiddleware(async (auth, req) => {
   }
   
   if (!isPublicRoute(req)) {
-    const authResponse = await auth.protect()
-    if (authResponse) {
-      return applySecurityHeaders(authResponse);
-    }
+    await auth.protect();
   }
 
   return applySecurityHeaders(NextResponse.next());
