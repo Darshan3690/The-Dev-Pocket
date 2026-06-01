@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { upstashLimit } from "@/lib/rate-limit-upstash"
-import { getClientIP } from "@/lib/rate-limit"
 
 export async function GET(
   request: NextRequest,
