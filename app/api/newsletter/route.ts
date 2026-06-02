@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 import { PrismaClient } from "@prisma/client";
 import { upstashLimit } from "@/lib/rate-limit-upstash";
 import { getClientIP } from "@/lib/rate-limit";
@@ -126,6 +127,12 @@ export async function POST(request: NextRequest) {
 
 // DELETE /api/newsletter - Unsubscribe from newsletter
 export async function DELETE(request: NextRequest) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   // Rate limiting: 5 requests per hour per IP
   const clientIP = getClientIP(request);
   const rateLimitResult = await upstashLimit(clientIP + ':newsletter-delete', {
