@@ -18,6 +18,10 @@ function parseBool(v?: string | undefined): boolean {
   return v.toLowerCase() === 'true';
 }
 
+function isGitHubActionsBuild(env: NodeJS.ProcessEnv): boolean {
+  return env.GITHUB_ACTIONS === 'true' && env.CI === 'true';
+}
+
 /**
  * Validates environment variables used by the application and returns a typed object.
  * - Throws a descriptive Error when required variables are missing or inconsistent.
@@ -50,7 +54,7 @@ export function validateEnv(opts?: { throwOnMissing?: boolean }): AppEnv {
   }
 
   // Production-only sanity checks
-  if (parsed.NODE_ENV === 'production') {
+  if (parsed.NODE_ENV === 'production' && !isGitHubActionsBuild(env)) {
     if (!parsed.DATABASE_URL) errors.push('DATABASE_URL is required in production.');
     if (!parsed.CLERK_SECRET_KEY) errors.push('CLERK_SECRET_KEY is required in production.');
   }
