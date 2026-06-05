@@ -42,6 +42,18 @@ describe('env validation', () => {
     }
   });
 
+  test('allows GitHub Actions production builds without runtime secrets', () => {
+    Object.assign(process.env, {
+      NODE_ENV: 'production',
+      CI: 'true',
+      GITHUB_ACTIONS: 'true',
+    });
+    delete process.env.DATABASE_URL;
+    delete process.env.CLERK_SECRET_KEY;
+
+    expect(() => validateEnv()).not.toThrow();
+  });
+
   test('returns typed env when everything is provided', () => {
     Object.assign(process.env, { NODE_ENV: 'production' });
     process.env.DATABASE_URL = 'postgresql://user:pass@localhost/testdb';
