@@ -10,7 +10,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build --turbopack",
+    "build": "prisma generate && next build --webpack",
     "start": "next start",
     "lint": "eslint .",
     "test": "jest --passWithNoTests --runInBand",

@@ -4,13 +4,13 @@ import { prisma } from "@/lib/prisma"
 import QuizList from "./quiz-list"
 
 interface PageProps {
-  params: {
+  params: Promise<{
     categorySlug: string
-  }
+  }>
 }
 
 export default async function CategoryQuizPage({ params }: PageProps) {
-  const { categorySlug } = params
+  const { categorySlug } = await params
 
   const category = await prisma.quizCategory.findUnique({
     where: { slug: categorySlug },
