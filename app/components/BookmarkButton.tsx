@@ -39,10 +39,6 @@ export default function BookmarkButton({
     lg: 'p-3'
   }
 
-  useEffect(() => {
-    checkBookmarkStatus()
-  }, [url, isSignedIn])
-
   const checkBookmarkStatus = async () => {
     try {
       if (isSignedIn) {
@@ -56,6 +52,17 @@ export default function BookmarkButton({
       console.error('Error checking bookmark status:', error)
     }
   }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    checkBookmarkStatus()
+  }, [checkBookmarkStatus])
+
+  useEffect(() => {
+    if (isSignedIn !== undefined) {
+      checkBookmarkStatus()
+    }
+  }, [isSignedIn, url])
 
   const handleBookmark = async () => {
     if (isLoading) return
