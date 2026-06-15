@@ -76,8 +76,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="font-sans text-gray-800 dark:text-gray-100 bg-gray-50 dark:bg-gray-900">
+             <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
         <ClerkProvider publishableKey={clerkPublishableKey}>
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
             <ErrorBoundary>
               <ToastProvider />
               <KeyboardShortcuts />
@@ -103,8 +103,8 @@ export default function RootLayout({
                 </>
               )}
             </ErrorBoundary>
-          </ThemeProvider>
         </ClerkProvider>
+           </ThemeProvider>
       </body>
     </html>
   );

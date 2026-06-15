@@ -26,6 +26,9 @@ export function buildCsp(): string {
     "'self'",
     "'unsafe-inline'", // Required by next-themes bootstrap script unless nonce/hash is added
     'https://js.clerk.com',
+    'https://*.clerk.accounts.dev'
+    ,
+    
     ...(isDev ? ["'unsafe-eval'"] : []),
   ];
 
@@ -40,6 +43,7 @@ export function buildCsp(): string {
     'https://api.clerk.com',
     'https://clerk.com',
     'https://*.clerk.accounts.dev',
+    'https://clerk-telemetry.com',
     ...(clerkFrontendApiHost ? [clerkFrontendApiHost] : []),
     ...(isDev ? ['ws:', 'wss:'] : []),
   ];
