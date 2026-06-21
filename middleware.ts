@@ -8,7 +8,21 @@ const isPublicRoute = createRouteMatcher([
   '/contact(.*)',
   '/sign-in(.*)',
   '/sign-up(.*)',
-  // Add other public routes here
+  '/faq(.*)',
+  '/practice-hub(.*)',
+  '/job(.*)',
+  '/shortcuts(.*)',
+  '/privacy(.*)',
+  '/terms(.*)',
+  '/resources(.*)',
+  '/search(.*)',
+  '/feedback(.*)',
+  '/web-dev(.*)',
+  '/career-guidance(.*)',
+  '/create-roadmap(.*)',
+  '/loading-demo(.*)',
+  '/toast-demo(.*)',
+  '/profile(.*)',
 ])
 
 export function buildCsp(): string {
@@ -26,6 +40,8 @@ export function buildCsp(): string {
     "'self'",
     "'unsafe-inline'", // Required by next-themes bootstrap script unless nonce/hash is added
     'https://js.clerk.com',
+    'https://*.clerk.accounts.dev',
+    ...(clerkFrontendApiHost ? [clerkFrontendApiHost] : []),
     ...(isDev ? ["'unsafe-eval'"] : []),
   ];
 
