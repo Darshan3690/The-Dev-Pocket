@@ -269,6 +269,6 @@ export default function ContactPage() {
           </Link>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
