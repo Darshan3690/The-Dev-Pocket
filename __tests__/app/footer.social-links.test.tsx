@@ -4,11 +4,13 @@ import { render, screen } from "@testing-library/react";
 import Footer from "@/app/components/Footer";
 
 jest.mock("next/link", () => {
-  return ({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+  const MockLink = ({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
     <a href={href} {...props}>
       {children}
     </a>
   );
+  MockLink.displayName = "MockLink";
+  return MockLink;
 });
 
 jest.mock("@/lib/toast", () => ({
