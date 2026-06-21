@@ -18,6 +18,14 @@ function parseBool(v?: string | undefined): boolean {
   return v.toLowerCase() === 'true';
 }
 
+function isGitHubActionsBuild(env: NodeJS.ProcessEnv): boolean {
+  return env.GITHUB_ACTIONS === 'true' && env.CI === 'true';
+}
+
+function isNextProductionBuild(env: NodeJS.ProcessEnv): boolean {
+  return env.NEXT_PHASE === 'phase-production-build';
+}
+
 /**
  * Validates environment variables used by the application and returns a typed object.
  * - Throws a descriptive Error when required variables are missing or inconsistent.
@@ -49,8 +57,8 @@ export function validateEnv(opts?: { throwOnMissing?: boolean }): AppEnv {
     errors.push(`RATE_LIMIT_MODE has invalid value: ${rawRateLimitMode}. Expected 'INMEM' or 'UPSTASH'.`);
   }
 
-  // Production-only sanity checks
-  if (parsed.NODE_ENV === 'production') {
+  // Production-only sanity checks, skipped only for CI/Next build-time validation.
+  if (parsed.NODE_ENV === 'production' && !isGitHubActionsBuild(env) && !isNextProductionBuild(env)) {
     if (!parsed.DATABASE_URL) errors.push('DATABASE_URL is required in production.');
     if (!parsed.CLERK_SECRET_KEY) errors.push('CLERK_SECRET_KEY is required in production.');
   }

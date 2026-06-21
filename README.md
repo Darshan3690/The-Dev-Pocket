@@ -194,6 +194,15 @@ You will need **two connection URLs** from Supabase:
 ```env
 DATABASE_URL="postgresql://postgres:<PASSWORD>@db.xxxxx.supabase.co:6543/postgres?pgbouncer=true"
 DIRECT_URL="postgresql://postgres:<PASSWORD>@db.xxxxx.supabase.co:5432/postgres"
+RATE_LIMIT_MODE="INMEM"
+```
+
+If you want to use the Redis-backed rate limiter instead of the local in-memory fallback, also add:
+
+```env
+RATE_LIMIT_MODE="UPSTASH"
+UPSTASH_REDIS_REST_URL="https://<your-upstash-endpoint>"
+UPSTASH_REDIS_REST_TOKEN="<your-upstash-token>"
 ```
 
 ### 4️⃣ Run Database Migrations
@@ -204,6 +213,9 @@ npx prisma generate
 
 # Push schema to database
 npx prisma db push
+
+# Seed the starter quiz/category data
+npx prisma db seed
 
 # (Optional) Open Prisma Studio for DB management
 npx prisma studio

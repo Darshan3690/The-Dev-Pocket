@@ -14,12 +14,13 @@ import {
 import { useState } from "react";
 import Link from "next/link";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { ThemeSwitcher } from "../ThemeSwitcher";
 
 export default function Navbar() {
   const navItems = [
-    { name: "Features", link: "#features" },
+    { name: "Features", link: "/#features" },
     { name: "Placement Arena", link: "/placement" },
-    { name: "Pricing", link: "#pricing" },
+    { name: "Pricing", link: "/#pricing" },
     { name: "About", link: "/about" },
   ];
 
@@ -32,7 +33,7 @@ export default function Navbar() {
         <NavbarLogo />
         <NavItems items={navItems} />
 
-        {/* Auth Section */}
+        {/* Auth & Theme Section */}
         <div className="flex items-center gap-5">
           <SignedOut>
             <NavbarButton as={Link} href="/sign-in" variant="primary">
@@ -54,6 +55,8 @@ export default function Navbar() {
               Dashboard
             </NavbarButton>
           </SignedIn>
+
+          <ThemeSwitcher />
         </div>
       </NavBody>
 
@@ -72,18 +75,25 @@ export default function Navbar() {
           onClose={() => setIsMobileMenuOpen(false)}
         >
           {navItems.map((item, idx) => (
-            <a
+            <Link
               key={`mobile-link-${idx}`}
               href={item.link}
               onClick={() => setIsMobileMenuOpen(false)}
               className="relative text-gray-700 dark:text-gray-200 font-medium text-base hover:text-sky-600 dark:hover:text-sky-400 transition-colors py-2 w-full"
             >
               {item.name}
-            </a>
+            </Link>
           ))}
 
-          {/* Mobile Auth Section */}
+          {/* Mobile Auth & Theme Section */}
           <div className="flex w-full flex-col gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between w-full px-1">
+              <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                Appearance
+              </span>
+              <ThemeSwitcher />
+            </div>
+
             <SignedOut>
               <NavbarButton
                 as={Link}
@@ -116,3 +126,4 @@ export default function Navbar() {
     </ResizableNavbar>
   );
 }
+
