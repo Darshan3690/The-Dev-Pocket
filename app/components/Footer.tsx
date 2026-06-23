@@ -18,7 +18,7 @@ export default function Footer() {
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email || !email.includes("@")) {
       showError("Please enter a valid email address");
       return;
@@ -50,11 +50,15 @@ export default function Footer() {
       }
 
       if (data.resubscribed) {
-        showSuccess("Welcome back! You've been resubscribed to our newsletter! 🎉");
+        showSuccess(
+          "Welcome back! You've been resubscribed to our newsletter! 🎉",
+        );
       } else {
-        showSuccess("Successfully subscribed to newsletter! Check your inbox. 🎉");
+        showSuccess(
+          "Successfully subscribed to newsletter! Check your inbox. 🎉",
+        );
       }
-      
+
       setEmail("");
     } catch (error) {
       console.error("Newsletter subscription error:", error);
@@ -65,16 +69,22 @@ export default function Footer() {
   };
 
   return (
-    <footer id="footer" className="w-full bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-200 dark:border-gray-800">
+    <footer
+      id="footer"
+      className="w-full bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-200 dark:border-gray-800"
+    >
       <div className="max-w-screen-2xl mx-auto">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-          
           {/* Brand Section */}
           <div className="flex flex-col items-start">
             <div className="flex items-center space-x-2 mb-4">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-6 h-6 text-white"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path d="M20 6h-2V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM10 4h4v2h-4V4zm10 16H8V8h12v12z" />
                 </svg>
               </div>
@@ -83,9 +93,10 @@ export default function Footer() {
               </h3>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-              Empowering developers with AI-driven insights, personalized roadmaps, and a comprehensive toolkit for career growth.
+              Empowering developers with AI-driven insights, personalized
+              roadmaps, and a comprehensive toolkit for career growth.
             </p>
-            
+
             {/* Social Media Links */}
             <div className="flex space-x-3">
               <a
@@ -147,7 +158,9 @@ export default function Footer() {
                   href="/about"
                   className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 flex items-center group"
                 >
-                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                  </span>
                   About Us
                 </Link>
               </li>
@@ -156,7 +169,9 @@ export default function Footer() {
                   href="/faq"
                   className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 flex items-center group"
                 >
-                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                  </span>
                   FAQ
                 </Link>
               </li>
@@ -165,7 +180,9 @@ export default function Footer() {
                   href="/contact"
                   className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 flex items-center group"
                 >
-                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                  </span>
                   Contact Us
                 </Link>
               </li>
@@ -174,7 +191,9 @@ export default function Footer() {
                   href="/shortcuts"
                   className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 flex items-center group"
                 >
-                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                  </span>
                   Keyboard Shortcuts
                 </Link>
               </li>
@@ -183,7 +202,9 @@ export default function Footer() {
                   href="/dashboard"
                   className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 flex items-center group"
                 >
-                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                  </span>
                   Dashboard
                 </Link>
               </li>
@@ -192,7 +213,9 @@ export default function Footer() {
                   href="/feedback"
                   className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 flex items-center group"
                 >
-                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                  </span>
                   Feedback
                 </Link>
               </li>
@@ -210,7 +233,9 @@ export default function Footer() {
                   href="/loading-demo"
                   className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 flex items-center group"
                 >
-                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                  </span>
                   Loading States
                 </Link>
               </li>
@@ -219,7 +244,9 @@ export default function Footer() {
                   href="/toast-demo"
                   className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 flex items-center group"
                 >
-                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                  </span>
                   Toast Demo
                 </Link>
               </li>
@@ -228,16 +255,20 @@ export default function Footer() {
                   href="/privacy"
                   className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 flex items-center group"
                 >
-                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                  </span>
                   Privacy Policy
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/terms"
+                  href="/TermsofService"
                   className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 flex items-center group"
                 >
-                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                  </span>
                   Terms of Service
                 </Link>
               </li>
@@ -246,7 +277,9 @@ export default function Footer() {
                   href="/settings"
                   className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 flex items-center group"
                 >
-                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                  </span>
                   Settings
                 </Link>
               </li>
@@ -259,7 +292,8 @@ export default function Footer() {
               Stay Updated
             </h4>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-              Subscribe to our newsletter for the latest updates, tips, and resources.
+              Subscribe to our newsletter for the latest updates, tips, and
+              resources.
             </p>
             <form onSubmit={handleNewsletterSubmit} className="w-full">
               <div className="flex flex-col space-y-2">
@@ -290,7 +324,8 @@ export default function Footer() {
         <div className="pt-8 mt-8 border-t border-gray-200 dark:border-gray-800">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-gray-600 dark:text-gray-400 text-center md:text-left">
-              &copy; {new Date().getFullYear()} Dev Pocket. All rights reserved. Built with ❤️ for developers.
+              &copy; {new Date().getFullYear()} Dev Pocket. All rights reserved.
+              Built with ❤️ for developers.
             </p>
             <div className="flex space-x-6 text-sm">
               <Link
@@ -300,7 +335,7 @@ export default function Footer() {
                 Privacy
               </Link>
               <Link
-                href="/terms"
+                href="/TermsofService"
                 className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               >
                 Terms
