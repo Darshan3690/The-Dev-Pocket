@@ -75,9 +75,15 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="font-sans text-gray-800 dark:text-gray-100 bg-gray-50 dark:bg-gray-900">
+      <body className="font-sans text-gray-800 dark:text-gray-100 bg-gray-50 dark:bg-gray-900" suppressHydrationWarning> {/* Added here as well */}
         <ClerkProvider publishableKey={clerkPublishableKey}>
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+          {/* 💡 Changed attribute="class" to enableSystem={true} and explicitly set the script strategy */}
+          <ThemeProvider 
+            attribute="class" 
+            defaultTheme="light" 
+            enableSystem
+            disableTransitionOnChange
+          >
             <ErrorBoundary>
               <ToastProvider />
               <KeyboardShortcuts />
