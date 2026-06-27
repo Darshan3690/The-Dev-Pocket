@@ -19,7 +19,7 @@ import { ThemeSwitcher } from "../ThemeSwitcher";
 export default function Navbar() {
   const navItems = [
     { name: "Features", link: "/#features" },
-    { name: "Placement Arena", link: "/placement" },
+    { name: "Placement Arena", link: "/practice-hub" },
     { name: "Pricing", link: "/#pricing" },
     { name: "About", link: "/about" },
   ];
