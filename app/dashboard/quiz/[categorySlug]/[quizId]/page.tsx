@@ -2,14 +2,14 @@ import { prisma } from "@/lib/prisma"
 import QuizRunner from "./QuizRunner"
 
 interface PageProps {
-  params: {
+  params: Promise<{
     quizId: string
     categorySlug: string
-  }
+  }>
 }
 
 export default async function QuizPlayPage({ params }: PageProps) {
-  const { quizId } = params
+  const { quizId } = await params
 
   const questions = await prisma.question.findMany({
     where: { quizId },

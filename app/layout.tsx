@@ -32,6 +32,12 @@ import KeyboardShortcuts from "./components/KeyboardShortcuts";
 import ScrollToTop from "./components/ScrollToTop";
 import OnboardingTutorial from "./components/OnboardingTutorial";
 
+const clerkPublishableKey =
+  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ||
+  (process.env.GITHUB_ACTIONS === "true" && process.env.CI === "true"
+    ? "pk_test_Y2lfYnVpbGQtcGxhY2Vob2xkZXIuY2xlcmsuYWNjb3VudHMuZGV2JA"
+    : undefined);
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -70,7 +76,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="font-sans text-gray-800 dark:text-gray-100 bg-gray-50 dark:bg-gray-900">
-        <ClerkProvider>
+        <ClerkProvider publishableKey={clerkPublishableKey}>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
             <ErrorBoundary>
               <ToastProvider />

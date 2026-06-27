@@ -5,8 +5,8 @@ export default function Page() {
     <div className="min-h-screen flex items-center justify-center bg-white px-2 sm:px-4 pt-20 sm:pt-24">
       <div className="w-full max-w-[min(400px,90vw)] mx-auto">
         <SignIn
-          afterSignInUrl="/dashboard"
-          redirectUrl="/dashboard"
+          forceRedirectUrl="/dashboard"
+          fallbackRedirectUrl="/dashboard"
           appearance={{
             elements: {
               rootBox: "w-full",

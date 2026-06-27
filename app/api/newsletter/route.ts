@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { PrismaClient } from "@prisma/client";
 import { upstashLimit } from "@/lib/rate-limit-upstash";
 import { getClientIP } from "@/lib/rate-limit";
@@ -126,6 +127,12 @@ export async function POST(request: NextRequest) {
 
 // DELETE /api/newsletter - Unsubscribe from newsletter
 export async function DELETE(request: NextRequest) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   // Rate limiting: 5 requests per hour per IP
   const clientIP = getClientIP(request);
   const rateLimitResult = await upstashLimit(clientIP + ':newsletter-delete', {
@@ -201,8 +208,19 @@ export async function DELETE(request: NextRequest) {
 }
 
 // GET /api/newsletter/stats - Get newsletter statistics (admin only)
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const user = await clerkClient.users.getUser(userId);
+    if (user.publicMetadata?.role !== "admin") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     const totalSubscribers = await prisma.newsletterSubscriber.count({
       where: { status: "active" },
     });
