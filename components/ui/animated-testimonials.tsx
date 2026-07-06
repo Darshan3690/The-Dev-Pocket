@@ -39,7 +39,13 @@ export const AnimatedTestimonials = ({
     }
   }, [autoplay]);
 
-  // Generate deterministic rotation values based on index to avoid hydration mismatch
+  /**
+   * Calculate deterministic rotation angle for a testimonial card.
+   * Uses a fixed multiplier (12345) to ensure consistent rotation values across server/client renders,
+   * preventing hydration mismatch while distributing cards at slightly different angles.
+   * @param index - The testimonial index in the array
+   * @returns Rotation in degrees, range -10 to 10
+   */
   const getRotationForIndex = (index: number) => {
     const seed = index * 12345;
     return ((seed % 21) - 10);
