@@ -276,3 +276,21 @@ model Resource {
   @@index([category])
   @@index([tags])
 }
+
+model DigestSubscription {
+  id               String    @id @default(uuid())
+  userId           String    @unique // Clerk userId
+  email            String
+  frequency        String    @default("weekly") // "weekly" | "biweekly"
+  sections         Json      // e.g. ["new_resources", "top_picks", "community_highlights"]
+  difficultyFilter String?   // "beginner" | "intermediate" | "advanced" | null (all levels)
+  unsubscribeToken String    @unique @default(uuid())
+  isActive         Boolean   @default(true)
+  lastSentAt       DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([isActive])
+  @@index([frequency])
+}
