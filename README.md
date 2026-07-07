@@ -229,7 +229,7 @@ npx prisma studio
 4. 📝 Add to `.env.local`:
 
 ```env
-CLERK_PUBLISHABLE_KEY=your_publishable_key
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_publishable_key
 CLERK_SECRET_KEY=your_secret_key
 ```
 
