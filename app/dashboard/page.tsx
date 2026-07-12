@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useUser } from "@clerk/nextjs"
 import Link from "next/link";
+import LearningPathProgress from "@/components/learning-path/LearningPathProgress";
 import {
   LineChart,
   Line,
@@ -415,6 +416,11 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
+
+      {/* Personalized Learning Path */}
+      <div className="mb-8">
+        <LearningPathProgress />
+      </div>
 
       {/* Quick Actions */}
           <div className="space-y-4">

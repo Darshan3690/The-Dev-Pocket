@@ -276,3 +276,27 @@ model Resource {
   @@index([category])
   @@index([tags])
 }
+
+// One skill assessment result per Clerk user; retaking replaces the previous record
+model SkillAssessment {
+  id        String   @id @default(uuid())
+  userId    String   @unique // Clerk userId
+  scores    Json     // { "web-fundamentals": 0-4, "javascript-typescript": 0-4, "devops-tools": 0-4 }
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+// Generated learning path for a user; retaking the assessment replaces this record
+model LearningPath {
+  id                 String   @id @default(uuid())
+  userId             String   @unique // Clerk userId
+  resourceIds        Json     // Ordered array of Resource ids
+  completedResourceIds Json   @default("[]") // Array of completed Resource ids
+  estimatedWeeks     Int
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([userId])
+}
