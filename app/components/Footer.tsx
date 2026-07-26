@@ -263,7 +263,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/terms"
+                  href="/TermsofService"
                   className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 flex items-center group"
                 >
                   <span className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -335,7 +335,7 @@ export default function Footer() {
                 Privacy
               </Link>
               <Link
-                href="/terms"
+                href="/TermsofService"
                 className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               >
                 Terms
