@@ -1,23 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server"; // ✅ Added clerkClient here
 import { PrismaClient } from "@prisma/client";
 import { upstashLimit } from "@/lib/rate-limit-upstash";
 import { getClientIP } from "@/lib/rate-limit";
 
-// Singleton pattern for Prisma Client to avoid connection pool exhaustion
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
-
 const prisma = globalForPrisma.prisma || new PrismaClient();
-
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
-// POST /api/newsletter - Subscribe to newsletter
 export async function POST(request: NextRequest) {
-  // Rate limiting: 3 requests per hour per IP
   const clientIP = getClientIP(request);
   const rateLimitResult = await upstashLimit(clientIP + ':newsletter', {
     maxRequests: 3,
-    windowMs: 60 * 60 * 1000, // 1 hour
+    windowMs: 60 * 60 * 1000,
   });
 
   if (!rateLimitResult.success) {
@@ -41,7 +36,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { email, name, source } = body;
 
-    // Validate email
     if (!email || !email.includes("@")) {
       return NextResponse.json(
         { error: "Valid email is required" },
@@ -49,13 +43,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if email already exists
     const existing = await prisma.newsletterSubscriber.findUnique({
       where: { email: email.toLowerCase() },
     });
 
     if (existing) {
-      // If previously unsubscribed, reactivate
       if (existing.status === "unsubscribed") {
         await prisma.newsletterSubscriber.update({
           where: { email: email.toLowerCase() },
@@ -85,19 +77,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create new subscriber
     const subscriber = await prisma.newsletterSubscriber.create({
       data: {
         email: email.toLowerCase(),
         name: name || null,
         source: source || "website-footer",
         status: "active",
-        verifiedAt: new Date(), // Auto-verify for now, can add email verification later
+        verifiedAt: new Date(),
       },
     });
-
-    // TODO: Send welcome email here
-    // await sendWelcomeEmail(subscriber.email, subscriber.name);
 
     return NextResponse.json(
       {
@@ -125,7 +113,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// DELETE /api/newsletter - Unsubscribe from newsletter
 export async function DELETE(request: NextRequest) {
   const { userId } = await auth();
 
@@ -133,11 +120,10 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Rate limiting: 5 requests per hour per IP
   const clientIP = getClientIP(request);
   const rateLimitResult = await upstashLimit(clientIP + ':newsletter-delete', {
     maxRequests: 5,
-    windowMs: 60 * 60 * 1000, // 1 hour
+    windowMs: 60 * 60 * 1000,
   });
 
   if (!rateLimitResult.success) {
@@ -207,18 +193,22 @@ export async function DELETE(request: NextRequest) {
   }
 }
 
-// GET /api/newsletter/stats - Get newsletter statistics (admin only)
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
+   
     const { userId } = await auth();
-
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await clerkClient.users.getUser(userId);
-    if (user.publicMetadata?.role !== "admin") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    
+    const client = await clerkClient();
+    const user = await client.users.getUser(userId);
+    
+    // Adjust this condition depending on how your codebase marks metadata admins
+    const isAdmin = user.privateMetadata?.role === "admin" || user.publicMetadata?.role === "admin";
+    if (!isAdmin) {
+      return NextResponse.json({ error: "Forbidden: Admins only" }, { status: 403 });
     }
 
     const totalSubscribers = await prisma.newsletterSubscriber.count({
@@ -248,7 +238,7 @@ export async function GET(_request: NextRequest) {
           totalSubscribers,
           totalUnsubscribed,
           recentSubscribers,
-        },
+         },
       },
       { status: 200 }
     );

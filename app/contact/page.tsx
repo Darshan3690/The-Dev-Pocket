@@ -60,8 +60,8 @@ export default function ContactPage() {
   };
 
   return (
-    <main id="main-content" className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 dark:from-gray-900 dark:via-blue-950/20 dark:to-purple-950/20">
-      <div className="max-w-4xl mx-auto py-16 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 dark:from-gray-900 dark:via-blue-950/20 dark:to-purple-950/20">
+      <div className="max-w-4xl mx-auto pt-32 px-4">
         {/* Header */}
         <header className="mb-12 text-center">
           <h1 className="text-5xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent mb-4">
@@ -269,6 +269,6 @@ export default function ContactPage() {
           </Link>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
