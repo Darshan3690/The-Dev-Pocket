@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (tag) {
-      where.tags = { hasSome: [tag] };
+      where.tags = { array_contains: tag };
     }
 
     const [snippets, total] = await Promise.all([
