@@ -95,6 +95,42 @@ describe('localBookmarks (guest / localStorage path)', () => {
     ).toThrow('Bookmark not found')
   })
 
+  it('rejects changing a bookmark\'s URL to one that already exists elsewhere', () => {
+    localBookmarks.add({
+      title: 'First',
+      url: 'https://taken.com',
+      category: 'General',
+      tags: []
+    })
+    const second = localBookmarks.add({
+      title: 'Second',
+      url: 'https://free.com',
+      category: 'General',
+      tags: []
+    })
+
+    expect(() =>
+      localBookmarks.update(second.id, { url: 'https://taken.com' })
+    ).toThrow('Bookmark already exists')
+  })
+
+  it('allows updating a bookmark to keep its own current URL', () => {
+    const created = localBookmarks.add({
+      title: 'Same URL',
+      url: 'https://same.com',
+      category: 'General',
+      tags: []
+    })
+
+    const updated = localBookmarks.update(created.id, {
+      url: 'https://same.com',
+      title: 'Renamed'
+    })
+
+    expect(updated.title).toBe('Renamed')
+    expect(updated.url).toBe('https://same.com')
+  })
+
   it('removes a bookmark by id', () => {
     const created = localBookmarks.add({
       title: 'To Delete',

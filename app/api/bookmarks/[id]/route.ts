@@ -24,12 +24,19 @@ export async function PATCH(
 
     const { title, url, description, category, tags } = await request.json()
 
-    if (title !== undefined && !title) {
+    if (title !== undefined && (typeof title !== 'string' || !title)) {
       return NextResponse.json({ error: 'Title cannot be empty' }, { status: 400 })
     }
 
-    if (url !== undefined && !url) {
+    if (url !== undefined && (typeof url !== 'string' || !url)) {
       return NextResponse.json({ error: 'URL cannot be empty' }, { status: 400 })
+    }
+
+    if (
+      tags !== undefined &&
+      (!Array.isArray(tags) || !tags.every((tag) => typeof tag === 'string'))
+    ) {
+      return NextResponse.json({ error: 'Tags must be an array of strings' }, { status: 400 })
     }
 
     const updated = await prisma.bookmark.update({

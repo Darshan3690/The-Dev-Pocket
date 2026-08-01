@@ -37,8 +37,13 @@ export default function BookmarksPage() {
       } else {
         data = localBookmarks.getAll()
       }
-      
-      setBookmarks(data)
+
+      const normalized = data.map(b => ({
+        ...b,
+        tags: Array.isArray(b.tags) ? b.tags : []
+      }))
+
+      setBookmarks(normalized)
     } catch (error) {
       toast.error('Failed to load bookmarks')
     } finally {
@@ -90,10 +95,11 @@ export default function BookmarksPage() {
   }
 
   const parseTags = (raw: FormDataEntryValue | null): string[] => {
-    return (raw as string || '')
+    const tags = (typeof raw === 'string' ? raw : '')
       .split(',')
       .map(tag => tag.trim())
       .filter(Boolean)
+    return Array.from(new Set(tags))
   }
 
   const handleAdd = async (formData: FormData) => {
@@ -128,7 +134,7 @@ export default function BookmarksPage() {
       const updates = {
         title: formData.get('title') as string,
         url: formData.get('url') as string,
-        description: formData.get('description') as string || undefined,
+        description: (formData.get('description') as string) ?? '',
         category: formData.get('category') as string || 'General',
         tags: parseTags(formData.get('tags'))
       }

@@ -54,6 +54,14 @@ export const localBookmarks = {
       throw new Error('Bookmark not found')
     }
 
+    if (
+      updates.url &&
+      updates.url !== bookmarks[index].url &&
+      bookmarks.some(b => b.url === updates.url && b.id !== id)
+    ) {
+      throw new Error('Bookmark already exists')
+    }
+
     const updated: Bookmark = { ...bookmarks[index], ...updates }
     bookmarks[index] = updated
     localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks))
