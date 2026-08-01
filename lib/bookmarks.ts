@@ -46,6 +46,20 @@ export const localBookmarks = {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks))
   },
 
+  update: (id: string, updates: Partial<Omit<Bookmark, 'id' | 'createdAt'>>): Bookmark => {
+    const bookmarks = localBookmarks.getAll()
+    const index = bookmarks.findIndex(b => b.id === id)
+
+    if (index === -1) {
+      throw new Error('Bookmark not found')
+    }
+
+    const updated: Bookmark = { ...bookmarks[index], ...updates }
+    bookmarks[index] = updated
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks))
+    return updated
+  },
+
   exists: (url: string): boolean => {
     return localBookmarks.getAll().some(b => b.url === url)
   }
@@ -80,6 +94,20 @@ export const apiBookmarks = {
       method: 'DELETE'
     })
     if (!response.ok) throw new Error('Failed to remove bookmark')
+  },
+
+  update: async (id: string, updates: Partial<Omit<Bookmark, 'id' | 'createdAt'>>): Promise<Bookmark> => {
+    const response = await fetch(`/api/bookmarks/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates)
+    })
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.error || 'Failed to update bookmark')
+    }
+    const data = await response.json()
+    return data.bookmark
   },
 
   exists: async (url: string): Promise<boolean> => {
