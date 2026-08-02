@@ -17,6 +17,15 @@ interface SearchResult {
   type?: "static" | "resource";
 }
 
+interface RecentSearch {
+  query: string;
+  url: string;
+  title: string;
+}
+
+const RECENT_SEARCHES_KEY = "dev-pocket-recent-searches";
+const MAX_RECENT_SEARCHES = 5;
+
 // All searchable content
 const searchableContent: SearchResult[] = [
   // Pages
@@ -44,18 +53,49 @@ export default function GlobalSearch() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([]);
 
   const [showRecent, setShowRecent] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
-  
-  const popularSearches = [
-    { query: "dashboard", count: 1024 },
-    { query: "learning path", count: 856 },
-    { query: "resources", count: 742 },
-  ];
+
+  const popularSearches = ["dashboard", "learning path", "resources"];
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
+      if (stored) {
+        setRecentSearches(JSON.parse(stored));
+      }
+    } catch {
+      // corrupted/unavailable storage - just start with an empty list
+    }
+  }, []);
+
+  const saveRecentSearch = useCallback((entry: RecentSearch) => {
+    setRecentSearches((prev) => {
+      const deduped = prev.filter((item) => item.url !== entry.url);
+      const updated = [entry, ...deduped].slice(0, MAX_RECENT_SEARCHES);
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
+        } catch {
+          // storage full/unavailable - keep it in memory for this session only
+        }
+      }
+      return updated;
+    });
+  }, []);
+
+  const clearRecentSearches = useCallback(() => {
+    setRecentSearches([]);
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(RECENT_SEARCHES_KEY);
+    }
+  }, []);
+
   // Search function with fuzzy matching and API integration
   const performSearch = useCallback(async (searchQuery: string) => {
     if (!searchQuery.trim()) {
@@ -111,6 +151,20 @@ export default function GlobalSearch() {
     setSelectedIndex(0);
   }, []);
 
+  // Handle result click - navigates and records it as a recent search
+  const handleResultClick = useCallback((result: SearchResult, searchQuery?: string) => {
+    saveRecentSearch({
+      query: searchQuery ?? query,
+      url: result.url,
+      title: result.title,
+    });
+    router.push(result.url);
+    setIsOpen(false);
+    setQuery("");
+    setResults([]);
+    setShowRecent(false);
+  }, [query, router, saveRecentSearch]);
+
   // Handle keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -140,10 +194,7 @@ export default function GlobalSearch() {
           e.preventDefault();
           const selected = results[selectedIndex];
           if (selected) {
-            router.push(selected.url);
-            setIsOpen(false);
-            setQuery("");
-            setResults([]);
+            handleResultClick(selected);
           }
         }
       }
@@ -151,7 +202,7 @@ export default function GlobalSearch() {
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, results, selectedIndex, router]);
+  }, [isOpen, results, selectedIndex, router, handleResultClick]);
 
   // Close when clicking outside
   useEffect(() => {
@@ -181,13 +232,6 @@ export default function GlobalSearch() {
     inputRef.current?.focus();
   };
 
-  // Handle result click
-  const handleResultClick = (url: string) => {
-    router.push(url);
-    setIsOpen(false);
-    setQuery("");
-    setResults([]);
-  };
 
   // Get category badge color
   const getCategoryColor = (category: string) => {
@@ -290,7 +334,7 @@ export default function GlobalSearch() {
                   {results.map((result, index) => (
                     <button
                       key={result.id}
-                      onClick={() => handleResultClick(result.url)}
+                      onClick={() => handleResultClick(result)}
                       className={`w-full group flex items-center gap-4 px-5 py-4 text-left transition-all duration-200 ${
                         index === selectedIndex
                           ? "bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 dark:from-blue-950/40 dark:via-purple-950/40 dark:to-pink-950/40 border-l-4 border-blue-500 dark:border-blue-400"
@@ -344,6 +388,41 @@ export default function GlobalSearch() {
                     </button>
                   ))}
                 </div>
+              ) : !query && showRecent && recentSearches.length > 0 ? (
+                <div className="px-6 py-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                      <Search className="h-4 w-4 text-blue-500" />
+                      Recent Searches
+                    </h3>
+                    <button
+                      onClick={clearRecentSearches}
+                      className="text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                  <div className="space-y-1">
+                    {recentSearches.map((recent) => (
+                      <button
+                        key={recent.url}
+                        onClick={() =>
+                          handleResultClick(
+                            { id: recent.url, title: recent.title, description: "", category: "page", url: recent.url },
+                            recent.query
+                          )
+                        }
+                        className="w-full flex items-center gap-3 px-3 py-2.5 text-left rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors group"
+                      >
+                        <Search className="w-4 h-4 text-gray-400 group-hover:text-blue-500 flex-shrink-0" />
+                        <span className="flex-1 min-w-0 truncate text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                          {recent.title}
+                        </span>
+                        <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-blue-500 flex-shrink-0" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
               ) : (
                 <div className="px-6 py-8 text-center">
                   <div className="relative inline-flex mb-4">
@@ -367,18 +446,17 @@ export default function GlobalSearch() {
                       <div className="flex flex-wrap justify-center gap-2">
                         {popularSearches.map((search) => (
                           <button
-                            key={search.query}
+                            key={search}
                             onClick={() => {
-                              setQuery(search.query);
-                              performSearch(search.query);
+                              setQuery(search);
+                              performSearch(search);
                             }}
                             className="px-3 py-1.5 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 
                                      border border-orange-200 dark:border-orange-800 rounded-full text-sm 
                                      hover:from-orange-100 hover:to-red-100 dark:hover:from-orange-900/30 dark:hover:to-red-900/30 
-                                     transition-all duration-200 flex items-center gap-2"
+                                     transition-all duration-200"
                           >
-                            <span className="text-orange-700 dark:text-orange-300">{search.query}</span>
-                            <span className="text-xs text-orange-500 dark:text-orange-400">({search.count})</span>
+                            <span className="text-orange-700 dark:text-orange-300">{search}</span>
                           </button>
                         ))}
                       </div>
