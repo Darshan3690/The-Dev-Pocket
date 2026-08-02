@@ -22,13 +22,30 @@ export async function PATCH(
       return NextResponse.json({ error: 'Bookmark not found' }, { status: 404 })
     }
 
-    const { title, url, description, category, tags } = await request.json()
+    let body: unknown
+    try {
+      body = await request.json()
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+    }
 
-    if (title !== undefined && (typeof title !== 'string' || !title)) {
+    if (typeof body !== 'object' || body === null) {
+      return NextResponse.json({ error: 'Request body must be an object' }, { status: 400 })
+    }
+
+    const { title, url, description, category, tags } = body as {
+      title?: unknown
+      url?: unknown
+      description?: unknown
+      category?: unknown
+      tags?: unknown
+    }
+
+    if (title !== undefined && (typeof title !== 'string' || !title.trim())) {
       return NextResponse.json({ error: 'Title cannot be empty' }, { status: 400 })
     }
 
-    if (url !== undefined && (typeof url !== 'string' || !url)) {
+    if (url !== undefined && (typeof url !== 'string' || !url.trim())) {
       return NextResponse.json({ error: 'URL cannot be empty' }, { status: 400 })
     }
 
@@ -42,8 +59,8 @@ export async function PATCH(
     const updated = await prisma.bookmark.update({
       where: { id },
       data: {
-        ...(title !== undefined ? { title } : {}),
-        ...(url !== undefined ? { url } : {}),
+        ...(title !== undefined ? { title: (title as string).trim() } : {}),
+        ...(url !== undefined ? { url: (url as string).trim() } : {}),
         ...(description !== undefined ? { description } : {}),
         ...(category !== undefined ? { category } : {}),
         ...(tags !== undefined ? { tags } : {})
