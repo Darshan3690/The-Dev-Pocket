@@ -57,24 +57,52 @@ export default function NotesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newNote, setNewNote] = useState({ title: "", content: "" });
+  const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
+  const [viewingNote, setViewingNote] = useState<Note | null>(null);
 
-  const handleAddNote = () => {
+  const handleSaveNote = () => {
     if (newNote.title.trim() === "" && newNote.content.trim() === "") return;
 
-    const note: Note = {
-      id: Date.now(),
-      title: newNote.title,
-      content: newNote.content || "",
-      date: new Date().toISOString().split("T")[0],
-    };
+    if (editingNoteId !== null) {
+      setNotes((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === editingNoteId
+            ? { ...note, title: newNote.title, content: newNote.content }
+            : note
+        )
+      );
+    } else {
+      const note: Note = {
+        id: Date.now(),
+        title: newNote.title,
+        content: newNote.content || "",
+        date: new Date().toISOString().split("T")[0],
+      };
+      setNotes((prevNotes) => [note, ...prevNotes]);
+    }
 
-    setNotes((prevNotes) => [note, ...prevNotes]);
     setNewNote({ title: "", content: "" });
+    setEditingNoteId(null);
     setIsModalOpen(false);
   };
 
+  const closeNoteModal = () => {
+    setIsModalOpen(false);
+    setEditingNoteId(null);
+    setNewNote({ title: "", content: "" });
+  };
+
+  const handleEditNote = (note: Note) => {
+    setNewNote({ title: note.title, content: note.content });
+    setEditingNoteId(note.id);
+    setViewingNote(null);
+    setIsModalOpen(true);
+  };
+
   const handleDeleteNote = (id: number) => {
+    if (!window.confirm("Delete this note? This cannot be undone.")) return;
     setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+    setViewingNote((prev) => (prev?.id === id ? null : prev));
   };
 
   // 🔍 Search filtering logic
@@ -97,7 +125,11 @@ export default function NotesPage() {
         </div>
 
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            setNewNote({ title: "", content: "" });
+            setEditingNoteId(null);
+            setIsModalOpen(true);
+          }}
           className="inline-flex items-center gap-2 bg-linear-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-4 py-2 rounded-xl font-medium shadow-lg shadow-blue-500/20 transition-all duration-200"
         >
           <Plus className="w-4 h-4" />
@@ -137,7 +169,10 @@ export default function NotesPage() {
               >
                 <Trash2 className="w-4 h-4" />
               </button>
-              <button className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
+              <button
+                onClick={() => setViewingNote(note)}
+                className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+              >
                 View Details
               </button>
             </div>
@@ -164,9 +199,11 @@ export default function NotesPage() {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg">
             <div className="flex justify-between items-center border-b border-slate-200/60 p-5">
-              <h2 className="text-lg font-semibold text-slate-900">Create New Note</h2>
+              <h2 className="text-lg font-semibold text-slate-900">
+                {editingNoteId !== null ? "Edit Note" : "Create New Note"}
+              </h2>
               <button
-                onClick={() => setIsModalOpen(false)}
+                onClick={closeNoteModal}
                 className="text-slate-400 hover:text-slate-500 transition-colors"
               >
                 <X className="w-5 h-5" />
@@ -203,16 +240,55 @@ export default function NotesPage() {
 
             <div className="flex justify-end gap-3 p-5 border-t border-slate-200/60">
               <button
-                onClick={() => setIsModalOpen(false)}
+                onClick={closeNoteModal}
                 className="px-4 py-2 text-slate-600 hover:text-slate-800 font-medium"
               >
                 Cancel
               </button>
               <button
-                onClick={handleAddNote}
+                onClick={handleSaveNote}
                 className="px-4 py-2 bg-linear-to-r from-blue-500 to-purple-500 text-white font-medium rounded-xl"
               >
-                Save Note
+                {editingNoteId !== null ? "Save Changes" : "Save Note"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* View Note Modal */}
+      {viewingNote && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg">
+            <div className="flex justify-between items-center border-b border-slate-200/60 p-5">
+              <h2 className="text-lg font-semibold text-slate-900 truncate pr-4">
+                {viewingNote.title}
+              </h2>
+              <button
+                onClick={() => setViewingNote(null)}
+                className="text-slate-400 hover:text-slate-500 transition-colors flex-shrink-0"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-5">
+              <p className="text-xs text-slate-500 mb-3">{viewingNote.date}</p>
+              <p className="text-slate-700 whitespace-pre-wrap">{viewingNote.content}</p>
+            </div>
+
+            <div className="flex justify-end gap-3 p-5 border-t border-slate-200/60">
+              <button
+                onClick={() => setViewingNote(null)}
+                className="px-4 py-2 text-slate-600 hover:text-slate-800 font-medium"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => handleEditNote(viewingNote)}
+                className="px-4 py-2 bg-linear-to-r from-blue-500 to-purple-500 text-white font-medium rounded-xl"
+              >
+                Edit
               </button>
             </div>
           </div>
