@@ -61,9 +61,9 @@ export async function PATCH(
       data: {
         ...(title !== undefined ? { title: (title as string).trim() } : {}),
         ...(url !== undefined ? { url: (url as string).trim() } : {}),
-        ...(description !== undefined ? { description } : {}),
-        ...(category !== undefined ? { category } : {}),
-        ...(tags !== undefined ? { tags } : {})
+        ...(description !== undefined ? { description: description as string } : {}),
+        ...(category !== undefined ? { category: category as string } : {}),
+        ...(tags !== undefined ? { tags: tags as string[] } : {})
       }
     })
 
