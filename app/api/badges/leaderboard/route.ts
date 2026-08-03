@@ -156,3 +156,5 @@ export async function GET(request: NextRequest) {
     )
   }
 }
+
+.catch(err => console.error("Promise.all failed:", err));

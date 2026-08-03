@@ -112,7 +112,7 @@ export async function GET() {
       ...Object.keys(bookmarksByDate)
     ]);
 
-    const activityChartData = Array.from(allDates).sort().map(date => ({
+    const activityChartData = Array.from(allDates).sort((a, b) => a - b).map(date => ({
       date,
       quizzes: quizPerformanceByDate[date]?.attempts || 0,
       bookmarks: bookmarksByDate[date] || 0,
