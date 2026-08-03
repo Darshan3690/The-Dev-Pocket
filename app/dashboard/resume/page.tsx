@@ -604,7 +604,7 @@ export default function ResumeBuilderPage() {
                         <span className="text-sm text-slate-600">Level:</span>
                         <select
                           value={skill.level}
-                          onChange={(e) => handleSkillChange(skill.id, "level", parseInt(e.target.value))}
+                          onChange={(e) => handleSkillChange(skill.id, "level", parseInt(e.target.value, 10))}
                           className="px-2 py-1 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                         >
                           {[1, 2, 3, 4, 5].map((level) => (

@@ -83,7 +83,7 @@ function AdvancedSearchContent() {
   // Results
   const [results, setResults] = useState<SearchResult | null>(null);
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(parseInt(searchParams.get('page') || '1'));
+  const [page, setPage] = useState(parseInt(searchParams.get('page', 10) || '1'));
 
   // Load recent searches from localStorage
   useEffect(() => {
