@@ -82,7 +82,7 @@ export default function ResourcesDashboard() {
       const payload = {
         ...data,
         tags: data.tags ? data.tags.split(',').map(tag => tag.trim()) : null,
-        readingTime: data.readingTime ? parseInt(data.readingTime) : null,
+        readingTime: data.readingTime ? parseInt(data.readingTime, 10) : null,
         rating: data.rating ? parseFloat(data.rating) : null,
       };
 
