@@ -64,7 +64,7 @@ const vertex = /* glsl */ `
     
     vec4 mvPos = viewMatrix * mPos;
 
-    if (uSizeRandomness == 0.0) {
+    if (uSizeRandomness === 0.0) {
       gl_PointSize = uBaseSize;
     } else {
       gl_PointSize = (uBaseSize * (1.0 + uSizeRandomness * (random.x - 0.5))) / length(mvPos.xyz);
