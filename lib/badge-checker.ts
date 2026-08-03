@@ -336,3 +336,5 @@ export function getBadgeChecker(prisma: PrismaClient): BadgeChecker {
   }
   return badgeCheckerInstance
 }
+
+.catch(err => console.error("Promise.all failed:", err));
