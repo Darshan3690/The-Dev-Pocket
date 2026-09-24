@@ -2,7 +2,7 @@ import React from "react";
 
 export default function TermsPage() {
   return (
-    <main className="max-w-3xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+    <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-18 md:pt-32 lg:pt-36 pb-16">
       <article className="prose prose-lg">
         <header>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-blue-600">
