@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/resizable-navbar";
 import { useState } from "react";
 import Link from "next/link";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { Show, UserButton } from "@clerk/nextjs";
 import { ThemeSwitcher } from "../ThemeSwitcher";
 
 export default function Navbar() {
@@ -35,15 +35,14 @@ export default function Navbar() {
 
         {/* Auth & Theme Section */}
         <div className="flex items-center gap-5">
-          <SignedOut>
+          <Show when="signed-out">
             <NavbarButton as={Link} href="/sign-in" variant="primary">
               Login
             </NavbarButton>
-          </SignedOut>
+          </Show>
 
-          <SignedIn>
+          <Show when="signed-in">
             <UserButton
-              afterSignOutUrl="/"
               appearance={{
                 elements: {
                   avatarBox:
@@ -54,7 +53,7 @@ export default function Navbar() {
             <NavbarButton as={Link} href="/dashboard" variant="primary">
               Dashboard
             </NavbarButton>
-          </SignedIn>
+          </Show>
 
           <ThemeSwitcher />
         </div>
@@ -94,7 +93,7 @@ export default function Navbar() {
               <ThemeSwitcher />
             </div>
 
-            <SignedOut>
+            <Show when="signed-out">
               <NavbarButton
                 as={Link}
                 href="/sign-in"
@@ -104,11 +103,11 @@ export default function Navbar() {
               >
                 Login
               </NavbarButton>
-            </SignedOut>
+            </Show>
 
-            <SignedIn>
+            <Show when="signed-in">
               <div className="flex items-center gap-3 w-full">
-                <UserButton afterSignOutUrl="/" />
+                <UserButton />
                 <NavbarButton
                   as={Link}
                   href="/dashboard"
@@ -119,7 +118,7 @@ export default function Navbar() {
                   Dashboard
                 </NavbarButton>
               </div>
-            </SignedIn>
+            </Show>
           </div>
         </MobileNavMenu>
       </MobileNav>

@@ -6,7 +6,7 @@ import { calculateReadingTime } from '@/utils/readingTime';
 import "./globals.css";
 
 import Link from "next/link";
-import { ClerkProvider, UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import { ClerkProvider, UserButton, Show } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { ThemeProvider } from "next-themes";
 import { ThemeSwitcher } from "./ThemeSwitcher";

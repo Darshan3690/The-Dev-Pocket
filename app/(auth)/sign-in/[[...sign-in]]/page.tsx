@@ -15,7 +15,7 @@ export default function Page() {
               formFieldInput: "rounded-lg",
               footerAction: "hidden",
             },
-            layout: {
+            options: {
               socialButtonsPlacement: "top",
               socialButtonsVariant: "iconButton",
             }
