@@ -353,7 +353,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             {/* Profile */}
             <div className="flex items-center gap-2" role="complementary" aria-label="User menu">
               <UserButton
-                afterSignOutUrl="/"
                 appearance={{
                   elements: {
                     avatarBox: "w-11 h-11 rounded-2xl transition-all duration-300 hover:scale-110 shadow-md"
