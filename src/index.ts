@@ -4,6 +4,9 @@ import chalk from "chalk";
 import ora from "ora";
 import { buildCITwin } from "./core/ci-twin.js";
 import { auditRepairDiff } from "./safety/diff-auditor.js";
+import preflightCmd from "./cli/commands/preflight.js";
+import checkCmd from "./cli/commands/check.js";
+import explainCmd from "./cli/commands/explain.js";
 
 const program = new Command();
 
@@ -68,5 +71,9 @@ program
       process.exit(1);
     }
   });
+
+program.addCommand(preflightCmd);
+program.addCommand(checkCmd);
+program.addCommand(explainCmd);
 
 program.parse();
