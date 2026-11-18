@@ -7,6 +7,9 @@ import { auditRepairDiff } from "./safety/diff-auditor.js";
 import preflightCmd from "./cli/commands/preflight.js";
 import checkCmd from "./cli/commands/check.js";
 import explainCmd from "./cli/commands/explain.js";
+import repairCmd from "./cli/commands/repair.js";
+import mcpCmd from "./cli/commands/mcp.js";
+import analyzePrCmd from "./cli/commands/analyze-pr.js";
 
 const program = new Command();
 
@@ -75,5 +78,8 @@ program
 program.addCommand(preflightCmd);
 program.addCommand(checkCmd);
 program.addCommand(explainCmd);
+program.addCommand(repairCmd);
+program.addCommand(mcpCmd);
+program.addCommand(analyzePrCmd);
 
 program.parse();
