@@ -1,0 +1,27 @@
+# Dependencies
+node_modules
+npm-debug.log
+
+# Next.js
+.next
+out
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# OS / editors
+.DS_Store
+*.swp
+*.swo
+.idea
+.vscode
+
+# Logs
+logs
+*.log
+
+# Misc
+coverage
+.cache
