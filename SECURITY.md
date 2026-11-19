@@ -2,7 +2,7 @@
 
 ## 📢 Reporting a Vulnerability
 
-If you discover a security vulnerability in **The Dev Pocket**, please help us by responsibly disclosing it. **Do not open a public GitHub issue**.
+If you discover a security vulnerability in **VibeCI**, please help us by responsibly disclosing it. **Do not open a public GitHub issue**.
 
 Instead, report it privately to the maintainers:
 
@@ -42,7 +42,7 @@ We release security updates only for the **latest main branch**. Users should al
 
 ## Security Best Practices
 
-When using **The Dev Pocket**, we recommend:
+When using **VibeCI**, we recommend:
 
 - Keep your installation up-to-date with the latest version
 - Review security advisories regularly

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The Dev Pocket project is committed to providing a welcoming and inclusive environment for all contributors, regardless of their background or experience level. This Code of Conduct outlines our expectations for all participants in our community, as well as the consequences for unacceptable behavior.
+The VibeCI project is committed to providing a welcoming and inclusive environment for all contributors, regardless of their background or experience level. This Code of Conduct outlines our expectations for all participants in our community, as well as the consequences for unacceptable behavior.
 
 ## Our Pledge
 
@@ -43,7 +43,7 @@ This Code of Conduct applies within all project spaces, and also applies when an
 
 ## Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the project team at **[devpocket@example.com](mailto:devpocket@example.com)**.
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the project team at **[darshan.rajput369@gmail.com](mailto:darshan.rajput369@gmail.com)**.
 
 All complaints will be reviewed and investigated promptly and fairly. All project team members are obligated to respect the privacy and security of the reporter of any incident.
 
