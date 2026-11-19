@@ -9,9 +9,11 @@ import path from "node:path";
 const command = new Command("check")
   .description("Execute change-aware checks with safety guards")
   .option("--allow-build", "Allow moderate-risk build commands")
+  .option("--all", "Run all CI jobs regardless of git diff")
+  .option("--fast", "Skip slow build and test suites, run fast static checks only")
   .action(async (opts) => {
     const spinner = ora("Planning checks...").start();
-    const plan = await planChecks(process.cwd());
+    const plan = await planChecks(process.cwd(), { all: opts.all, fast: opts.fast });
 
     if (plan.skipReasons.length > 0) {
       spinner.info(chalk.yellow(`Skipping: ${plan.skipReasons.join(", ")}`));

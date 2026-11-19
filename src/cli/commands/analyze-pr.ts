@@ -6,6 +6,7 @@ import { generatePrBadge, copyToClipboard } from "../../remote/badge-generator.j
 const command = new Command("analyze-pr")
   .description("Analyze remote PR failures and generate verification badge")
   .argument("<pr-number>", "Pull Request number")
+  .option("--copy-pr-badge", "Save PR badge to .vibeci/reports/pr-badge.md")
   .action(async (prNumber: string, opts: any) => {
     const prNum = parseInt(prNumber, 10);
 

@@ -4,22 +4,22 @@ import chalk from "chalk";
 const command = new Command("mcp")
   .description("Start VibeCI JSON-RPC 2.0 MCP server for IDE agent integration")
   .action(async () => {
-    console.log(chalk.cyan("\n╭────────────────────────────────────────────────────╮"));
-    console.log(chalk.cyan("│           VIBECI — MCP Server                      │"));
-    console.log(chalk.cyan("╰────────────────────────────────────────────────────╯"));
-    console.log(chalk.yellow("Starting MCP server on stdio..."));
-    console.log(chalk.gray("Tools available: get_ci_twin, run_preflight, verify_repair"));
-    console.log(chalk.gray("Connect your IDE agent (Cursor, Claude Code, Antigravity)"));
-    console.log();
+    // Log info only to stderr so stdout remains clean JSON-RPC for MCP
+    console.error(chalk.cyan("\n╭────────────────────────────────────────────────────╮"));
+    console.error(chalk.cyan("│           VIBECI — MCP Server                      │"));
+    console.error(chalk.cyan("╰────────────────────────────────────────────────────╯"));
+    console.error(chalk.yellow("Starting MCP server on stdio..."));
+    console.error(chalk.gray("Tools available: get_ci_twin, run_preflight, verify_repair"));
+    console.error(chalk.gray("Connect your IDE agent (Cursor, Claude Code, Antigravity)"));
 
     // Import and run the MCP server
-    const { Server } = await import("@modelcontextprotocol/sdk/server");
+    const { Server } = await import("@modelcontextprotocol/sdk/server/index.js");
     const {
       CallToolRequestSchema,
       ListToolsRequestSchema,
-    } = await import("@modelcontextprotocol/sdk/types");
-    const { buildCITwin } = require("../../core/ci-twin.js");
-    const { auditRepairDiff } = require("../../safety/diff-auditor.js");
+    } = await import("@modelcontextprotocol/sdk/types.js");
+    const { buildCITwin } = await import("../../core/ci-twin.js");
+    const { auditRepairDiff } = await import("../../safety/diff-auditor.js");
 
     const server = new Server(
       { name: "vibeci", version: "0.1.0" },

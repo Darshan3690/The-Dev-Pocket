@@ -19,12 +19,13 @@ export interface ClassifiedFailure {
 const FAILURE_PATTERNS = [
   {
     category: "TYPESCRIPT_ERROR",
-    pattern: /error TS(\d+):\s*(.*?)(?:\s*\((\d+),(\d+)\))?/gi,
+    pattern: /(?:([^\s()]+\.(?:ts|tsx|js|jsx))(?:\((\d+),(\d+)\))?:\s*)?error TS(\d+):\s*(.*)/gi,
     extract: (match: RegExpExecArray) => ({
-      errorCode: `TS${match[1]}`,
-      message: match[2],
-      line: match[3] ? parseInt(match[3], 10) : undefined,
-      column: match[4] ? parseInt(match[4], 10) : undefined,
+      file: match[1],
+      line: match[2] ? parseInt(match[2], 10) : undefined,
+      column: match[3] ? parseInt(match[3], 10) : undefined,
+      errorCode: `TS${match[4]}`,
+      message: match[5],
     }),
   },
   {
@@ -85,8 +86,9 @@ export function classifyFailure(
     let match: RegExpExecArray | null;
     regex.lastIndex = 0;
     while ((match = regex.exec(clean)) !== null) {
-      const extracted = pattern.extract(match);
-      const hashInput = `${pattern.category}|${checkName}|${extracted.errorCode ?? "unknown"}|unknown`;
+      const extracted = pattern.extract(match) as any;
+      const file = extracted.file || "unknown";
+      const hashInput = `${pattern.category}|${checkName}|${extracted.errorCode ?? "unknown"}|${file}`;
       const hash = crypto.createHash("sha256").update(hashInput).digest("hex").substring(0, 16);
 
       fingerprints.push({
@@ -94,7 +96,7 @@ export function classifyFailure(
         category: pattern.category,
         checkName,
         errorCode: extracted.errorCode,
-        file: "unknown",
+        file,
         line: extracted.line,
         column: extracted.column,
         timestamp: new Date().toISOString(),

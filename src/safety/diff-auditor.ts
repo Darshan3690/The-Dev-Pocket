@@ -17,7 +17,9 @@ const PROHIBITED_SUPPRESSIONS = [
 
 export async function auditRepairDiff(repoRoot: string): Promise<SafetyAuditResult> {
   const git = simpleGit(repoRoot);
-  const rawDiff = await git.diff();
+  const unstagedDiff = await git.diff();
+  const stagedDiff = await git.diff(["--cached"]);
+  const rawDiff = `${unstagedDiff}\n${stagedDiff}`;
   const violations: string[] = [];
 
   if (!rawDiff.trim()) {

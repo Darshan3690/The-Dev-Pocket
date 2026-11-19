@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { simpleGit } from "simple-git";
 
 export type FileCategory =
@@ -32,7 +34,12 @@ function categorizeFile(filePath: string): FileCategory {
   return "SOURCE_CODE";
 }
 
-export async function planChecks(repoRoot: string): Promise<CheckPlan> {
+export interface PlanCheckOptions {
+  all?: boolean;
+  fast?: boolean;
+}
+
+export async function planChecks(repoRoot: string, options: PlanCheckOptions = {}): Promise<CheckPlan> {
   const git = simpleGit(repoRoot);
   const isRepo = await git.checkIsRepo();
   if (!isRepo) {
@@ -45,11 +52,6 @@ export async function planChecks(repoRoot: string): Promise<CheckPlan> {
   const categories = changedFiles.map((f) => categorizeFile(f));
   const skipReasons: string[] = [];
 
-  // If only docs changed, skip heavy checks
-  if (categories.every((c) => c === "DOCS_ONLY") && changedFiles.length > 0) {
-    skipReasons.push("Only documentation files changed — skipping heavy build/test checks");
-  }
-
   const queue: CheckItem[] = [];
 
   // Always run static checks first
@@ -61,8 +63,20 @@ export async function planChecks(repoRoot: string): Promise<CheckPlan> {
     relatedFiles: changedFiles.filter((f) => /\.(ts|tsx|js|jsx)$/.test(f)),
   });
 
-  // Lint if source or test files changed
-  if (categories.includes("SOURCE_CODE") || categories.includes("TEST_FILES")) {
+  const shouldRunAll = options.all || changedFiles.length === 0;
+
+  // If only docs changed and not --all, skip heavy checks
+  if (!shouldRunAll && categories.every((c) => c === "DOCS_ONLY") && changedFiles.length > 0) {
+    skipReasons.push("Only documentation files changed — skipping heavy build/test checks");
+    return { queue, skipReasons };
+  }
+
+  // Lint only if eslint config exists or package.json has lint script
+  const hasEslint = fs.existsSync(path.join(repoRoot, "eslint.config.mjs")) ||
+                    fs.existsSync(path.join(repoRoot, "eslint.config.js")) ||
+                    fs.existsSync(path.join(repoRoot, ".eslintrc.json")) ||
+                    fs.existsSync(path.join(repoRoot, ".eslintrc.js"));
+  if (hasEslint && (shouldRunAll || categories.includes("SOURCE_CODE") || categories.includes("TEST_FILES"))) {
     queue.push({
       id: "eslint",
       command: "npx eslint . --ext .ts,.tsx",
@@ -72,8 +86,9 @@ export async function planChecks(repoRoot: string): Promise<CheckPlan> {
     });
   }
 
-  // Type check if source files changed
-  if (categories.includes("SOURCE_CODE")) {
+  // Type check if tsconfig exists and (source files changed or --all)
+  const hasTsConfig = fs.existsSync(path.join(repoRoot, "tsconfig.json"));
+  if (hasTsConfig && (shouldRunAll || categories.includes("SOURCE_CODE"))) {
     queue.push({
       id: "tsc",
       command: "npx tsc --noEmit",
@@ -83,8 +98,17 @@ export async function planChecks(repoRoot: string): Promise<CheckPlan> {
     });
   }
 
-  // Tests if test files or source files changed
-  if (categories.includes("TEST_FILES") || categories.includes("SOURCE_CODE")) {
+  // Skip test & build if --fast
+  if (options.fast) {
+    skipReasons.push("--fast flag enabled: skipping heavy test and build suites");
+    return { queue, skipReasons };
+  }
+
+  // Tests only if test files exist and test framework configured
+  const hasTests = categories.includes("TEST_FILES") ||
+                   fs.existsSync(path.join(repoRoot, "vitest.config.ts")) ||
+                   fs.existsSync(path.join(repoRoot, "vitest.config.js"));
+  if (hasTests && (shouldRunAll || categories.includes("TEST_FILES") || categories.includes("SOURCE_CODE"))) {
     queue.push({
       id: "vitest",
       command: "npx vitest run",
@@ -94,8 +118,8 @@ export async function planChecks(repoRoot: string): Promise<CheckPlan> {
     });
   }
 
-  // Build if lock files or source changed
-  if (categories.includes("DEPENDENCY_LOCK") || categories.includes("SOURCE_CODE")) {
+  // Build if lock files or source changed or --all
+  if (shouldRunAll || categories.includes("DEPENDENCY_LOCK") || categories.includes("SOURCE_CODE")) {
     queue.push({
       id: "build",
       command: "npm run build",

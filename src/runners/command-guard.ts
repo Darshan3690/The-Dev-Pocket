@@ -6,10 +6,10 @@ export interface CommandRiskAssessment {
 }
 
 const SAFE_COMMANDS = [
-  "vitest", "jest", "pytest", "eslint", "ruff", "tsc", "mypy", "cargo check", "go test",
+  "vibeci", "vitest", "jest", "pytest", "eslint", "ruff", "tsc", "mypy", "cargo check", "go test", "npm test", "pnpm test", "npm run typecheck", "pnpm run typecheck",
 ];
 
-const MODERATE_COMMANDS = ["pnpm build", "npm ci", "pip install"];
+const MODERATE_COMMANDS = ["pnpm build", "npm ci", "npm run build", "pip install"];
 
 const BLOCKED_PATTERNS = [
   /curl\s.*\|.*bash/,

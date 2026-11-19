@@ -46,16 +46,15 @@ export class RepairLoop {
     let verificationExitCode = -1;
 
     if (safetyAudit.passed) {
-      // Step 4: Re-run the failed check
-      // In a real scenario, we'd know which check failed; here we re-run vitest
-      const checkResult = await runCheck("verification", "npx vitest run", false);
-      verificationExitCode = checkResult.exitCode;
+      // Step 4: Re-run the specific failed check
+      let verifyCmd = "npm test";
+      if (failureId === "tsc") verifyCmd = "npx tsc --noEmit";
+      else if (failureId === "eslint") verifyCmd = "npx eslint . --ext .ts,.tsx";
+      else if (failureId === "static-casing") verifyCmd = "node ./dist/index.js preflight";
+      else if (failureId === "build") verifyCmd = "npm run build";
 
-      // Step 5: If check passes, run full suite
-      if (verificationExitCode === 0) {
-        const fullResult = await runCheck("full-suite", "npx vitest run", false);
-        verificationExitCode = fullResult.exitCode;
-      }
+      const checkResult = await runCheck("verification", verifyCmd, true);
+      verificationExitCode = checkResult.exitCode;
     }
 
     // Step 6: Record fingerprint in history

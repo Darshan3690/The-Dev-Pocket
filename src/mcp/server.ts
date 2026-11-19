@@ -1,8 +1,8 @@
-import { Server } from "@modelcontextprotocol/sdk/server";
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
-} from "@modelcontextprotocol/sdk/types";
+} from "@modelcontextprotocol/sdk/types.js";
 import { buildCITwin } from "../core/ci-twin.js";
 import { auditRepairDiff } from "../safety/diff-auditor.js";
 import { planChecks } from "../core/change-planner.js";

@@ -5,6 +5,7 @@ import { buildCITwin } from "../../core/ci-twin.js";
 
 const command = new Command("preflight")
   .description("Run preflight checks: CI twin analysis + cross-platform casing guard")
+  .option("--strict", "Strict mode: exit with failure if any gap or score < 100")
   .option("--copy-pr-badge", "Copy PR badge Markdown to clipboard")
   .action(async (opts) => {
     const spinner = ora("Running preflight checks...").start();
@@ -46,7 +47,8 @@ const command = new Command("preflight")
         console.log(chalk.gray(badge));
       }
 
-      process.exit(twin.readinessScore < 60 ? 1 : 0);
+      const shouldFail = opts.strict ? (twin.gaps.length > 0 || twin.readinessScore < 100) : (twin.readinessScore < 60);
+      process.exit(shouldFail ? 1 : 0);
     } catch (err: any) {
       spinner.fail(chalk.red(`Preflight failed: ${err.message}`));
       process.exit(1);
