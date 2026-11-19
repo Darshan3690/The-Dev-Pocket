@@ -3,382 +3,704 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VibeCI — The CI Seatbelt for Vibe Coding & AI Coding Agents</title>
-  <meta name="description" content="Catch environment gaps, cross-platform casing traps, and lazy AI test-cheating before your pull request hits GitHub Actions.">
+  <title>VibeCI — The CI Seatbelt for AI Coding Agents</title>
+  <meta name="description" content="Catch Windows-to-Linux casing traps, runtime drift, and lazy AI test-cheats locally in seconds before your pull request breaks GitHub Actions.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Plus Jakarta Sans', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace']
           },
           colors: {
+            alabaster: '#FAF9F6',
+            ink: {
+              900: '#111827',
+              700: '#374151',
+              500: '#6B7280',
+              400: '#9CA3AF',
+              200: '#E5E7EB',
+              100: '#F3F4F6'
+            },
+            terminal: {
+              bg: '#0D1117',
+              bar: '#161B22',
+              border: '#30363D',
+              text: '#C9D1D9'
+            },
             brand: {
-              50: '#eef2ff',
-              400: '#818cf8',
-              500: '#6366f1',
-              600: '#4f46e5',
+              indigo: '#6366F1',
+              violet: '#4F46E5',
+              emerald: '#10B981',
+              amber: '#F59E0B',
+              crimson: '#EF4444'
             }
+          },
+          letterSpacing: {
+            tighter: '-0.03em'
           }
         }
       }
-    }
+    };
   </script>
   <style>
-    .glow-bg {
-      background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.18) 0%, rgba(15, 23, 42, 0) 70%);
+    body {
+      background-color: #FAF9F6;
+      color: #111827;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
-    .card-glass {
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    .code-scroll::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
     }
-    .card-glass:hover {
-      border-color: rgba(99, 102, 241, 0.4);
+    .code-scroll::-webkit-scrollbar-thumb {
+      background: #30363D;
+      border-radius: 4px;
+    }
+    .terminal-glow {
+      box-shadow: 0 20px 50px -10px rgba(17, 24, 39, 0.18), 0 0 0 1px rgba(17, 24, 39, 0.08);
+    }
+    .card-border {
+      border: 1px solid #E5E7EB;
+    }
+    .card-border:hover {
+      border-color: #D1D5DB;
+    }
+    .pill-active {
+      background: #111827;
+      color: #FFFFFF;
+    }
+    .pill-idle {
+      background: #F3F4F6;
+      color: #4B5563;
+    }
+    .pill-idle:hover {
+      background: #E5E7EB;
+      color: #111827;
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-indigo-500 selection:text-white">
+<body class="min-h-screen antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- Glow Background Effect -->
-  <div class="fixed inset-0 glow-bg pointer-events-none z-0"></div>
-
-  <!-- Navbar -->
-  <header class="sticky top-0 z-50 backdrop-blur-md bg-slate-950/80 border-b border-slate-800/80">
+  <!-- ================= STICKY GLASSMORPHIC NAVBAR ================= -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-[#FAF9F6]/85 border-b border-ink-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <span class="text-2xl">🛡️</span>
-        <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">VibeCI</span>
-        <span class="text-xs uppercase font-mono px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">v0.1.0</span>
-      </div>
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-2.5 group">
+        <div class="w-8 h-8 rounded-lg bg-ink-900 flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105">
+          <svg class="w-4 h-4 text-brand-indigo" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-lg tracking-tight text-ink-900">VibeCI</span>
+          <span class="text-xs font-mono font-medium px-1.5 py-0.5 rounded bg-ink-100 text-ink-700 border border-ink-200">v0.1.0</span>
+        </div>
+      </a>
 
-      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-        <a href="#about" class="hover:text-indigo-400 transition-colors">About</a>
-        <a href="#features" class="hover:text-indigo-400 transition-colors">Features</a>
-        <a href="#commands" class="hover:text-indigo-400 transition-colors">Commands</a>
-        <a href="#mcp" class="hover:text-indigo-400 transition-colors">MCP Agent</a>
-        <a href="#contribute" class="hover:text-indigo-400 transition-colors">Contribute</a>
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-ink-700">
+        <a href="#how-it-works" class="hover:text-ink-900 transition-colors">How it Works</a>
+        <a href="#ci-twin" class="hover:text-ink-900 transition-colors">CI Twin</a>
+        <a href="#anti-cheat" class="hover:text-ink-900 transition-colors">Anti-Cheat Guard</a>
+        <a href="#bento" class="hover:text-ink-900 transition-colors">Capabilities</a>
+        <a href="#mcp-setup" class="hover:text-ink-900 transition-colors">MCP & Agents</a>
       </nav>
 
+      <!-- Right CTAs -->
       <div class="flex items-center gap-3">
         <a href="https://github.com/Darshan3690/The-Dev-Pocket" target="_blank" rel="noopener noreferrer" 
-           class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/25 transition-all">
-          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-          <span>Star on GitHub</span>
+           class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink-700 hover:text-ink-900 bg-white border border-ink-200 rounded-lg hover:border-ink-400 shadow-sm transition-all">
+          <svg class="w-3.5 h-3.5 text-amber-500 fill-amber-500" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+          </svg>
+          <span class="hidden sm:inline">Star on GitHub</span>
+          <span class="sm:hidden">GitHub</span>
         </a>
+
+        <!-- Quick Copy Pill -->
+        <button onclick="copyToClipboard('npx vibeci preflight', this)" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-medium text-white bg-ink-900 hover:bg-black rounded-lg shadow-sm transition-all group">
+          <span class="text-brand-indigo font-bold">$</span>
+          <span>npx vibeci preflight</span>
+          <svg class="w-3.5 h-3.5 text-ink-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+        </button>
       </div>
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <main class="relative z-10">
-    <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 text-center">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs text-slate-300 mb-8">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        Pre-PR Intelligence & Anti-Cheat Repair Engine
+  <!-- ================= HERO SECTION ================= -->
+  <section class="pt-16 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="text-center max-w-3xl mx-auto mb-10">
+      <!-- Eyebrow Pill -->
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-ink-200 text-xs font-medium text-ink-700 shadow-sm mb-6">
+        <span class="inline-block w-2 h-2 rounded-full bg-brand-emerald animate-pulse"></span>
+        <span>Open Source • Zero Docker • MCP & Agent Skill Ready</span>
       </div>
 
-      <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-tight sm:leading-none">
-        The CI Seatbelt for <br class="hidden sm:inline" />
-        <span class="bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">Vibe Coding & AI Agents</span>
+      <!-- Main Headline -->
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tighter text-ink-900 leading-[1.08] mb-6">
+        The CI seatbelt for vibe coding & AI agents.
       </h1>
 
-      <p class="mt-6 text-lg sm:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
-        Catch environment gaps, cross-platform casing traps, and lazy AI test-cheating locally <span class="text-slate-200 font-semibold">before</span> your pull request hits remote GitHub Actions.
+      <!-- Subheadline -->
+      <p class="text-lg sm:text-xl text-ink-500 font-normal leading-relaxed mb-8 max-w-2xl mx-auto">
+        Catch Windows-to-Linux casing traps, runtime drift, and lazy AI test-cheating locally in seconds—before your pull request breaks GitHub Actions.
       </p>
 
-      <!-- Quick Install Box -->
-      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-        <div class="flex items-center bg-slate-900/90 border border-slate-800 rounded-xl px-4 py-3 font-mono text-sm shadow-xl w-full sm:w-auto justify-between gap-4">
-          <span class="text-indigo-400">$</span>
-          <span class="text-slate-200 select-all" id="installCmd">npx vibeci preflight</span>
-          <button onclick="copyCommand('npx vibeci preflight')" class="text-xs px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors" title="Copy to clipboard">
-            <span id="copyText">Copy</span>
+      <!-- Primary Action Bar -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <!-- Interactive Terminal Bar -->
+        <div class="w-full sm:w-auto flex items-center justify-between gap-3 bg-white border border-ink-200 rounded-xl px-4 py-2.5 shadow-sm font-mono text-sm text-ink-900">
+          <div class="flex items-center gap-2">
+            <span class="text-brand-indigo font-bold">$</span>
+            <span class="font-medium">npx vibeci preflight</span>
+          </div>
+          <button onclick="copyToClipboard('npx vibeci preflight', this)" class="text-xs font-sans font-medium px-2 py-1 rounded bg-ink-100 hover:bg-ink-200 text-ink-700 transition-colors flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            <span>Copy</span>
           </button>
         </div>
 
         <a href="https://github.com/Darshan3690/The-Dev-Pocket" target="_blank" rel="noopener noreferrer"
-           class="px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-sm font-semibold text-white transition-all flex items-center gap-2 w-full sm:w-auto justify-center">
-          <svg class="w-4 h-4 fill-amber-400" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-          Give a Star ⭐
+           class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-xl bg-ink-900 text-white hover:bg-black transition-all shadow-sm">
+          <span>View on GitHub</span>
+          <span class="text-brand-indigo">→</span>
         </a>
       </div>
+    </div>
 
-      <!-- Problem vs Solution Banner -->
-      <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-4xl mx-auto">
-        <div class="card-glass rounded-2xl p-6 border-red-500/20 bg-red-950/10">
-          <div class="flex items-center gap-2 text-red-400 font-semibold mb-3">
-            <span class="text-lg">❌</span> Without VibeCI
+    <!-- ================= INTERACTIVE HERO TERMINAL SIMULATOR ================= -->
+    <div class="max-w-4xl mx-auto rounded-2xl bg-terminal-bg border border-terminal-border terminal-glow overflow-hidden">
+      <!-- Window Title Bar -->
+      <div class="bg-terminal-bar px-4 py-3 border-b border-terminal-border flex items-center justify-between">
+        <!-- Mac Dots -->
+        <div class="flex items-center gap-2">
+          <div class="w-3 h-3 rounded-full bg-[#EC6A5E] border border-[#D04E41]"></div>
+          <div class="w-3 h-3 rounded-full bg-[#F5BF4F] border border-[#D6A23C]"></div>
+          <div class="w-3 h-3 rounded-full bg-[#62C554] border border-[#48A83A]"></div>
+          <span class="ml-2 text-xs font-mono text-ink-400 hidden sm:inline">vibeci-terminal-simulator — v0.1.0</span>
+        </div>
+
+        <!-- Simulator Tabs -->
+        <div class="flex items-center gap-1 bg-terminal-bg p-1 rounded-lg border border-terminal-border text-xs font-mono">
+          <button onclick="switchTerminalTab('tab-preflight', this)" class="term-tab px-3 py-1 rounded bg-[#21262D] text-white font-medium transition-all">
+            1. vibeci preflight
+          </button>
+          <button onclick="switchTerminalTab('tab-anticheat', this)" class="term-tab px-3 py-1 rounded text-ink-400 hover:text-white transition-all">
+            2. AI Agent Cheats (Blocked)
+          </button>
+          <button onclick="switchTerminalTab('tab-verify', this)" class="term-tab px-3 py-1 rounded text-ink-400 hover:text-white transition-all">
+            3. vibeci verify (Passed)
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab 1: vibeci preflight (Casing trap & Drift) -->
+      <div id="tab-preflight" class="term-view p-5 text-xs sm:text-sm font-mono leading-relaxed code-scroll overflow-x-auto text-terminal-text">
+        <div class="text-ink-400 mb-2">$ npx vibeci preflight</div>
+        <div class="text-brand-indigo font-bold mb-3">⚡ VibeCI Preflight Diagnostic Engine v0.1.0</div>
+        
+        <div class="mb-3 text-ink-400 border-b border-terminal-border/60 pb-2">
+          <div>Repository: <span class="text-white">Darshan3690/The-Dev-Pocket</span> (branch: <span class="text-brand-indigo">feature/auth-provider</span>)</div>
+          <div>CI Workflow: <span class="text-white">.github/workflows/ci.yml</span> (parsed in 8ms)</div>
+        </div>
+
+        <div class="text-brand-amber font-semibold mb-1">⚠ DRIFT WARNINGS DETECTED:</div>
+        <div class="pl-3 border-l-2 border-brand-amber text-ink-400 mb-4">
+          <div>• Host OS mismatch: Local is <span class="text-white">win32</span>, Target CI is <span class="text-brand-amber font-bold">ubuntu-latest</span></div>
+          <div>• Runtime mismatch: Local Node <span class="text-white">v22.4.0</span> != Target Node <span class="text-brand-amber font-bold">20.x</span></div>
+        </div>
+
+        <div class="text-brand-crimson font-semibold mb-1">❌ 2 CRITICAL FAILURES PREVENTING PR MERGE:</div>
+        <div class="space-y-3 pl-3 border-l-2 border-brand-crimson text-ink-300 mb-4">
+          <div>
+            <div class="text-brand-crimson font-bold">[1] CASE_SENSITIVITY_TRAP in src/auth/session.ts:L3</div>
+            <div class="text-ink-400">Import: <span class="text-red-400">import { AuthClient } from "./providers/AuthClient"</span></div>
+            <div class="text-ink-400">Disk:   <span class="text-green-400">src/auth/providers/authClient.ts</span> (lowercase 'a')</div>
+            <div class="text-ink-500 text-[11px]">&gt; Will succeed on Windows/macOS NTFS, but immediately crash with ModuleNotFound on Ubuntu CI!</div>
           </div>
-          <ul class="space-y-2 text-sm text-slate-300">
-            <li class="flex items-start gap-2"><span>•</span> Code passes on Windows, crashes on Linux CI (import casing error)</li>
-            <li class="flex items-start gap-2"><span>•</span> AI agent sneakily deletes test assertions to turn CI green</li>
-            <li class="flex items-start gap-2"><span>•</span> Agent peppers <code class="text-xs bg-slate-900 px-1 py-0.5 rounded text-red-300">@ts-ignore</code> to silence compiler</li>
-            <li class="flex items-start gap-2"><span>•</span> Wait 10+ minutes for GitHub Actions just to see a lint fail</li>
-          </ul>
-        </div>
-
-        <div class="card-glass rounded-2xl p-6 border-emerald-500/20 bg-emerald-950/10">
-          <div class="flex items-center gap-2 text-emerald-400 font-semibold mb-3">
-            <span class="text-lg">✅</span> With VibeCI
+          <div>
+            <div class="text-brand-crimson font-bold">[2] TYPECHECK_FAILURE in src/auth/session.ts:L42</div>
+            <div class="text-ink-400">Error: TS2339: Property 'refreshToken' does not exist on type 'UserSession'.</div>
           </div>
-          <ul class="space-y-2 text-sm text-slate-300">
-            <li class="flex items-start gap-2"><span>•</span> CI Twin detects OS/Node/package manager gaps instantly</li>
-            <li class="flex items-start gap-2"><span>•</span> Anti-Cheat Diff Auditor blocks deleted assertions & skipped tests</li>
-            <li class="flex items-start gap-2"><span>•</span> Change-aware runner executes only impacted test suites</li>
-            <li class="flex items-start gap-2"><span>•</span> Native MCP tools allow Cursor & Claude Code to auto-verify fixes</li>
-          </ul>
+        </div>
+
+        <div class="pt-3 border-t border-terminal-border flex items-center justify-between">
+          <div class="text-ink-400 font-bold">PR Readiness Score: <span class="text-brand-crimson">50 / 100 [BLOCKED]</span></div>
+          <div class="text-ink-500 text-[11px]">Run `vibeci repair` to safely prompt AI agent</div>
         </div>
       </div>
-    </section>
 
-    <!-- Terminal Demo Section -->
-    <section id="demo" class="max-w-4xl mx-auto px-4 sm:px-6 mb-24">
-      <div class="rounded-2xl border border-slate-800 bg-slate-900/90 shadow-2xl overflow-hidden font-mono text-xs sm:text-sm">
-        <div class="flex items-center justify-between px-4 py-3 bg-slate-950 border-b border-slate-800">
-          <div class="flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
-            <span class="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
-            <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
-            <span class="ml-2 text-slate-400 text-xs">terminal — vibeci preflight</span>
+      <!-- Tab 2: AI Agent Cheats Blocked -->
+      <div id="tab-anticheat" class="term-view hidden p-5 text-xs sm:text-sm font-mono leading-relaxed code-scroll overflow-x-auto text-terminal-text">
+        <div class="text-ink-400 mb-2">$ npx vibeci verify</div>
+        <div class="text-brand-indigo font-bold mb-3">🛡 VibeCI Anti-Cheat Diff Auditor</div>
+
+        <div class="text-ink-400 mb-2">Inspecting local git diff (working tree + staged) vs origin/main...</div>
+
+        <div class="bg-red-950/30 border border-brand-crimson/50 rounded-lg p-3.5 mb-4">
+          <div class="text-brand-crimson font-bold flex items-center gap-2 mb-2">
+            <span>❌ SAFETY AUDIT REJECTED AI REPAIR: 2 CHEATS DETECTED</span>
           </div>
-          <span class="text-xs text-slate-500">v0.1.0</span>
-        </div>
-        <div class="p-6 text-slate-300 space-y-3 leading-relaxed">
-          <div class="text-slate-400">$ node ./dist/index.js preflight</div>
-          <div class="text-slate-400">- Running preflight checks...</div>
-          <div class="text-emerald-400 font-bold">√ Preflight complete</div>
-          <div class="text-cyan-400">╭────────────────────────────────────────────────────╮</div>
-          <div class="text-cyan-400">│           VIBECI — Preflight Report                │</div>
-          <div class="text-cyan-400">╰────────────────────────────────────────────────────╯</div>
-          <div class="text-yellow-400">⚠ 1 non-critical gap(s):</div>
-          <div class="text-slate-300 pl-4">• [MEDIUM] OS_MISMATCH: win32 vs ubuntu-latest (case-sensitive ext4)</div>
-          <div class="text-slate-400 pl-4">  ↳ VibeCI Case-Sensitivity Guard enabled for relative imports.</div>
-          <div class="text-slate-100 font-bold mt-2">PR Readiness Score: <span class="text-emerald-400">90/100 (READY)</span></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Key Features Section -->
-    <section id="features" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div class="text-center mb-16">
-        <h2 class="text-3xl font-bold text-white">Engineered for Safe Agentic Development</h2>
-        <p class="mt-4 text-slate-400">Four layers of protection between your editor and remote CI.</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="card-glass rounded-xl p-6">
-          <div class="text-3xl mb-4">🪞</div>
-          <h3 class="text-lg font-bold text-white mb-2">CI Twin Engine</h3>
-          <p class="text-sm text-slate-400 leading-relaxed">
-            Parses GitHub Actions workflows into a local model. Compares runtime versions, packages, and OS environments.
-          </p>
+          <div class="space-y-2 text-xs">
+            <div class="text-red-300">
+              <span class="font-bold text-white">[VIOLATION 1]</span> Suppressed TypeScript compiler checking:
+              <div class="bg-terminal-bg p-2 rounded mt-1 text-red-400">
+                + // @ts-ignore -- bypass missing refreshToken property
+              </div>
+            </div>
+            <div class="text-red-300">
+              <span class="font-bold text-white">[VIOLATION 2]</span> Weakened / Deleted Test Assertion:
+              <div class="bg-terminal-bg p-2 rounded mt-1 text-red-400">
+                - expect(session.refreshToken).toBeDefined();<br>
+                + // expect commented out by agent to force green tests
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="card-glass rounded-xl p-6">
-          <div class="text-3xl mb-4">🪟➡️🐧</div>
-          <h3 class="text-lg font-bold text-white mb-2">Casing Guard</h3>
-          <p class="text-sm text-slate-400 leading-relaxed">
-            Checks relative import casing against disk. Catches Windows NTFS vs. Linux ext4 traps before pushing.
-          </p>
+        <div class="pl-3 border-l-2 border-brand-amber text-ink-400 mb-4">
+          <div class="font-semibold text-white">Auditor Verdict:</div>
+          <div>The AI agent attempted to fake a green build by suppressing diagnostics and removing assertion assertions rather than fixing the underlying types.</div>
+          <div class="text-brand-amber font-medium mt-1">Exit Code: 1 (Commit aborted)</div>
         </div>
 
-        <div class="card-glass rounded-xl p-6">
-          <div class="text-3xl mb-4">🚫</div>
-          <h3 class="text-lg font-bold text-white mb-2">Anti-Cheat Auditor</h3>
-          <p class="text-sm text-slate-400 leading-relaxed">
-            Audits git diffs for stripped assertions, skipped test suites, <code class="text-xs bg-slate-900 px-1 py-0.5 rounded text-indigo-300">@ts-ignore</code>, or altered workflow configs.
-          </p>
-        </div>
-
-        <div class="card-glass rounded-xl p-6">
-          <div class="text-3xl mb-4">🔌</div>
-          <h3 class="text-lg font-bold text-white mb-2">Native MCP Server</h3>
-          <p class="text-sm text-slate-400 leading-relaxed">
-            Exposes Model Context Protocol tools over stdio so Cursor, Claude Code, and Antigravity verify fixes autonomously.
-          </p>
+        <div class="pt-3 border-t border-terminal-border text-ink-400 font-bold">
+          PR Readiness Score: <span class="text-brand-crimson">0 / 100 [CHEATING DETECTED]</span>
         </div>
       </div>
-    </section>
 
-    <!-- CLI Commands Table -->
-    <section id="commands" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-white">CLI Command Reference</h2>
-        <p class="mt-3 text-slate-400">Simple, targeted developer commands.</p>
-      </div>
+      <!-- Tab 3: vibeci verify Passed -->
+      <div id="tab-verify" class="term-view hidden p-5 text-xs sm:text-sm font-mono leading-relaxed code-scroll overflow-x-auto text-terminal-text">
+        <div class="text-ink-400 mb-2">$ npx vibeci verify</div>
+        <div class="text-brand-indigo font-bold mb-3">🛡 VibeCI Anti-Cheat Diff Auditor &amp; Change Queue</div>
 
-      <div class="card-glass rounded-2xl overflow-hidden shadow-xl border border-slate-800">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-slate-900/80 text-xs font-mono uppercase text-slate-400 border-b border-slate-800">
-              <tr>
-                <th class="px-6 py-4">Command</th>
-                <th class="px-6 py-4">Options</th>
-                <th class="px-6 py-4">Description</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-800/60 font-mono text-xs">
-              <tr class="hover:bg-slate-800/30">
-                <td class="px-6 py-4 text-indigo-400 font-semibold">vibeci analyze</td>
-                <td class="px-6 py-4 text-slate-500">—</td>
-                <td class="px-6 py-4 text-slate-300 font-sans">Parses workflows & builds <code class="text-xs bg-slate-900 px-1 py-0.5 rounded">.vibeci/ci-twin.json</code></td>
-              </tr>
-              <tr class="hover:bg-slate-800/30">
-                <td class="px-6 py-4 text-indigo-400 font-semibold">vibeci preflight</td>
-                <td class="px-6 py-4 text-slate-400">--strict, --copy-pr-badge</td>
-                <td class="px-6 py-4 text-slate-300 font-sans">Full pre-PR gap scan + casing checks</td>
-              </tr>
-              <tr class="hover:bg-slate-800/30">
-                <td class="px-6 py-4 text-indigo-400 font-semibold">vibeci check</td>
-                <td class="px-6 py-4 text-slate-400">--all, --fast, --allow-build</td>
-                <td class="px-6 py-4 text-slate-300 font-sans">Change-aware CI check execution with safety policy</td>
-              </tr>
-              <tr class="hover:bg-slate-800/30">
-                <td class="px-6 py-4 text-indigo-400 font-semibold">vibeci verify</td>
-                <td class="px-6 py-4 text-slate-500">—</td>
-                <td class="px-6 py-4 text-slate-300 font-sans">Anti-Cheat Git Diff Audit (staged & unstaged)</td>
-              </tr>
-              <tr class="hover:bg-slate-800/30">
-                <td class="px-6 py-4 text-indigo-400 font-semibold">vibeci explain</td>
-                <td class="px-6 py-4 text-slate-500">—</td>
-                <td class="px-6 py-4 text-slate-300 font-sans">Classifies latest failure coordinates and readiness score</td>
-              </tr>
-              <tr class="hover:bg-slate-800/30">
-                <td class="px-6 py-4 text-indigo-400 font-semibold">vibeci repair</td>
-                <td class="px-6 py-4 text-slate-400">--failure-id, --root-cause</td>
-                <td class="px-6 py-4 text-slate-300 font-sans">Evidence-driven repair loop from latest failure report</td>
-              </tr>
-              <tr class="hover:bg-slate-800/30">
-                <td class="px-6 py-4 text-indigo-400 font-semibold">vibeci mcp</td>
-                <td class="px-6 py-4 text-slate-500">—</td>
-                <td class="px-6 py-4 text-slate-300 font-sans">Starts stdio JSON-RPC 2.0 MCP server for AI IDEs</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="space-y-1.5 text-ink-300 mb-4">
+          <div class="flex items-center gap-2 text-brand-emerald">
+            <span>✔</span> <span>Anti-Cheat Diff Audit: 0 suppressed rules, 0 weakened assertions</span>
+          </div>
+          <div class="flex items-center gap-2 text-brand-emerald">
+            <span>✔</span> <span>Static Casing Engine: All 48 module paths verified case-exact for Linux</span>
+          </div>
+          <div class="flex items-center gap-2 text-brand-emerald">
+            <span>✔</span> <span>CI Twin Runner: Typecheck passed (tsc --noEmit) [0 errors]</span>
+          </div>
+          <div class="flex items-center gap-2 text-brand-emerald">
+            <span>✔</span> <span>CI Twin Runner: Unit tests passed (28 passed, 0 failed, 100% assertions valid)</span>
+          </div>
+        </div>
+
+        <div class="bg-emerald-950/20 border border-brand-emerald/40 rounded-lg p-3 text-xs mb-4">
+          <div class="text-brand-emerald font-bold mb-1">PROPER FIX VERIFIED:</div>
+          <div class="text-ink-300">• Renamed import to exact disk case: <code class="text-white">"./providers/authClient"</code></div>
+          <div class="text-ink-300">• Added optional <code class="text-white">refreshToken?: string</code> to interface in <code class="text-white">types/auth.ts</code></div>
+        </div>
+
+        <div class="pt-3 border-t border-terminal-border flex items-center justify-between">
+          <div class="text-ink-300 font-bold">PR Readiness Score: <span class="text-brand-emerald">100 / 100 (VERIFIED)</span></div>
+          <div class="text-brand-emerald font-semibold text-xs">Ready for GitHub PR 🚀</div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- MCP Section -->
-    <section id="mcp" class="max-w-4xl mx-auto px-4 sm:px-6 py-16">
-      <div class="card-glass rounded-2xl p-8 border border-indigo-500/20">
-        <div class="flex items-center gap-3 mb-4">
-          <span class="text-2xl">🤖</span>
-          <h2 class="text-2xl font-bold text-white">Add VibeCI to Cursor / Claude Code</h2>
+  <!-- ================= AGENT & ECOSYSTEM LOGO STRIP ================= -->
+  <section class="border-y border-ink-200 bg-white py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="text-center text-xs font-semibold uppercase tracking-wider text-ink-500 mb-6">
+        Built to work seamlessly with your favorite AI coding agents &amp; stacks
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-8 sm:gap-12 opacity-80 grayscale hover:grayscale-0 transition-all">
+        <span class="font-mono text-sm font-bold text-ink-700 flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-brand-indigo"></span>Cursor
+        </span>
+        <span class="font-mono text-sm font-bold text-ink-700 flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-600"></span>Claude Code
+        </span>
+        <span class="font-mono text-sm font-bold text-ink-700 flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>Antigravity IDE
+        </span>
+        <span class="font-mono text-sm font-bold text-ink-700 flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>Cline
+        </span>
+        <span class="font-mono text-sm font-bold text-ink-700 flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan-600"></span>Windsurf
+        </span>
+        <span class="font-mono text-sm font-bold text-ink-700 flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-ink-900"></span>GitHub Actions
+        </span>
+        <span class="font-mono text-sm font-bold text-ink-700 flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-green-600"></span>Node.js
+        </span>
+        <span class="font-mono text-sm font-bold text-ink-700 flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>Python
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= THE VIBE CODING PROBLEM: BEFORE VS AFTER ================= -->
+  <section id="how-it-works" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-14">
+      <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tighter text-ink-900 mb-4">
+        The Vibe Coding Problem
+      </h2>
+      <p class="text-base sm:text-lg text-ink-500">
+        AI coding agents make shipping 10x faster, but leave you stranded when code works on your laptop and fails on GitHub Actions.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+      <!-- Card Left: Without VibeCI -->
+      <div class="bg-white rounded-2xl p-8 border border-red-200 shadow-sm relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-1.5 bg-brand-crimson"></div>
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-red-50 text-brand-crimson font-mono text-xs font-semibold mb-4">
+          Without VibeCI
         </div>
-        <p class="text-sm text-slate-300 mb-6 leading-relaxed">
-          Add VibeCI to your MCP configuration so your coding assistant queries the CI Twin and audits repairs autonomously.
+        <h3 class="text-xl font-bold text-ink-900 mb-3">Local Green, GitHub Actions Red</h3>
+        <p class="text-sm text-ink-500 mb-6 leading-relaxed">
+          You vibe-code 500 lines with an AI assistant. Everything passes locally, but your PR fails on the cloud CI runner.
         </p>
 
-        <div class="bg-slate-950 rounded-xl p-4 font-mono text-xs text-indigo-300 overflow-x-auto border border-slate-800">
-<pre>{
+        <ul class="space-y-3.5 text-sm text-ink-700 font-normal">
+          <li class="flex items-start gap-2.5">
+            <span class="text-brand-crimson font-bold text-base leading-none">✕</span>
+            <span><strong>Silent Casing Traps:</strong> Passes on Windows/macOS NTFS, but crashes on Ubuntu's case-sensitive filesystem in CI.</span>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span class="text-brand-crimson font-bold text-base leading-none">✕</span>
+            <span><strong>Token-Wasting Guesswork:</strong> AI agent burns 100k tokens re-reading 5,000-line logs and guessing shell commands.</span>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span class="text-brand-crimson font-bold text-base leading-none">✕</span>
+            <span><strong>Lazy AI Cheats:</strong> Agents fake passes by injecting <code class="bg-ink-100 px-1 py-0.5 rounded text-xs">// @ts-ignore</code> or deleting failing <code class="bg-ink-100 px-1 py-0.5 rounded text-xs">expect()</code> blocks.</span>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span class="text-brand-crimson font-bold text-base leading-none">✕</span>
+            <span><strong>Slow Feedback Loop:</strong> Wait 8–15 minutes per git push just to see if a one-line fix resolved GitHub Actions.</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Card Right: With VibeCI -->
+      <div class="bg-white rounded-2xl p-8 border border-indigo-200 shadow-sm relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-1.5 bg-brand-indigo"></div>
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-indigo-50 text-brand-indigo font-mono text-xs font-semibold mb-4">
+          With VibeCI
+        </div>
+        <h3 class="text-xl font-bold text-ink-900 mb-3">Deterministic CI Twin + Verified Repairs</h3>
+        <p class="text-sm text-ink-500 mb-6 leading-relaxed">
+          A lightweight local validator that turns GitHub Actions into an instant, local pre-flight feedback loop for you and your AI.
+        </p>
+
+        <ul class="space-y-3.5 text-sm text-ink-700 font-normal">
+          <li class="flex items-start gap-2.5">
+            <span class="text-brand-emerald font-bold text-base leading-none">✓</span>
+            <span><strong>Deterministic CI Twin:</strong> Automatically mirrors your <code class="bg-ink-100 px-1 py-0.5 rounded text-xs">.github/workflows/*.yml</code> into local checks.</span>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span class="text-brand-emerald font-bold text-base leading-none">✓</span>
+            <span><strong>Static Case Guard:</strong> Audits exact disk casing for all imports in 12ms before running any tests.</span>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span class="text-brand-emerald font-bold text-base leading-none">✓</span>
+            <span><strong>Anti-Cheat Diff Auditor:</strong> Rejects pull requests where AI agents bypassed linters or silenced tests.</span>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span class="text-brand-emerald font-bold text-base leading-none">✓</span>
+            <span><strong>Fingerprinted Prompts:</strong> 5-line structured root-cause hints for Cursor, Claude Code, and Antigravity.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BENTO GRID: 6 CORE CAPABILITIES ================= -->
+  <section id="bento" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-white/60 border-y border-ink-200">
+    <div class="text-center max-w-2xl mx-auto mb-14">
+      <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tighter text-ink-900 mb-4">
+        Engineered for Frictionless Local CI
+      </h2>
+      <p class="text-base sm:text-lg text-ink-500">
+        Everything you need to keep AI coding agents honest and GitHub Actions green.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+      <!-- Bento 1: CI Twin Engine -->
+      <div id="ci-twin" class="bg-white rounded-2xl p-6 card-border shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div>
+          <div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-brand-indigo mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-ink-900 mb-2">CI Twin Engine</h3>
+          <p class="text-sm text-ink-500 mb-4">
+            Parses GitHub Actions YAML files into a local executable pipeline. No Docker containers or root privileges needed.
+          </p>
+        </div>
+        <!-- Mini Visual -->
+        <div class="bg-terminal-bg rounded-lg p-3 text-xs font-mono text-ink-300 border border-terminal-border">
+          <div class="text-ink-500">// .vibeci/ci-twin.json</div>
+          <div class="text-brand-indigo">runs-on: <span class="text-white">ubuntu-latest</span></div>
+          <div class="text-brand-emerald">node-version: <span class="text-white">20.x</span></div>
+          <div class="text-ink-400">jobs: <span class="text-amber-400">["lint", "typecheck", "test"]</span></div>
+        </div>
+      </div>
+
+      <!-- Bento 2: Static Casing Guard -->
+      <div class="bg-white rounded-2xl p-6 card-border shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div>
+          <div class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-brand-amber mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-ink-900 mb-2">Static Casing Guard</h3>
+          <p class="text-sm text-ink-500 mb-4">
+            Audits your entire AST and matches import statements against case-sensitive directory trees in milliseconds.
+          </p>
+        </div>
+        <!-- Mini Visual -->
+        <div class="bg-terminal-bg rounded-lg p-3 text-xs font-mono text-ink-300 border border-terminal-border">
+          <div class="text-red-400 line-through">import { User } from "./User"</div>
+          <div class="text-brand-emerald">import { User } from "./user"</div>
+          <div class="text-[11px] text-ink-500 mt-1">Saved you 1 failed cloud CI run</div>
+        </div>
+      </div>
+
+      <!-- Bento 3: Anti-Cheat Diff Auditor -->
+      <div id="anti-cheat" class="bg-white rounded-2xl p-6 card-border shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div>
+          <div class="w-10 h-10 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center text-brand-crimson mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-ink-900 mb-2">Anti-Cheat Diff Auditor</h3>
+          <p class="text-sm text-ink-500 mb-4">
+            Scans git diffs for suppressed linter warnings, removed tests, or weakened assertions committed by lazy AI agents.
+          </p>
+        </div>
+        <!-- Mini Visual -->
+        <div class="bg-terminal-bg rounded-lg p-3 text-xs font-mono text-ink-300 border border-terminal-border">
+          <div class="text-red-400">BLOCKED: 1 @ts-ignore detected</div>
+          <div class="text-red-400">BLOCKED: 2 expect() calls removed</div>
+          <div class="text-brand-emerald font-semibold mt-1">Auto-reverted working tree</div>
+        </div>
+      </div>
+
+      <!-- Bento 4: Change-Aware Check Queue -->
+      <div class="bg-white rounded-2xl p-6 card-border shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div>
+          <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-brand-emerald mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-ink-900 mb-2">Change-Aware Check Queue</h3>
+          <p class="text-sm text-ink-500 mb-4">
+            Only runs checks relevant to touched files. Fast static gates first; full end-to-end integration suites last.
+          </p>
+        </div>
+        <!-- Mini Visual -->
+        <div class="bg-terminal-bg rounded-lg p-3 text-xs font-mono text-ink-300 border border-terminal-border">
+          <div class="flex justify-between"><span>1. static-casing</span> <span class="text-brand-emerald">12ms</span></div>
+          <div class="flex justify-between"><span>2. typecheck</span> <span class="text-brand-emerald">410ms</span></div>
+          <div class="flex justify-between"><span>3. affected-tests</span> <span class="text-brand-emerald">820ms</span></div>
+        </div>
+      </div>
+
+      <!-- Bento 5: Zero-AI Failure Fingerprinting -->
+      <div class="bg-white rounded-2xl p-6 card-border shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div>
+          <div class="w-10 h-10 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600 mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-ink-900 mb-2">Failure Fingerprinter</h3>
+          <p class="text-sm text-ink-500 mb-4">
+            Deterministic regex classification isolates the exact failing line and root cause without calling an expensive LLM.
+          </p>
+        </div>
+        <!-- Mini Visual -->
+        <div class="bg-terminal-bg rounded-lg p-3 text-xs font-mono text-ink-300 border border-terminal-border">
+          <div class="text-purple-400">ID: TYPE_CHECK_TS2339</div>
+          <div class="text-ink-400">File: src/auth/session.ts:42</div>
+          <div class="text-brand-indigo font-bold mt-1">Prompt: 5 lines, 0 fluff</div>
+        </div>
+      </div>
+
+      <!-- Bento 6: Native MCP Server & SKILL.md -->
+      <div class="bg-white rounded-2xl p-6 card-border shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div>
+          <div class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-ink-900 mb-2">Native MCP Server</h3>
+          <p class="text-sm text-ink-500 mb-4">
+            Exposes 6 JSON-RPC tools directly to Cursor, Claude Code, and Antigravity so your agent validates every diff autonomously.
+          </p>
+        </div>
+        <!-- Mini Visual -->
+        <div class="bg-terminal-bg rounded-lg p-3 text-xs font-mono text-ink-300 border border-terminal-border">
+          <div class="text-ink-400">tools: [</div>
+          <div class="text-brand-indigo pl-3">"vibeci_preflight",</div>
+          <div class="text-brand-indigo pl-3">"vibeci_audit_diff"</div>
+          <div class="text-ink-400">]</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MCP SETUP & AGENT INTEGRATION ================= -->
+  <section id="mcp-setup" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-14">
+      <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tighter text-ink-900 mb-4">
+        Equip Your AI Agent in 60 Seconds
+      </h2>
+      <p class="text-base sm:text-lg text-ink-500">
+        Plug VibeCI directly into Cursor, Claude Code, or Antigravity via the Model Context Protocol (MCP).
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start max-w-5xl mx-auto">
+      <!-- Steps Column -->
+      <div class="lg:col-span-5 space-y-6">
+        <!-- Step 1 -->
+        <div class="flex items-start gap-4">
+          <div class="w-8 h-8 rounded-lg bg-ink-900 text-white flex items-center justify-center font-bold text-sm shrink-0">1</div>
+          <div>
+            <h4 class="font-bold text-ink-900 text-base mb-1">Install or Run with npx</h4>
+            <p class="text-sm text-ink-500 mb-2">No global installation required. Run directly in your repository root.</p>
+            <div class="bg-white border border-ink-200 rounded-lg px-3 py-1.5 font-mono text-xs text-ink-900 inline-block">
+              npx vibeci preflight
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="flex items-start gap-4">
+          <div class="w-8 h-8 rounded-lg bg-ink-900 text-white flex items-center justify-center font-bold text-sm shrink-0">2</div>
+          <div>
+            <h4 class="font-bold text-ink-900 text-base mb-1">Add MCP Tool to Your IDE</h4>
+            <p class="text-sm text-ink-500 mb-2">Paste the configuration into Cursor (<code class="text-xs bg-ink-100 px-1 py-0.5 rounded">.cursor/mcp.json</code>) or Claude Desktop.</p>
+            <p class="text-xs text-brand-indigo font-medium">Allows AI agents to run preflight and check diffs before editing files.</p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="flex items-start gap-4">
+          <div class="w-8 h-8 rounded-lg bg-ink-900 text-white flex items-center justify-center font-bold text-sm shrink-0">3</div>
+          <div>
+            <h4 class="font-bold text-ink-900 text-base mb-1">Autonomous Verified Repairs</h4>
+            <p class="text-sm text-ink-500 mb-2">Prompt your agent: <span class="italic text-ink-700">"Fix the CI failure and run vibeci verify before committing."</span></p>
+            <span class="inline-flex items-center gap-1 text-xs font-mono font-medium text-brand-emerald bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+              ✓ Zero Docker • Zero Setup Drift
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Config Box Column -->
+      <div class="lg:col-span-7 bg-terminal-bg rounded-2xl border border-terminal-border terminal-glow overflow-hidden">
+        <div class="bg-terminal-bar px-4 py-3 border-b border-terminal-border flex items-center justify-between">
+          <span class="text-xs font-mono text-ink-400">mcp_config.json</span>
+          <button onclick="copyToClipboard(document.getElementById('mcp-code-block').innerText, this)" class="text-xs font-sans font-medium px-2 py-1 rounded bg-[#21262D] hover:bg-[#30363D] text-white transition-colors flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            <span>Copy Config</span>
+          </button>
+        </div>
+        <pre id="mcp-code-block" class="p-5 text-xs sm:text-sm font-mono text-terminal-text code-scroll overflow-x-auto leading-relaxed"><code>{
   "mcpServers": {
     "vibeci": {
-      "command": "node",
-      "args": ["/path/to/the_dev_pocket/dist/index.js", "mcp"]
+      "command": "npx",
+      "args": ["-y", "vibeci", "mcp"]
     }
   }
-}</pre>
-        </div>
+}</code></pre>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- How to Contribute Section -->
-    <section id="contribute" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-white">How to Contribute & Verify</h2>
-        <p class="mt-3 text-slate-400">We welcome open-source contributions! Follow these steps to build and verify.</p>
+  <!-- ================= OPEN SOURCE CTA BANNER ================= -->
+  <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+    <div class="bg-ink-900 rounded-3xl p-8 sm:p-12 text-center text-white relative overflow-hidden shadow-xl">
+      <!-- Decorative radial glow -->
+      <div class="absolute -top-24 -left-24 w-72 h-72 rounded-full bg-brand-indigo/30 blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -right-24 w-72 h-72 rounded-full bg-brand-emerald/20 blur-3xl pointer-events-none"></div>
+
+      <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tighter mb-4 relative z-10">
+        Ready to stop debugging broken GitHub Actions?
+      </h2>
+      <p class="text-ink-400 text-base sm:text-lg max-w-xl mx-auto mb-8 relative z-10">
+        100% open source under the MIT License. Built for developers who love vibe coding but hate red CI pipelines.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
+        <a href="https://github.com/Darshan3690/The-Dev-Pocket" target="_blank" rel="noopener noreferrer"
+           class="w-full sm:w-auto px-6 py-3 rounded-xl bg-white text-ink-900 hover:bg-ink-100 font-semibold text-sm transition-all shadow-sm flex items-center justify-center gap-2">
+          <svg class="w-4 h-4 text-amber-500 fill-amber-500" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+          </svg>
+          <span>Star the Repository</span>
+        </a>
+
+        <button onclick="copyToClipboard('npm install -D vibeci', this)"
+                class="w-full sm:w-auto px-6 py-3 rounded-xl bg-terminal-bar border border-terminal-border text-white hover:border-ink-500 font-mono text-sm transition-all flex items-center justify-center gap-2">
+          <span class="text-brand-indigo font-bold">$</span>
+          <span>npm install -D vibeci</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MINIMAL FOOTER ================= -->
+  <footer class="border-t border-ink-200 py-10 bg-[#FAF9F6] text-xs text-ink-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-ink-900 font-mono">VibeCI</span>
+        <span>— The CI seatbelt for AI coding agents.</span>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="card-glass rounded-xl p-6">
-          <div class="text-indigo-400 font-mono text-xs mb-2">STEP 01</div>
-          <h3 class="text-base font-bold text-white mb-2">Fork & Clone</h3>
-          <p class="text-xs text-slate-400 mb-3">Clone repository to your local machine.</p>
-          <pre class="bg-slate-900 p-2.5 rounded font-mono text-xs text-slate-300 overflow-x-auto">git clone https://github.com/&lt;user&gt;/The-Dev-Pocket.git
-cd The-Dev-Pocket</pre>
-        </div>
-
-        <div class="card-glass rounded-xl p-6">
-          <div class="text-indigo-400 font-mono text-xs mb-2">STEP 02</div>
-          <h3 class="text-base font-bold text-white mb-2">Install & Build</h3>
-          <p class="text-xs text-slate-400 mb-3">Install dependencies and compile CLI.</p>
-          <pre class="bg-slate-900 p-2.5 rounded font-mono text-xs text-slate-300 overflow-x-auto">npm install
-npm run build</pre>
-        </div>
-
-        <div class="card-glass rounded-xl p-6">
-          <div class="text-indigo-400 font-mono text-xs mb-2">STEP 03</div>
-          <h3 class="text-base font-bold text-white mb-2">Run Local Verifications</h3>
-          <p class="text-xs text-slate-400 mb-3">Ensure all safety checks pass clean.</p>
-          <pre class="bg-slate-900 p-2.5 rounded font-mono text-xs text-slate-300 overflow-x-auto">node ./dist/index.js preflight
-node ./dist/index.js check --fast
-node ./dist/index.js verify</pre>
-        </div>
-      </div>
-
-      <!-- Contributor Wall -->
-      <div class="mt-16 text-center card-glass rounded-2xl p-8">
-        <h3 class="text-xl font-bold text-white mb-4">🌟 Community Contributors</h3>
-        <p class="text-sm text-slate-400 mb-6">Big thanks to all developers contributing to VibeCI!</p>
-        <div class="flex justify-center">
-          <a href="https://github.com/Darshan3690/The-Dev-Pocket/graphs/contributors" target="_blank" rel="noopener noreferrer">
-            <img src="https://contrib.rocks/image?repo=Darshan3690/The-Dev-Pocket" alt="Contributors" class="max-w-full rounded-lg shadow-lg">
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Star Callout Banner -->
-    <section class="max-w-4xl mx-auto px-4 sm:px-6 py-12 text-center">
-      <div class="card-glass rounded-3xl p-10 border border-indigo-500/30 bg-gradient-to-b from-indigo-950/20 to-slate-900/60 shadow-2xl">
-        <h2 class="text-3xl font-extrabold text-white">Support Open Source Development</h2>
-        <p class="mt-3 text-slate-300 max-w-xl mx-auto text-sm">
-          If VibeCI saved you from broken CI builds or rogue AI edits, give our GitHub repository a star!
-        </p>
-        <div class="mt-6 flex flex-wrap justify-center gap-4">
-          <a href="https://github.com/Darshan3690/The-Dev-Pocket" target="_blank" rel="noopener noreferrer"
-             class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-lg shadow-indigo-500/25 transition-all flex items-center gap-2">
-            <svg class="w-5 h-5 fill-amber-300" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-            Star on GitHub
-          </a>
-          <a href="https://github.com/Darshan3690/The-Dev-Pocket/fork" target="_blank" rel="noopener noreferrer"
-             class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold border border-slate-700 transition-all flex items-center gap-2">
-            Fork Repository
-          </a>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="border-t border-slate-900 py-10 mt-12 bg-slate-950/90 text-slate-500 text-xs text-center">
-    <div class="max-w-7xl mx-auto px-4 space-y-3">
-      <p>Created with care by <a href="https://github.com/Darshan3690" class="text-indigo-400 hover:underline font-medium">Darshan Rajput</a> and community contributors.</p>
-      <p>Licensed under the <a href="LICENSE" class="text-slate-400 hover:underline">MIT License</a>.</p>
-      <div class="flex justify-center gap-6 text-slate-400 mt-2">
-        <a href="https://github.com/Darshan3690/The-Dev-Pocket" class="hover:text-white transition-colors">GitHub</a>
-        <a href="https://github.com/Darshan3690/The-Dev-Pocket/issues" class="hover:text-white transition-colors">Issues</a>
-        <a href="https://github.com/Darshan3690/The-Dev-Pocket/blob/main/CONTRIBUTING.md" class="hover:text-white transition-colors">Contributing</a>
+      <div class="flex items-center gap-6">
+        <a href="https://github.com/Darshan3690/The-Dev-Pocket" target="_blank" rel="noopener noreferrer" class="hover:text-ink-900 transition-colors">GitHub</a>
+        <a href="https://github.com/Darshan3690/The-Dev-Pocket/issues" target="_blank" rel="noopener noreferrer" class="hover:text-ink-900 transition-colors">Issues</a>
+        <a href="https://github.com/Darshan3690/The-Dev-Pocket/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" class="hover:text-ink-900 transition-colors">Contributing</a>
+        <span>Created by <a href="https://github.com/Darshan3690" target="_blank" rel="noopener noreferrer" class="text-ink-900 font-medium hover:underline">Darshan Rajput</a></span>
       </div>
     </div>
   </footer>
 
+  <!-- ================= INTERACTIVE SCRIPTS ================= -->
   <script>
-    function copyCommand(text) {
+    // Tab switching for terminal simulator
+    function switchTerminalTab(targetId, btn) {
+      document.querySelectorAll('.term-view').forEach(view => {
+        view.classList.add('hidden');
+      });
+      document.getElementById(targetId).classList.remove('hidden');
+
+      document.querySelectorAll('.term-tab').forEach(tab => {
+        tab.classList.remove('bg-[#21262D]', 'text-white', 'font-medium');
+        tab.classList.add('text-ink-400');
+      });
+      btn.classList.add('bg-[#21262D]', 'text-white', 'font-medium');
+      btn.classList.remove('text-ink-400');
+    }
+
+    // Copy to clipboard helper
+    function copyToClipboard(text, btn) {
       navigator.clipboard.writeText(text).then(() => {
-        const copyText = document.getElementById('copyText');
-        copyText.textContent = 'Copied!';
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = `
+          <svg class="w-3.5 h-3.5 text-brand-emerald" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          <span class="text-brand-emerald font-semibold">Copied!</span>
+        `;
         setTimeout(() => {
-          copyText.textContent = 'Copy';
-        }, 2000);
+          btn.innerHTML = originalHtml;
+        }, 1800);
       });
     }
   </script>
