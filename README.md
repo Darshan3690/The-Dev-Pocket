@@ -1,19 +1,3 @@
-<div align="center">
-
-# 📚 The Dev Pocket
-
-
-<p align="center">
- <p class="tagline">
-  Curated resources, interactive tools, and step-by-step roadmaps 
-  for <span>learners</span>, <span>students</span>, and <span>developers</span>.
-</p>
-
-
-
-
-</p>
-
 <br/>
 
 ![Hacktoberfest Badge](https://img.shields.io/badge/Hacktoberfest-2025-blueviolet?style=for-the-badge&logo=hackaday)
@@ -24,164 +8,186 @@
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg?style=for-the-badge)
 
 <br/>
-
-```ascii
+ ```ascii
 ┌─────────────────────────────────────────────────────────┐
 │  🎯 Learn → 🛠️ Build → 🚀 Deploy → 🤝 Contribute       │
 └─────────────────────────────────────────────────────────┘
 ```
 
-</div>
+Existing tools fall short for open-source contributors and AI workflows:
+
+* **Heavy container runners (`act`)** require multi-GB Docker images and frequently fail on custom GitHub Actions.
+* **Cloud CI auto-fixers** require repository admin access—useless when contributing to upstream open-source repositories.
+* **Raw AI agents** guess which commands to run, burn tokens on 5,000-line error logs, and frequently weaken tests just to make checks pass.
+
+**VibeCI** solves this locally in seconds with zero Docker overhead and zero required API keys.
 
 ---
 
-## 🌟 Features That Set Us Apart
+## ✨ What Makes VibeCI Different
 
-<table>
-<tr>
-<td width="50%">
-
-### 📖 Rich Learning Resources
-Carefully curated content for **Web Development**, **DSA**, **AI/ML**, and cutting-edge technologies
-
-</td>
-<td width="50%">
-
-### 🛠️ Interactive Tools
-Boost productivity with hands-on coding practice tools and utilities
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### 🎯 Guided Roadmaps
-Crystal-clear paths for developers at every stage of their journey
-
-</td>
-<td width="50%">
-
-### 🌍 Community-Powered
-Built by developers, for developers with **Hacktoberfest** spirit
-
-</td>
-</tr>
-</table>
-
-<div align="center">
-
-```mermaid
-graph LR
-    A[🌱 Beginner] --> B[💪 Intermediate]
-    B --> C[🚀 Advanced]
-    C --> D[⭐ Expert]
-    style A fill:#84cc16
-    style B fill:#3b82f6
-    style C fill:#8b5cf6
-    style D fill:#f59e0b
-```
-
-</div>
+| Feature | How VibeCI Works |
+| --- | --- |
+| **🪞 CI Twin Engine** | Parses `.github/workflows/*.{yml,yaml}` into a local `.vibeci/ci-twin.json` model and compares your OS, runtime versions, and lockfiles against remote CI. |
+| **🪟➡️🐧 Casing & Path Guard** | Statically scans `git diff` relative imports against exact disk filename casing—catching Windows/macOS case-insensitive traps (`./UserService` vs `userService.ts`) before running a single test. |
+| **🎯 Change-Aware Check Queue** | Maps modified files in `git diff` to relevant lint, typecheck, and test commands from your CI workflow, executing fast static checks before heavy builds. |
+| **🧬 Zero-AI Failure Fingerprinter** | Deterministically classifies raw `stdout`/`stderr` into 15 structured failure categories (`PLATFORM_COMPATIBILITY`, `TYPE_ERROR`, `LOCKFILE_DRIFT`, etc.) with exact `file:line` coordinates. |
+| **🚫 Anti-Cheat Diff Auditor** | Audits every AI-generated repair diff and **blocks** deleted `expect()`/`assert` calls, `.skip()`, `@ts-ignore`, `eslint-disable`, `# noqa`, or edits to `.github/workflows/*`. |
+| **🔌 Native MCP & `SKILL.md**` | Ships with a built-in stdio MCP server (`vibeci mcp`) and portable `SKILL.md` so any coding agent can run preflight checks and verify repairs natively. |
 
 ---
 
-## 🛠️ Tech Stack
+## ⚡ Quick Start
 
-<div align="center">
+Run VibeCI inside any Git repository without global installation:
 
-| Category | Technologies |
-|----------|-------------|
-| **Frontend** | ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=next.js&logoColor=white) ![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black) ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white) ![Tailwind](https://img.shields.io/badge/Tailwind-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white) |
-| **Backend** | ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=node.js&logoColor=white) ![Next.js API](https://img.shields.io/badge/Next.js_API-000000?style=flat-square&logo=next.js&logoColor=white) |
-| **Database** | ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white) ![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white) |
-| **Auth** | ![Clerk](https://img.shields.io/badge/Clerk-6C47FF?style=flat-square&logo=clerk&logoColor=white) |
-| **Deployment** | ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white) |
+```bash
+# 1. Scan repository, parse GitHub Actions, and build .vibeci/ci-twin.json
+npx vibeci analyze
 
-</div>
+# 2. Run change-aware preflight checks & failure fingerprinting
+npx vibeci preflight
+
+# 3. Audit AI-generated fixes against anti-cheat safety rules
+npx vibeci verify
+
+```
+
+### Example Output (`npx vibeci preflight`)
+
+```text
+╭────────────────────────────────────────────────────────────╮
+│       VIBECI — Pre-PR Intelligence & CI Twin Verification  │
+╰────────────────────────────────────────────────────────────╯
+Repository:      my-open-source-repo (branch: feat/oauth-client)
+Local Env:       win32 (Windows 11) | Node 22.4.0 | pnpm 9.12.0
+Target CI:       .github/workflows/ci.yml (ubuntu-latest | Node 20)
+
+[1/4] CI Twin & Environment Gap Scan
+  ⚠ OS_MISMATCH: win32 vs ubuntu-latest -> Case-Sensitivity Guard ACTIVE
+  ⚠ RUNTIME_MISMATCH: Local Node 22.4.0 vs CI Node 20
+  ❌ CRITICAL [CASE_SENSITIVITY_TRAP]:
+     File: src/index.ts:4
+     Import './providers/AuthClient' does not match disk file 'authClient.ts'.
+     ↳ Will pass on Windows NTFS, WILL FAIL on Ubuntu CI!
+
+[2/4] Change-Aware CI Execution
+  ✓ pnpm lint (1.1s)
+  ❌ pnpm typecheck (2.3s) -> Exit Code 2
+     src/providers/authClient.ts:28:14 - TS2339: Property 'token' does not exist on type 'Session'.
+  ✓ pnpm test (1.8s)
+
+[3/4] Failure Fingerprinting & Readiness Score
+  PR Readiness Score: 50/100 (NEEDS REPAIR)
+  Evidence Ledger saved to: .vibeci/reports/latest.json
+
+```
 
 ---
 
-## 🚀 Getting Started (Developer Mode)
+## 🛠️ CLI Commands
 
-<details open>
-<summary><b>📦 Quick Setup Guide</b></summary>
+| Command | Description |
+| --- | --- |
+| `vibeci analyze` | Scans stack/lockfiles, parses `.github/workflows/*.yml`, and generates `.vibeci/ci-twin.json`. |
+| `vibeci env` | Displays a side-by-side comparison of your local machine vs. remote CI runners and config drift. |
+| `vibeci preflight` | Full pre-PR pipeline: CI Twin gap scan $\rightarrow$ change-aware checks $\rightarrow$ failure fingerprinting $\rightarrow$ readiness score. |
+| `vibeci check --changed` | Runs only the CI checks impacted by your current `git diff`. |
+| `vibeci explain` | Breaks down the last failure into category, `file:line`, root cause, and historical repo fixes. |
+| `vibeci verify` | Runs the **Anti-Cheat Git Diff Auditor** + re-verifies previously failing checks. |
+| `vibeci repair` | Generates a structured Evidence Ledger and orchestrates a safe, bounded repair loop with your coding agent. |
+| `vibeci analyze-pr <id>` | Uses `gh` CLI to fetch failed logs from an open GitHub PR and map them against your local CI Twin. |
+| `vibeci mcp` | Starts the stdio Model Context Protocol (MCP) server for AI coding agents. |
 
-<br/>
+---
 
-### 1️⃣ Fork & Clone Repository
+## 🚫 Anti-Cheat Git Diff Auditor
 
-```bash
-# Clone the repository
-git clone https://github.com/Darshan3690/The-Dev-Pocket.git
+AI coding agents frequently take shortcuts to turn red checks green. Every repair verified through `vibeci verify` must pass deterministic diff rules before VibeCI issues a `VERIFIED` badge:
 
-# Navigate to project directory
-cd The-Dev-Pocket
+### Prohibited in Repair Diffs (Auto-Rejected)
+
+* ❌ **Assertion Removal:** Net decrease in `expect(...)`, `assert(...)`, or test blocks in `*.test.*` / `test_*.py`.
+* ❌ **Test Skipping:** Adding `.skip(`, `xit(`, `@pytest.mark.skip`, or `t.Skip()`.
+* ❌ **Compiler / Linter Silencing:** Adding `@ts-ignore`, `@ts-expect-error`, `eslint-disable`, `# noqa`, or `# type: ignore`.
+* ❌ **CI Tampering:** Modifying `.github/workflows/*` or weakening linter/compiler config rules.
+
+### Allowed Repairs
+
+* ✅ Fixing implementation logic, types, and import paths/casing
+* ✅ Updating broken test mocks/fixtures while preserving or increasing assertions
+* ✅ Resolving lockfile or cross-platform path separator issues
+
+---
+
+## 🤖 MCP & AI Agent Integration
+
+VibeCI works out of the box with **Cursor**, **Claude Code**, **Cline**, **Windsurf**, and **Antigravity IDE** via MCP or portable agent skills.
+
+### Option 1: MCP Server Configuration
+
+Add VibeCI to your IDE's MCP config (`mcp_config.json` / `.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "vibeci": {
+      "command": "npx",
+      "args": ["-y", "vibeci", "mcp"]
+    }
+  }
+}
+
 ```
 
-### 2️⃣ Install Dependencies
+**Exposed MCP Tools:**
 
-```bash
-npm install
-# or
-yarn install
-# or
-pnpm install
+* `get_ci_twin_and_gaps` — Returns `.vibeci/ci-twin.json` and cross-platform environment mismatches.
+* `run_preflight_checks` — Executes mapped CI checks and returns structured failure fingerprints.
+* `verify_repair_with_safety_audit` — Audits `git diff` for suppressed rules/deleted tests and re-runs failed checks.
+
+### Option 2: Portable Agent Skill (`SKILL.md`)
+
+Copy `skills/vibeci-repair` into your repository or global skills folder to enforce evidence-based repair rules across any skill-compatible agent.
+
+---
+
+## 📁 Local Workspace Structure (`.vibeci/`)
+
+VibeCI stores all state locally (add `.vibeci/` to your `.gitignore`):
+
+```text
+.vibeci/
+├── ci-twin.json          # Local vs. GitHub Actions environment & command mirror
+├── reports/
+│   ├── latest.json       # Structured check execution results & failure fingerprints
+│   └── pr-badge.md       # Collapsible Markdown verification summary for your PR body
+├── ledger/
+│   └── repair-001.json   # Auditable proof: Failure -> Diff -> Safety Audit -> Pass
+└── history/
+    └── fingerprints.json # Repository memory of recurring CI failures
+
 ```
 
-### 3️⃣ Set Up Supabase Database (Prisma)
+---
 
-> ⚠️ Important: Prisma CLI does **not** load `.env.local`.  
-> Please use a `.env` file for database configuration.
+## 🔒 Security & Command Execution Safety
 
-1. 🌐 Visit [Supabase](https://supabase.com)
-2. ➕ Create a new project
-3. ⚙️ Go to **Settings → Database → Connection string**
+Because open-source repositories can contain untrusted workflow scripts, VibeCI classifies every extracted CI command before execution:
 
-You will need **two connection URLs** from Supabase:
-- **Session pooler URL** (used by Prisma Client)
-- **Direct connection URL** (used by Prisma migrations)
+* **SAFE (Auto-run):** Test runners (`vitest`, `jest`, `pytest`, `go test`), linters (`eslint`, `ruff`), and typecheckers (`tsc`, `mypy`).
+* **MODERATE (Explicit flag):** Build scripts and dependency installations.
+* **BLOCKED:** Destructive filesystem commands, `curl | bash` pipes, and commands attempting to read `.env` or secret tokens. All captured logs automatically redact API keys and Bearer tokens.
 
-4. 📝 Create a `.env` file in the project root (same level as `package.json`) and add:
+---
 
-```env
-DATABASE_URL="postgresql://postgres:<PASSWORD>@db.xxxxx.supabase.co:6543/postgres?pgbouncer=true"
-DIRECT_URL="postgresql://postgres:<PASSWORD>@db.xxxxx.supabase.co:5432/postgres"
-```
+## 🗺️ Roadmap
 
-### 4️⃣ Run Database Migrations
-
-```bash
-# Generate Prisma Client
-npx prisma generate
-
-# Push schema to database
-npx prisma db push
-
-# (Optional) Open Prisma Studio for DB management
-npx prisma studio
-```
-
-### 5️⃣ Configure Authentication with Clerk
-
-1. 🔐 Go to [Clerk Dashboard](https://dashboard.clerk.com)
-2. ➕ Create a new application.
-3. 🔑 Copy your API keys.
-4. 📝 Add to `.env.local`:
-
-```env
-CLERK_PUBLISHABLE_KEY=your_publishable_key
-CLERK_SECRET_KEY=your_secret_key
-```
-
-### 6️⃣ Launch Development Server
-
-```bash
-npm run dev
-```
-
-🎉 **Success!** Visit [http://localhost:3000](http://localhost:3000)
-
-</details>
+* [x] **v0.1** — GitHub Actions YAML parser, CI Twin builder, Windows-to-Linux import casing guard, Anti-Cheat Diff Auditor
+* [ ] **v0.2** — Change-aware check execution engine, regex failure fingerprinter, `--copy-pr-badge` Markdown generator
+* [ ] **v0.3** — Built-in stdio MCP server (`vibeci mcp`) & portable `skills/vibeci-repair/SKILL.md`
+* [ ] **v0.4** — Remote PR failure forensics (`vibeci analyze-pr <id>`) & repository failure memory
+* [ ] **v0.5** — Optional Docker / `act` container reproduction for Linux-only native dependencies
 
 ---
 
