@@ -14,7 +14,8 @@
     "dev": "tsx src/index.ts",
     "build": "tsup src/index.ts --format esm --clean --shims",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "web": "npx -y serve ."
   },
   "keywords": [
     "ci",

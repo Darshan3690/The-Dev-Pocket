@@ -30,7 +30,7 @@
 
 <br/>
 
-[About VibeCI](#-about-vibeci) • [The Problem](#-the-problem) • [Key Features](#-key-features) • [Quick Start](#-quick-start) • [CLI Reference](#-cli-reference) • [Anti-Cheat Guard](#-anti-cheat-git-diff-auditor) • [MCP for Agents](#-mcp--ai-agent-integration) • [Contributing Guide](#-contributing)
+[About VibeCI](#-about-vibeci) • [Website Page](index.html) • [The Problem](#-the-problem) • [Key Features](#-key-features) • [Quick Start](#-quick-start) • [CLI Reference](#-cli-reference) • [Anti-Cheat Guard](#-anti-cheat-git-diff-auditor) • [MCP for Agents](#-mcp--ai-agent-integration) • [Contributing Guide](#-contributing)
 
 </div>
 
