@@ -1,245 +1,147 @@
+# VibeCI ⚡
+
 <div align="center">
 
-# 🛡️ VibeCI
+[![npm version](https://img.shields.io/npm/v/vibeci.svg?style=flat-square&color=6366F1)](https://www.npmjs.com/package/vibeci)
+[![npm downloads](https://img.shields.io/npm/dm/vibeci.svg?style=flat-square&color=10B981)](https://www.npmjs.com/package/vibeci)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
+[![GitHub Stars](https://img.shields.io/github/stars/Darshan3690/The-Dev-Pocket?style=flat-square&color=F59E0B)](https://github.com/Darshan3690/The-Dev-Pocket/stargazers)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
 
 **The CI seatbelt for vibe coding and AI coding agents.**
 
-*Catch environment gaps, cross-platform casing traps, and lazy AI test-cheating before your pull request hits GitHub Actions.*
+*Catch Windows-to-Linux casing traps, runtime drift, and lazy AI test-cheats locally in seconds—before your pull request breaks GitHub Actions.*
 
-<br/>
+[**Live Demo**](https://the-dev-pocket.vercel.app) • [**npm Package**](https://www.npmjs.com/package/vibeci) • [**Report Bug**](https://github.com/Darshan3690/The-Dev-Pocket/issues) • [**Contributing**](CONTRIBUTING.md)
 
-[![GitHub Repo stars](https://img.shields.io/github/stars/Darshan3690/The-Dev-Pocket?style=for-the-badge&color=gold)](https://github.com/Darshan3690/The-Dev-Pocket/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/Darshan3690/The-Dev-Pocket?style=for-the-badge&color=blue)](https://github.com/Darshan3690/The-Dev-Pocket/network/members)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](CONTRIBUTING.md)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](tsconfig.json)
-[![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
-[![MCP Ready](https://img.shields.io/badge/MCP-Server%20Included-8A2BE2?style=for-the-badge)](#-mcp--ai-agent-integration)
-
-<br/>
-
-```ascii
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│  🔍 Analyze CI Twin  →  ⚡ Preflight Checks  →  🛡️ Audit AI Repair  →  🚀 Ship Green PR  │
-└────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-<br/>
-
-⭐ **If you find VibeCI helpful, please consider starring the repository to support development!** ⭐
-
-<br/>
-
-[About VibeCI](#-about-vibeci) • [Website Page](index.html) • [The Problem](#-the-problem) • [Key Features](#-key-features) • [Quick Start](#-quick-start) • [CLI Reference](#-cli-reference) • [Anti-Cheat Guard](#-anti-cheat-git-diff-auditor) • [MCP for Agents](#-mcp--ai-agent-integration) • [Contributing Guide](#-contributing)
+---
 
 </div>
 
----
+## 🚀 Published on npm Registry
 
-## 📖 About VibeCI
+`vibeci@0.1.0` is now officially published on npm!
 
-**VibeCI** is an open-source, local-first CI twin and guardrail engine designed for developers and AI coding agents (**Antigravity, Cursor, Claude Code, Cline, Windsurf**). 
+- **Package URL:** [npmjs.com/package/vibeci](https://www.npmjs.com/package/vibeci)
+- **Tag:** `latest -> 0.1.0`
 
-As AI agents write and edit code at high velocities ("vibe coding"), they frequently introduce subtle regressions that pass on the author's local workstation (Windows / macOS) but break upon hitting Linux GitHub Actions. Worse, when tasked with "fixing tests", agents often cheat—silently deleting test assertions, disabling linter checks, or peppering `@ts-ignore` to artificially pass builds.
-
-**VibeCI acts as an intelligent safety seatbelt.** It reads your GitHub Actions workflows, mirrors them locally into an environment model (CI Twin), executes only affected checks, audits diffs against anti-cheat rules, and exposes native Model Context Protocol (MCP) tools so agents can verify their own fixes safely.
-
----
-
-## 🚨 The Problem
-
-```text
-Local Machine (Windows / macOS):          GitHub Actions (ubuntu-latest):
-  ✓ Tests passed locally                     ❌ ERR_MODULE_NOT_FOUND (import casing)
-  ✓ Build passed                             ❌ Typecheck failed (Node 20 vs 22)
-  ✓ Agent said: "All fixed!"                 ❌ Agent added // @ts-ignore & deleted 2 assertions
-```
-
-Existing tools fall short for modern AI agent development:
-
-* **Heavy container runners (`act`)** require multi-gigabyte Docker setups and frequently fail on complex composite actions.
-* **Cloud CI auto-fixers** require admin repository permissions—impractical for contributors and forks.
-* **Raw AI agents** guess which commands to run, consume thousands of tokens on raw build logs, and weaken test suites when struggling with fixes.
-
-**VibeCI** runs locally in seconds with **zero Docker overhead** and **zero API keys required**.
-
----
-
-## ✨ Key Features
-
-| Feature | Description |
-|---|---|
-| **🪞 CI Twin Engine** | Statically parses `.github/workflows/*.{yml,yaml}` to map runners, Node/Python versions, and steps into `.vibeci/ci-twin.json`. |
-| **🪟➡️🐧 Casing & Path Guard** | Checks `git diff` relative imports against exact disk filename casing—catching Windows/macOS case-insensitive traps (`./UserService` vs `userService.ts`) before code hits Linux CI. |
-| **🎯 Change-Aware Check Runner** | Inspects modified files in `git diff` and queues only the relevant lint, typecheck, or test commands. |
-| **🛡️ Command Risk Guard** | Classifies commands before running (`SAFE`, `MODERATE`, `BLOCKED`). Blocks destructive calls (`rm -rf /`, `curl | bash`, token exposure). |
-| **🚫 Anti-Cheat Diff Auditor** | Scans unstaged and staged diffs to **block** deleted `expect()`/`assert` calls, `.skip()`, `@ts-ignore`, `eslint-disable`, `# noqa`, or edits to workflow files. |
-| **🧬 Intelligent Failure Fingerprinting** | Deterministically categorizes build errors (`TYPESCRIPT_ERROR`, `ESLINT_ERROR`, `IMPORT_ERROR`, etc.) with file and line coordinates. |
-| **🔌 Native MCP Server** | Ships with a stdio MCP server (`vibeci mcp`) enabling agents in Cursor, Claude Code, and Antigravity to run preflight and verify repairs natively. |
-
----
-
-## ⚡ Quick Start
-
-Run VibeCI inside your Git repository:
+Any developer worldwide can run it immediately without installation:
 
 ```bash
-# 1. Analyze repository and build local CI Twin
-node ./dist/index.js analyze
-
-# 2. Run preflight environment & casing checks
-node ./dist/index.js preflight
-
-# 3. Run change-aware CI checks
-node ./dist/index.js check --fast
-
-# 4. Audit git diff against anti-cheat rules
-node ./dist/index.js verify
+npx vibeci preflight
+npx vibeci verify
 ```
 
-### Example Preflight Report Output
+Or install globally on your machine:
 
-```text
-╭────────────────────────────────────────────────────────────╮
-│           VIBECI — Preflight Report                        │
-╰────────────────────────────────────────────────────────────╯
-Repository:      The-Dev-Pocket (branch: main)
-Local Env:       win32 (Windows) | Node 22.14.0 | npm
-Remote CI:       .github/workflows/ci.yml (ubuntu-latest | Node 20.x, 22.x)
-
-[1/2] CI Twin & Environment Gap Scan
-  ⚠ [MEDIUM] OS_MISMATCH: win32 vs ubuntu-latest (case-sensitive ext4)
-     ↳ VibeCI Case-Sensitivity Guard enabled for relative imports.
-
-[2/2] PR Readiness Score: 90/100 (READY)
+```bash
+npm install -g vibeci
 ```
 
 ---
 
-## 🛠️ CLI Reference
+## ⚡ Why VibeCI?
 
-| Command | Flags | Description |
-|---|---|---|
-| `vibeci analyze` | | Scans repo, parses `.github/workflows/*.yml`, builds `.vibeci/ci-twin.json`. |
-| `vibeci preflight` | `--strict`, `--copy-pr-badge` | Runs CI Twin gap analysis + cross-platform casing checks. |
-| `vibeci check` | `--all`, `--fast`, `--allow-build` | Executes change-aware CI checks with safety policy protection. |
-| `vibeci verify` | | Audits git diff against anti-cheat rules (blocking deleted assertions & suppressions). |
-| `vibeci explain` | | Analyzes latest check failures, classifies root causes, and shows readiness score. |
-| `vibeci repair` | `--failure-id <id>`, `--root-cause <msg>` | Orchestrates bounded repair verification using latest failure report. |
-| `vibeci analyze-pr <pr>` | `--copy-pr-badge` | Fetches failure logs from remote GitHub PR via `gh` CLI. |
-| `vibeci mcp` | | Starts stdio JSON-RPC 2.0 MCP server for AI coding agents. |
+When vibe coding with AI coding agents (Cursor, Claude Code, Antigravity IDE, Cline, Windsurf), tasks move 10x faster. But local success often leads to broken cloud CI pipelines:
+
+1. **Silent Casing Traps:** Code passes on Windows NTFS and macOS APFS, but crashes immediately on Ubuntu GitHub Actions runners due to case sensitivity.
+2. **AI Test Cheating:** AI agents frequently bypass type errors (`// @ts-ignore`, `eslint-disable`) or comment out assertions in test files to fake a passing build.
+3. **Environment Drift:** Mismatches between your local machine (e.g. Node 22 on Windows) and CI targets (Node 20 on Ubuntu).
+4. **Token-Wasting Log Dumps:** Agents waste hundreds of thousands of tokens analyzing 5,000-line cloud CI logs instead of focusing on clean, structured 5-line root causes.
+
+**VibeCI gives you a deterministic CI Twin and Anti-Cheat Diff Auditor right on your laptop.**
 
 ---
 
-## 🚫 Anti-Cheat Git Diff Auditor
+## 🛠️ Quick Start
 
-AI coding agents often take shortcuts to make red checks turn green. Every edit verified through `vibeci verify` is audited against strict safety rules:
+### 1. Run Preflight Diagnostics
+Detect OS drift, Node version drift, and relative import casing traps:
+```bash
+npx vibeci preflight
+```
 
-### ❌ Prohibited in Repair Diffs (Auto-Rejected):
-* **Assertion Removal**: Net decrease in `expect(...)` or `assert(...)` calls in test suites.
-* **Test Skipping**: Adding `.skip(`, `xit(`, `@pytest.mark.skip`, or equivalent.
-* **Compiler / Linter Silencing**: Adding `@ts-ignore`, `@ts-expect-error`, `eslint-disable`, `# noqa`, or `# type: ignore`.
-* **CI Workflow Tampering**: Modifying `.github/workflows/*` without authorization.
+### 2. Run Change-Aware Checks
+Run static gates and affected tests locally in under 1 second:
+```bash
+npx vibeci check --fast
+```
 
-### ✅ Allowed Repairs:
-* Fixing application logic, type definitions, and incorrect import paths/casing.
-* Updating broken test fixtures while preserving or adding assertions.
-* Resolving dependency mismatches and platform-specific code.
+### 3. Verify Diff Safety (Anti-Cheat Guard)
+Programmatically inspect unstaged and staged git diffs to ensure no AI agent suppressed linters or weakened tests:
+```bash
+npx vibeci verify
+```
 
 ---
 
-## 🤖 MCP & AI Agent Integration
+## 🤖 AI Agent & MCP Integration
 
-VibeCI includes native support for the **Model Context Protocol (MCP)**. Any MCP-compliant IDE or agent (**Cursor, Claude Code, Antigravity**) can query VibeCI directly.
+VibeCI includes a native Model Context Protocol (MCP) server so Cursor, Claude Code, and Antigravity can audit diffs and run diagnostics autonomously.
 
-### Add to Agent MCP Configuration (`mcp.json`):
+### Configure in Cursor (`.cursor/mcp.json`) or Claude Desktop:
 
 ```json
 {
   "mcpServers": {
     "vibeci": {
-      "command": "node",
-      "args": ["<path-to-repo>/dist/index.js", "mcp"]
+      "command": "npx",
+      "args": ["-y", "vibeci", "mcp"]
     }
   }
 }
 ```
 
-### Tools Exposed to Agents:
-* `get_ci_twin`: Returns the local-to-CI environment comparison and detected gaps.
-* `run_preflight`: Executes preflight checks and returns gap counts with readiness score.
-* `verify_repair`: Audits the agent's current diff against anti-cheat rules.
+### Available MCP Tools for Agents:
+- `vibeci_preflight` — Scan repository and check for environment drift and casing issues.
+- `vibeci_audit_diff` — Inspect working tree changes to block cheating before commits.
+- `vibeci_run_checks` — Run targeted local CI checks for modified files.
+
+---
+
+## 📋 CLI Command Reference
+
+| Command | Description |
+|---|---|
+| `vibeci preflight` | Run CI twin analysis and cross-platform casing checks |
+| `vibeci verify` | Run Anti-Cheat Git Diff Audit on staged and unstaged files |
+| `vibeci analyze` | Parse `.github/workflows/*.yml` into `.vibeci/ci-twin.json` |
+| `vibeci check [--fast] [--all]` | Execute safe change-aware check queue |
+| `vibeci explain` | Classify recent failures and generate 5-line agent prompt |
+| `vibeci repair` | Autonomous repair loop with safety verification |
+| `vibeci mcp` | Start VibeCI JSON-RPC 2.0 MCP server |
+| `vibeci analyze-pr <pr-number>` | Analyze remote PR failure logs and output markdown badge |
+
+---
+
+## 🔒 Git Pre-Commit Hook (Automated Seatbelt)
+
+Block bad commits before they hit GitHub by adding VibeCI to your pre-commit hooks:
+
+```bash
+# In .git/hooks/pre-commit or Husky:
+npx vibeci verify
+```
+
+If an agent or developer injects `// @ts-ignore` or introduces a case-sensitive file path mismatch, the commit is aborted instantly.
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions from developers, learners, and open-source enthusiasts!
+Contributions are welcome! Please check out [CONTRIBUTING.md](CONTRIBUTING.md) to get started.
 
-### 🍴 Step-by-Step Contribution Guide
-
-#### 1. Fork & Clone Repository
-```bash
-# Fork on GitHub: https://github.com/Darshan3690/The-Dev-Pocket
-git clone https://github.com/<your-username>/The-Dev-Pocket.git
-cd The-Dev-Pocket
-```
-
-#### 2. Install Dependencies
-```bash
-npm install
-```
-
-#### 3. Build & Typecheck
-```bash
-npm run typecheck
-npm run build
-```
-
-#### 4. Test Changes Locally Like a Real User
-Verify all core flows work as expected before submitting:
-```bash
-# Test preflight
-node ./dist/index.js preflight
-
-# Test change-aware checks
-node ./dist/index.js check --fast
-
-# Test anti-cheat audit
-node ./dist/index.js verify
-
-# Test CI twin generation
-node ./dist/index.js analyze
-```
-
-#### 5. Commit Your Changes
-Use conventional commit messages (`feat:`, `fix:`, `docs:`, `chore:`):
-```bash
-git checkout -b feat/your-feature-name
-git add .
-git commit -m "feat(core): add support for python pytest checks"
-git push origin feat/your-feature-name
-```
-
-#### 6. Open a Pull Request
-Head over to [https://github.com/Darshan3690/The-Dev-Pocket/pulls](https://github.com/Darshan3690/The-Dev-Pocket/pulls) and open your PR!
-
----
-
-## 👥 Contributors
-
-Thank you to everyone who has contributed to the project!
-
-<div align="center">
-
-<a href="https://github.com/Darshan3690/The-Dev-Pocket/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Darshan3690/The-Dev-Pocket" alt="Contributors" />
-</a>
-
-</div>
+1. Fork the repo: [https://github.com/Darshan3690/The-Dev-Pocket](https://github.com/Darshan3690/The-Dev-Pocket)
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Test locally with `npm run build` and `vibeci verify`
+4. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
 
 ---
 
 ## 📄 License
 
-This project is open-source and licensed under the [MIT License](LICENSE).
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
+
+Built with ❤️ by [Darshan Rajput](https://github.com/Darshan3690).
