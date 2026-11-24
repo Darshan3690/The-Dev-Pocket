@@ -16,7 +16,7 @@ const BLOCKED_PATTERNS = [
   /rm\s+-rf\s+\//,
   /\bsudo\b/,
   /\$GITHUB_TOKEN/,
-  /\.env/,
+  /(?:cat|type|cp|mv|curl|echo)\s+.*\.env(?:\s|$)/,
   /wget\s.*\|.*bash/,
 ];
 

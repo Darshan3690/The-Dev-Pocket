@@ -35,10 +35,16 @@ export class RepairLoop {
     // Step 1: Agent applies fix
     await applyFix();
 
-    // Step 2: Capture diff
+    // Step 2: Capture diff (staged + unstaged)
     const { execa } = await import("execa");
-    const diffResult = await execa("git diff", { cwd: this.repoRoot });
-    const diff = diffResult.stdout;
+    let diff = "";
+    try {
+      const diffResult = await execa("git diff HEAD", { cwd: this.repoRoot });
+      diff = diffResult.stdout;
+    } catch {
+      const diffResult = await execa("git diff", { cwd: this.repoRoot });
+      diff = diffResult.stdout;
+    }
 
     // Step 3: Run anti-cheat safety audit
     const safetyAudit = await auditRepairDiff(this.repoRoot);
@@ -50,7 +56,7 @@ export class RepairLoop {
       let verifyCmd = "npm test";
       if (failureId === "tsc") verifyCmd = "npx tsc --noEmit";
       else if (failureId === "eslint") verifyCmd = "npx eslint . --ext .ts,.tsx";
-      else if (failureId === "static-casing") verifyCmd = "node ./dist/index.js preflight";
+      else if (failureId === "static-casing") verifyCmd = "npx vibeci preflight";
       else if (failureId === "build") verifyCmd = "npm run build";
 
       const checkResult = await runCheck("verification", verifyCmd, true);

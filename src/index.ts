@@ -10,6 +10,7 @@ import explainCmd from "./cli/commands/explain.js";
 import repairCmd from "./cli/commands/repair.js";
 import mcpCmd from "./cli/commands/mcp.js";
 import analyzePrCmd from "./cli/commands/analyze-pr.js";
+import initCmd from "./cli/commands/init.js";
 
 const program = new Command();
 
@@ -81,5 +82,6 @@ program.addCommand(explainCmd);
 program.addCommand(repairCmd);
 program.addCommand(mcpCmd);
 program.addCommand(analyzePrCmd);
+program.addCommand(initCmd);
 
 program.parse();

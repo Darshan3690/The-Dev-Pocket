@@ -55,19 +55,25 @@ When vibe coding with AI coding agents (Cursor, Claude Code, Antigravity IDE, Cl
 
 ## 🛠️ Quick Start
 
-### 1. Run Preflight Diagnostics
+### 1. Zero-Config Init
+Initialize local CI twin config and optional git pre-commit anti-cheat hook:
+```bash
+npx vibeci init --hook
+```
+
+### 2. Run Preflight Diagnostics
 Detect OS drift, Node version drift, and relative import casing traps:
 ```bash
 npx vibeci preflight
 ```
 
-### 2. Run Change-Aware Checks
+### 3. Run Change-Aware Checks
 Run static gates and affected tests locally in under 1 second:
 ```bash
 npx vibeci check --fast
 ```
 
-### 3. Verify Diff Safety (Anti-Cheat Guard)
+### 4. Verify Diff Safety (Anti-Cheat Guard)
 Programmatically inspect unstaged and staged git diffs to ensure no AI agent suppressed linters or weakened tests:
 ```bash
 npx vibeci verify
