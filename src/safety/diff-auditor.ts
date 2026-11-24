@@ -5,21 +5,47 @@ export interface SafetyAuditResult {
   violations: string[];
 }
 
+export interface SafetyAuditOptions {
+  baseBranch?: string;
+  headBranch?: string;
+}
+
+// Benign import-level suppression patterns (e.g. mock fallbacks)
+const BENIGN_NOQA_PATTERNS = [
+  /#\s*noqa:\s*F401\b/i, // unused import (common in optional mock modules)
+  /#\s*noqa:\s*E402\b/i, // module level import not at top of file
+];
+
 const PROHIBITED_SUPPRESSIONS = [
   { pattern: /@ts-ignore/, label: "@ts-ignore type suppression" },
   { pattern: /@ts-expect-error/, label: "@ts-expect-error suppression" },
   { pattern: /eslint-disable/, label: "eslint-disable directive" },
-  { pattern: /#\s*noqa/i, label: "Python # noqa linter suppression" },
+  { pattern: /#\s*noqa(?!\s*:\s*(?:F401|E402)\b)/i, label: "Python # noqa linter suppression" },
   { pattern: /#\s*type:\s*ignore/i, label: "Python # type: ignore suppression" },
   { pattern: /\b(it|test|describe)\.skip\s*\(/, label: "Skipped test (.skip)" },
   { pattern: /@pytest\.mark\.skip/, label: "Skipped pytest (@pytest.mark.skip)" },
 ];
 
-export async function auditRepairDiff(repoRoot: string): Promise<SafetyAuditResult> {
+export async function auditRepairDiff(
+  repoRoot: string,
+  options: SafetyAuditOptions = {}
+): Promise<SafetyAuditResult> {
   const git = simpleGit(repoRoot);
-  const unstagedDiff = await git.diff();
-  const stagedDiff = await git.diff(["--cached"]);
-  const rawDiff = `${unstagedDiff}\n${stagedDiff}`;
+  let rawDiff = "";
+
+  if (options.baseBranch) {
+    const head = options.headBranch || "HEAD";
+    try {
+      rawDiff = await git.diff([`${options.baseBranch}...${head}`]);
+    } catch {
+      rawDiff = await git.diff([`${options.baseBranch}..${head}`]);
+    }
+  } else {
+    const unstagedDiff = await git.diff();
+    const stagedDiff = await git.diff(["--cached"]);
+    rawDiff = `${unstagedDiff}\n${stagedDiff}`;
+  }
+
   const violations: string[] = [];
 
   if (!rawDiff.trim()) {
@@ -40,9 +66,13 @@ export async function auditRepairDiff(repoRoot: string): Promise<SafetyAuditResu
     }
 
     if (line.startsWith("+") && !line.startsWith("+++")) {
-      for (const rule of PROHIBITED_SUPPRESSIONS) {
-        if (rule.pattern.test(line)) {
-          violations.push(`CHEAT DETECTED in ${currentFile}: Added ${rule.label} -> "${line.slice(1).trim()}"`);
+      // Check for benign noqa first
+      const isBenign = BENIGN_NOQA_PATTERNS.some((p) => p.test(line));
+      if (!isBenign) {
+        for (const rule of PROHIBITED_SUPPRESSIONS) {
+          if (rule.pattern.test(line)) {
+            violations.push(`CHEAT DETECTED in ${currentFile}: Added ${rule.label} -> "${line.slice(1).trim()}"`);
+          }
         }
       }
       if (/\b(expect|assert)\s*\(/.test(line)) addedAssertions++;

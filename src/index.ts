@@ -62,13 +62,18 @@ program
 
 program
   .command("verify")
-  .description("Run Anti-Cheat Git Diff Audit to verify AI agent repairs")
-  .action(async () => {
-    const result = await auditRepairDiff(process.cwd());
+  .description("Run Anti-Cheat Git Diff Audit to verify AI agent repairs or PR diffs")
+  .option("-b, --base <baseRef>", "Compare against base git reference (e.g. origin/main, main)")
+  .option("-h, --head <headRef>", "Compare head git reference (defaults to HEAD)", "HEAD")
+  .action(async (opts: { base?: string; head?: string }) => {
+    const result = await auditRepairDiff(process.cwd(), {
+      baseBranch: opts.base,
+      headBranch: opts.head,
+    });
     if (result.passed) {
       console.log(chalk.green.bold("✓ VibeCI Safety Audit PASSED: 0 suppressed rules, 0 weakened assertions."));
     } else {
-      console.log(chalk.red.bold("❌ VibeCI Safety Audit REJECTED REPAIR:"));
+      console.log(chalk.red.bold("❌ VibeCI Safety Audit REJECTED REPAIR / PR DIFF:"));
       for (const v of result.violations) {
         console.log(chalk.red(`  • ${v}`));
       }
