@@ -20,19 +20,27 @@
 
 ## 🚀 Published on npm Registry
 
-`vibeci@0.1.0` is now officially published on npm!
+`vibeci` is officially published on npm!
 
 - **Package URL:** [npmjs.com/package/vibeci](https://www.npmjs.com/package/vibeci)
-- **Tag:** `latest -> 0.1.0`
+- **Version:** `0.1.1`
 
 Any developer worldwide can run it immediately without installation:
 
 ```bash
+# Preflight checks (casing & CI gap analysis)
 npx vibeci preflight
+
+# Anti-cheat diff verify (local working tree or PR diff)
 npx vibeci verify
+npx vibeci verify --base origin/main
+
+# Change-aware checks (supports Node, Python, Rust, CMake)
+npx vibeci check
+npx vibeci check --base origin/main --allow-build
 ```
 
-Or install globally on your machine:
+Or install globally:
 
 ```bash
 npm install -g vibeci

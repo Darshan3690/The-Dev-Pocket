@@ -12,12 +12,16 @@ import mcpCmd from "./cli/commands/mcp.js";
 import analyzePrCmd from "./cli/commands/analyze-pr.js";
 import initCmd from "./cli/commands/init.js";
 
+import { createRequire } from "node:module";
+const require = createRequire(import.meta.url);
+const pkg = require("../package.json");
+
 const program = new Command();
 
 program
   .name("vibeci")
   .description("The CI seatbelt for vibe coding and AI coding agents.")
-  .version("0.1.0");
+  .version(pkg.version);
 
 program
   .command("analyze")
