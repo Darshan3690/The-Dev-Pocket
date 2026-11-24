@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { execSync } from "node:child_process";
 import { simpleGit } from "simple-git";
 
 export type FileCategory =
@@ -22,9 +23,35 @@ export interface CheckPlan {
   skipReasons: string[];
 }
 
-const TEST_FILE_PATTERNS = [/\.(test|spec)\.(ts|js|jsx|tsx)$/, /__tests__\//];
-const LOCK_FILE_PATTERNS = [/package-lock\.json$/, /pnpm-lock\.yaml$/, /yarn\.lock$/, /poetry\.lock$/, /uv\.lock$/];
-const DOC_PATTERNS = [/\.md$/, /\/docs\//];
+const TEST_FILE_PATTERNS = [
+  /\.(test|spec)\.(ts|js|jsx|tsx)$/,
+  /__tests__\//,
+  /test_[^/]+\.py$/,
+  /[^/]+_test\.py$/,
+  /tests?\//,
+  /test_[^/]+\.cpp$/,
+];
+
+const LOCK_FILE_PATTERNS = [
+  /package-lock\.json$/,
+  /pnpm-lock\.yaml$/,
+  /yarn\.lock$/,
+  /poetry\.lock$/,
+  /uv\.lock$/,
+  /Cargo\.lock$/,
+];
+
+const DOC_PATTERNS = [/\.md$/, /\/docs\//, /^website\//];
+
+function hasBinary(binaryName: string): boolean {
+  try {
+    const cmd = process.platform === "win32" ? `where.exe ${binaryName}` : `which ${binaryName}`;
+    execSync(cmd, { stdio: "ignore" });
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 function categorizeFile(filePath: string): FileCategory {
   if (TEST_FILE_PATTERNS.some((p) => p.test(filePath))) return "TEST_FILES";
@@ -37,6 +64,8 @@ function categorizeFile(filePath: string): FileCategory {
 export interface PlanCheckOptions {
   all?: boolean;
   fast?: boolean;
+  baseBranch?: string;
+  headBranch?: string;
 }
 
 export async function planChecks(repoRoot: string, options: PlanCheckOptions = {}): Promise<CheckPlan> {
@@ -46,12 +75,30 @@ export async function planChecks(repoRoot: string, options: PlanCheckOptions = {
     return { queue: [], skipReasons: ["Not a git repository"] };
   }
 
-  const status = await git.status();
-  const changedFiles = [...new Set([...status.modified, ...status.created, ...status.not_added])];
+  let changedFiles: string[] = [];
+
+  if (options.baseBranch) {
+    const head = options.headBranch || "HEAD";
+    try {
+      const diffSummary = await git.diffSummary([`${options.baseBranch}...${head}`]);
+      changedFiles = diffSummary.files.map((f) => f.file);
+    } catch {
+      try {
+        const diffSummary = await git.diffSummary([`${options.baseBranch}..${head}`]);
+        changedFiles = diffSummary.files.map((f) => f.file);
+      } catch {
+        // fallback to working tree
+      }
+    }
+  }
+
+  if (changedFiles.length === 0) {
+    const status = await git.status();
+    changedFiles = [...new Set([...status.modified, ...status.created, ...status.not_added])];
+  }
 
   const categories = changedFiles.map((f) => categorizeFile(f));
   const skipReasons: string[] = [];
-
   const queue: CheckItem[] = [];
 
   // Always run static checks first
@@ -60,7 +107,7 @@ export async function planChecks(repoRoot: string, options: PlanCheckOptions = {
     command: "vibeci preflight",
     category: "STATIC",
     estimatedMs: 100,
-    relatedFiles: changedFiles.filter((f) => /\.(ts|tsx|js|jsx)$/.test(f)),
+    relatedFiles: changedFiles.filter((f) => /\.(ts|tsx|js|jsx|py|cpp|h|rs|go)$/.test(f)),
   });
 
   const shouldRunAll = options.all || changedFiles.length === 0;
@@ -71,27 +118,44 @@ export async function planChecks(repoRoot: string, options: PlanCheckOptions = {
     return { queue, skipReasons };
   }
 
-  // Lint only if eslint config exists or package.json has lint script
-  const hasEslint = fs.existsSync(path.join(repoRoot, "eslint.config.mjs")) ||
-                    fs.existsSync(path.join(repoRoot, "eslint.config.js")) ||
-                    fs.existsSync(path.join(repoRoot, ".eslintrc.json")) ||
-                    fs.existsSync(path.join(repoRoot, ".eslintrc.js"));
+  // Node.js project checks
+  const packageJsonPath = path.join(repoRoot, "package.json");
+  const hasPackageJson = fs.existsSync(packageJsonPath);
+  let pkgScripts: Record<string, string> = {};
+
+  if (hasPackageJson) {
+    try {
+      const pkg = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
+      pkgScripts = pkg.scripts || {};
+    } catch {
+      // ignore JSON parse error
+    }
+  }
+
+  // Lint
+  const hasEslint =
+    fs.existsSync(path.join(repoRoot, "eslint.config.mjs")) ||
+    fs.existsSync(path.join(repoRoot, "eslint.config.js")) ||
+    fs.existsSync(path.join(repoRoot, ".eslintrc.json")) ||
+    fs.existsSync(path.join(repoRoot, ".eslintrc.js")) ||
+    !!pkgScripts["lint"];
+
   if (hasEslint && (shouldRunAll || categories.includes("SOURCE_CODE") || categories.includes("TEST_FILES"))) {
     queue.push({
       id: "eslint",
-      command: "npx eslint . --ext .ts,.tsx",
+      command: pkgScripts["lint"] ? "npm run lint" : "npx eslint . --ext .ts,.tsx",
       category: "LINT",
       estimatedMs: 5000,
-      relatedFiles: changedFiles.filter((f) => /\.(ts|tsx)$/.test(f)),
+      relatedFiles: changedFiles.filter((f) => /\.(ts|tsx|js|jsx)$/.test(f)),
     });
   }
 
-  // Type check if tsconfig exists and (source files changed or --all)
+  // Type check if tsconfig exists
   const hasTsConfig = fs.existsSync(path.join(repoRoot, "tsconfig.json"));
   if (hasTsConfig && (shouldRunAll || categories.includes("SOURCE_CODE"))) {
     queue.push({
       id: "tsc",
-      command: "npx tsc --noEmit",
+      command: pkgScripts["typecheck"] ? "npm run typecheck" : "npx tsc --noEmit",
       category: "TYPECHECK",
       estimatedMs: 10000,
       relatedFiles: changedFiles.filter((f) => /\.(ts|tsx)$/.test(f)),
@@ -104,29 +168,78 @@ export async function planChecks(repoRoot: string, options: PlanCheckOptions = {
     return { queue, skipReasons };
   }
 
-  // Tests only if test files exist and test framework configured
-  const hasTests = categories.includes("TEST_FILES") ||
-                   fs.existsSync(path.join(repoRoot, "vitest.config.ts")) ||
-                   fs.existsSync(path.join(repoRoot, "vitest.config.js"));
-  if (hasTests && (shouldRunAll || categories.includes("TEST_FILES") || categories.includes("SOURCE_CODE"))) {
+  // Tests
+  const hasVitest =
+    fs.existsSync(path.join(repoRoot, "vitest.config.ts")) ||
+    fs.existsSync(path.join(repoRoot, "vitest.config.js")) ||
+    !!pkgScripts["test"];
+
+  const hasPythonTests =
+    fs.existsSync(path.join(repoRoot, "pytest.ini")) ||
+    fs.existsSync(path.join(repoRoot, "pyproject.toml")) ||
+    fs.existsSync(path.join(repoRoot, "setup.py"));
+
+  const hasCargo = fs.existsSync(path.join(repoRoot, "Cargo.toml"));
+
+  if (hasVitest && (shouldRunAll || categories.includes("TEST_FILES") || categories.includes("SOURCE_CODE"))) {
     queue.push({
       id: "vitest",
-      command: "npx vitest run",
+      command: pkgScripts["test"] ? "npm test" : "npx vitest run",
       category: "TEST",
       estimatedMs: 30000,
-      relatedFiles: changedFiles.filter((f) => /\.(test|spec)\.(ts|tsx)$/.test(f)),
+      relatedFiles: changedFiles.filter((f) => /\.(test|spec)\.(ts|tsx|js|jsx)$/.test(f)),
     });
+  } else if (hasPythonTests && (shouldRunAll || categories.includes("TEST_FILES") || categories.includes("SOURCE_CODE"))) {
+    if (hasBinary("pytest")) {
+      queue.push({
+        id: "pytest",
+        command: "pytest -q",
+        category: "TEST",
+        estimatedMs: 20000,
+        relatedFiles: changedFiles.filter((f) => /\.py$/.test(f)),
+      });
+    } else {
+      skipReasons.push("Python test files detected but pytest executable is not installed in local environment");
+    }
+  } else if (hasCargo && (shouldRunAll || categories.includes("SOURCE_CODE"))) {
+    if (hasBinary("cargo")) {
+      queue.push({
+        id: "cargo-test",
+        command: "cargo test",
+        category: "TEST",
+        estimatedMs: 30000,
+        relatedFiles: changedFiles.filter((f) => /\.rs$/.test(f)),
+      });
+    } else {
+      skipReasons.push("Rust project detected but cargo executable is not installed in local environment");
+    }
   }
 
-  // Build if lock files or source changed or --all
+  // Build: Only if repository actually declares a build script or build file
+  const hasNpmBuild = hasPackageJson && !!pkgScripts["build"];
+  const hasCargoBuild = hasCargo;
+  const hasCmake = fs.existsSync(path.join(repoRoot, "CMakeLists.txt"));
+
   if (shouldRunAll || categories.includes("DEPENDENCY_LOCK") || categories.includes("SOURCE_CODE")) {
-    queue.push({
-      id: "build",
-      command: "npm run build",
-      category: "BUILD",
-      estimatedMs: 60000,
-      relatedFiles: changedFiles,
-    });
+    if (hasNpmBuild) {
+      queue.push({
+        id: "build",
+        command: "npm run build",
+        category: "BUILD",
+        estimatedMs: 60000,
+        relatedFiles: changedFiles,
+      });
+    } else if (hasCargoBuild && hasBinary("cargo")) {
+      queue.push({
+        id: "cargo-build",
+        command: "cargo build --release",
+        category: "BUILD",
+        estimatedMs: 60000,
+        relatedFiles: changedFiles.filter((f) => /\.rs$/.test(f)),
+      });
+    } else if (hasCmake) {
+      skipReasons.push("CMake build system detected — use native cmake/ninja for compilation");
+    }
   }
 
   return { queue, skipReasons };

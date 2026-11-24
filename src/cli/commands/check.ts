@@ -11,9 +11,14 @@ const command = new Command("check")
   .option("--allow-build", "Allow moderate-risk build commands")
   .option("--all", "Run all CI jobs regardless of git diff")
   .option("--fast", "Skip slow build and test suites, run fast static checks only")
+  .option("--base <branch>", "Base branch for comparison (e.g. origin/main)")
   .action(async (opts) => {
     const spinner = ora("Planning checks...").start();
-    const plan = await planChecks(process.cwd(), { all: opts.all, fast: opts.fast });
+    const plan = await planChecks(process.cwd(), {
+      all: opts.all,
+      fast: opts.fast,
+      baseBranch: opts.base,
+    });
 
     if (plan.skipReasons.length > 0) {
       spinner.info(chalk.yellow(`Skipping: ${plan.skipReasons.join(", ")}`));
@@ -48,22 +53,32 @@ const command = new Command("check")
     console.log(chalk.cyan("\n╭────────────────────────────────────────────────────╮"));
     console.log(chalk.cyan("│           VIBECI — Check Results                   │"));
     console.log(chalk.cyan("╰────────────────────────────────────────────────────╯"));
-    console.log(`Passed: ${chalk.green(passed.length)} | Failed: ${chalk.red(failed.length)}`);
+    console.log(`Passed: ${passed.length} | Failed: ${failed.length}\n`);
 
-    // Save report
     const reportDir = path.join(process.cwd(), ".vibeci", "reports");
-    fs.mkdirSync(reportDir, { recursive: true });
-    const report = {
-      generatedAt: new Date().toISOString(),
-      total: results.length,
-      passed: passed.length,
-      failed: failed.length,
-      results,
-    };
-    fs.writeFileSync(path.join(reportDir, "latest.json"), JSON.stringify(report, null, 2), "utf8");
+    if (!fs.existsSync(reportDir)) {
+      fs.mkdirSync(reportDir, { recursive: true });
+    }
+    fs.writeFileSync(
+      path.join(reportDir, "latest.json"),
+      JSON.stringify(
+        {
+          generatedAt: new Date().toISOString(),
+          total: results.length,
+          passed: passed.length,
+          failed: failed.length,
+          results,
+        },
+        null,
+        2
+      )
+    );
 
-    console.log(chalk.gray("\nReport saved to .vibeci/reports/latest.json"));
-    process.exit(failed.length > 0 ? 1 : 0);
+    console.log(chalk.gray(`Report saved to .vibeci/reports/latest.json\n`));
+
+    if (failed.length > 0) {
+      process.exit(1);
+    }
   });
 
 export default command;
