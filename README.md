@@ -10,7 +10,7 @@
 
 **The CI seatbelt for vibe coding and AI coding agents.**
 
-*Catch Windows-to-Linux casing traps, runtime drift, unverified toolchain gaps, and lazy AI test-cheats locally in seconds—before your pull request breaks GitHub Actions.*
+*Catch Windows-to-Linux casing traps, runtime drift, missing local toolchains, and lazy AI test-cheats locally in seconds—before your pull request breaks GitHub Actions.*
 
 [**Live Demo**](https://the-dev-pocket.vercel.app) • [**npm Package**](https://www.npmjs.com/package/vibeci) • [**Report Bug**](https://github.com/Darshan3690/The-Dev-Pocket/issues) • [**Contributing**](CONTRIBUTING.md)
 
@@ -35,13 +35,12 @@ npx vibeci preflight
 npx vibeci verify
 npx vibeci verify --base origin/main
 
-# Change-aware checks (supports Node, Python, Rust, CMake)
+# Change-aware checks (supports Node, Python, Rust, CMake, C/C++)
 npx vibeci check
 npx vibeci check --base origin/main --allow-build
 
-# Validate PR template & metadata guardrail before git push
+# PR Template & Metadata Guardrail
 npx vibeci check --pr-template
-npx vibeci check --pr-metadata
 ```
 
 Or install globally:
@@ -58,25 +57,54 @@ When vibe coding with AI coding agents (Cursor, Claude Code, Antigravity IDE, Cl
 
 1. **Silent Casing Traps:** Code passes on Windows NTFS and macOS APFS, but crashes immediately on Ubuntu GitHub Actions runners due to case sensitivity.
 2. **AI Test Cheating:** AI agents frequently bypass type errors (`// @ts-ignore`, `eslint-disable`) or comment out assertions in test files to fake a passing build.
-3. **Environment Drift & Unverified Gaps:** Mismatches between your local machine (e.g. Windows without clang-format/pytest) and cloud CI. VibeCI detects missing toolchains, provides containerized fallbacks (`docker` / `act`), and penalizes readiness scores accurately.
-4. **Automated PR Template & Metadata Guardrail:** Verifies local commits and PR descriptions against `.github/PULL_REQUEST_TEMPLATE.md` to prevent pushing PRs with uncompleted checklists or missing risk assessments.
-5. **Robust Remote PR Forensics:** Analyzes remote PR checks with auto remote repo detection (`-R <owner>/<repo>`) and REST API fallback with `GITHUB_TOKEN`.
+3. **Missing Toolchains:** When local machines lack `pytest`, `clang-format`, or `cmake`, standard checkers mark builds as 100% green instead of flagging unverified toolchain gaps.
+4. **Remote Target Misalignment:** PR checks fail on forks without automatic `-R <owner>/<repo>` upstream targeting and REST API fallback.
+5. **PR Template Non-Compliance:** PRs get rejected because template sections, risk levels, or checkboxes remain uncompleted.
+
+**VibeCI gives you a deterministic CI Twin, Toolchain Detection, and Anti-Cheat Diff Auditor right on your laptop.**
 
 ---
 
-## 🛠️ Commands Reference
+## 🛠️ CLI Reference
 
-| Command | Action |
-|---|---|
-| `vibeci analyze` | Scan repository, build `.vibeci/ci-twin.json`, and detect local-to-CI environment gaps. |
-| `vibeci verify [options]` | Run Anti-Cheat Git Diff Audit to verify AI agent repairs or PR diffs. |
-| `vibeci preflight [options]` | Run preflight checks: CI twin analysis + cross-platform casing guard. |
-| `vibeci check [options]` | Execute change-aware checks with safety guards and optional `--pr-template`. |
-| `vibeci explain` | Classify failures and show readiness score from latest check report. |
-| `vibeci repair [options]` | Run evidence-driven repair loop for failed checks. |
-| `vibeci analyze-pr <pr-number>` | Analyze remote PR failures and generate verification badge with auto-remote targeting. |
-| `vibeci init [options]` | Initialize VibeCI guardrails in repository (config and git hooks). |
-| `vibeci mcp` | Start VibeCI JSON-RPC 2.0 MCP server for IDE agent integration. |
+### 1. Zero-Config Init
+Initialize local CI twin config and optional git pre-commit anti-cheat hook:
+```bash
+npx vibeci init --hook
+```
+
+### 2. Preflight Diagnostics
+Detect OS drift, Node version drift, and relative import casing traps:
+```bash
+npx vibeci preflight
+```
+
+### 3. Change-Aware Checks with Toolchain Gap Detection
+Run static gates and affected tests locally, flagging unverified gaps and container fallbacks (`docker`/`act`):
+```bash
+npx vibeci check
+npx vibeci check --fast
+```
+
+### 4. PR Template & Metadata Guardrail
+Validate your commit message or PR description against `.github/PULL_REQUEST_TEMPLATE.md`:
+```bash
+npx vibeci check --pr-template
+npx vibeci check --pr-metadata
+```
+
+### 5. Anti-Cheat Git Diff Audit
+Programmatically inspect git diffs to ensure no AI agent suppressed linters, skipped tests, or weakened assertions:
+```bash
+npx vibeci verify
+npx vibeci verify --base origin/main
+```
+
+### 6. Remote PR Forensics & Badge
+Inspect remote PR check failures with automatic upstream targeting (`-R owner/repo`) and REST API fallback:
+```bash
+npx vibeci analyze-pr 123 --copy-pr-badge
+```
 
 ---
 
@@ -97,8 +125,13 @@ VibeCI includes a native Model Context Protocol (MCP) server so Cursor, Claude C
 }
 ```
 
+Available MCP Tools:
+- `get_ci_twin`: Get full environment disparity report.
+- `run_preflight`: Run case-sensitivity and environment checks.
+- `verify_repair`: Audit git diff for anti-cheat violations.
+
 ---
 
-## 📄 License
+## 📜 License
 
-MIT © [Darshan Rajput](https://github.com/Darshan3690)
+MIT License © [Darshan Rajput](https://github.com/Darshan3690)
