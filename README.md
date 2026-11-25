@@ -10,7 +10,7 @@
 
 **The CI seatbelt for vibe coding and AI coding agents.**
 
-*Catch Windows-to-Linux casing traps, runtime drift, and lazy AI test-cheats locally in seconds—before your pull request breaks GitHub Actions.*
+*Catch Windows-to-Linux casing traps, runtime drift, unverified toolchain gaps, and lazy AI test-cheats locally in seconds—before your pull request breaks GitHub Actions.*
 
 [**Live Demo**](https://the-dev-pocket.vercel.app) • [**npm Package**](https://www.npmjs.com/package/vibeci) • [**Report Bug**](https://github.com/Darshan3690/The-Dev-Pocket/issues) • [**Contributing**](CONTRIBUTING.md)
 
@@ -23,7 +23,7 @@
 `vibeci` is officially published on npm!
 
 - **Package URL:** [npmjs.com/package/vibeci](https://www.npmjs.com/package/vibeci)
-- **Version:** `0.1.1`
+- **Version:** `0.1.2`
 
 Any developer worldwide can run it immediately without installation:
 
@@ -38,6 +38,10 @@ npx vibeci verify --base origin/main
 # Change-aware checks (supports Node, Python, Rust, CMake)
 npx vibeci check
 npx vibeci check --base origin/main --allow-build
+
+# Validate PR template & metadata guardrail before git push
+npx vibeci check --pr-template
+npx vibeci check --pr-metadata
 ```
 
 Or install globally:
@@ -54,38 +58,25 @@ When vibe coding with AI coding agents (Cursor, Claude Code, Antigravity IDE, Cl
 
 1. **Silent Casing Traps:** Code passes on Windows NTFS and macOS APFS, but crashes immediately on Ubuntu GitHub Actions runners due to case sensitivity.
 2. **AI Test Cheating:** AI agents frequently bypass type errors (`// @ts-ignore`, `eslint-disable`) or comment out assertions in test files to fake a passing build.
-3. **Environment Drift:** Mismatches between your local machine (e.g. Node 22 on Windows) and CI targets (Node 20 on Ubuntu).
-4. **Token-Wasting Log Dumps:** Agents waste hundreds of thousands of tokens analyzing 5,000-line cloud CI logs instead of focusing on clean, structured 5-line root causes.
-
-**VibeCI gives you a deterministic CI Twin and Anti-Cheat Diff Auditor right on your laptop.**
+3. **Environment Drift & Unverified Gaps:** Mismatches between your local machine (e.g. Windows without clang-format/pytest) and cloud CI. VibeCI detects missing toolchains, provides containerized fallbacks (`docker` / `act`), and penalizes readiness scores accurately.
+4. **Automated PR Template & Metadata Guardrail:** Verifies local commits and PR descriptions against `.github/PULL_REQUEST_TEMPLATE.md` to prevent pushing PRs with uncompleted checklists or missing risk assessments.
+5. **Robust Remote PR Forensics:** Analyzes remote PR checks with auto remote repo detection (`-R <owner>/<repo>`) and REST API fallback with `GITHUB_TOKEN`.
 
 ---
 
-## 🛠️ Quick Start
+## 🛠️ Commands Reference
 
-### 1. Zero-Config Init
-Initialize local CI twin config and optional git pre-commit anti-cheat hook:
-```bash
-npx vibeci init --hook
-```
-
-### 2. Run Preflight Diagnostics
-Detect OS drift, Node version drift, and relative import casing traps:
-```bash
-npx vibeci preflight
-```
-
-### 3. Run Change-Aware Checks
-Run static gates and affected tests locally in under 1 second:
-```bash
-npx vibeci check --fast
-```
-
-### 4. Verify Diff Safety (Anti-Cheat Guard)
-Programmatically inspect unstaged and staged git diffs to ensure no AI agent suppressed linters or weakened tests:
-```bash
-npx vibeci verify
-```
+| Command | Action |
+|---|---|
+| `vibeci analyze` | Scan repository, build `.vibeci/ci-twin.json`, and detect local-to-CI environment gaps. |
+| `vibeci verify [options]` | Run Anti-Cheat Git Diff Audit to verify AI agent repairs or PR diffs. |
+| `vibeci preflight [options]` | Run preflight checks: CI twin analysis + cross-platform casing guard. |
+| `vibeci check [options]` | Execute change-aware checks with safety guards and optional `--pr-template`. |
+| `vibeci explain` | Classify failures and show readiness score from latest check report. |
+| `vibeci repair [options]` | Run evidence-driven repair loop for failed checks. |
+| `vibeci analyze-pr <pr-number>` | Analyze remote PR failures and generate verification badge with auto-remote targeting. |
+| `vibeci init [options]` | Initialize VibeCI guardrails in repository (config and git hooks). |
+| `vibeci mcp` | Start VibeCI JSON-RPC 2.0 MCP server for IDE agent integration. |
 
 ---
 
@@ -106,56 +97,8 @@ VibeCI includes a native Model Context Protocol (MCP) server so Cursor, Claude C
 }
 ```
 
-### Available MCP Tools for Agents:
-- `vibeci_preflight` — Scan repository and check for environment drift and casing issues.
-- `vibeci_audit_diff` — Inspect working tree changes to block cheating before commits.
-- `vibeci_run_checks` — Run targeted local CI checks for modified files.
-
----
-
-## 📋 CLI Command Reference
-
-| Command | Description |
-|---|---|
-| `vibeci preflight` | Run CI twin analysis and cross-platform casing checks |
-| `vibeci verify` | Run Anti-Cheat Git Diff Audit on staged and unstaged files |
-| `vibeci analyze` | Parse `.github/workflows/*.yml` into `.vibeci/ci-twin.json` |
-| `vibeci check [--fast] [--all]` | Execute safe change-aware check queue |
-| `vibeci explain` | Classify recent failures and generate 5-line agent prompt |
-| `vibeci repair` | Autonomous repair loop with safety verification |
-| `vibeci mcp` | Start VibeCI JSON-RPC 2.0 MCP server |
-| `vibeci analyze-pr <pr-number>` | Analyze remote PR failure logs and output markdown badge |
-
----
-
-## 🔒 Git Pre-Commit Hook (Automated Seatbelt)
-
-Block bad commits before they hit GitHub by adding VibeCI to your pre-commit hooks:
-
-```bash
-# In .git/hooks/pre-commit or Husky:
-npx vibeci verify
-```
-
-If an agent or developer injects `// @ts-ignore` or introduces a case-sensitive file path mismatch, the commit is aborted instantly.
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please check out [CONTRIBUTING.md](CONTRIBUTING.md) to get started.
-
-1. Fork the repo: [https://github.com/Darshan3690/The-Dev-Pocket](https://github.com/Darshan3690/The-Dev-Pocket)
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Test locally with `npm run build` and `vibeci verify`
-4. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-5. Push to the branch (`git push origin feature/amazing-feature`)
-6. Open a Pull Request
-
 ---
 
 ## 📄 License
 
-Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
-
-Built with ❤️ by [Darshan Rajput](https://github.com/Darshan3690).
+MIT © [Darshan Rajput](https://github.com/Darshan3690)

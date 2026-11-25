@@ -10,7 +10,8 @@ export function calculateReadinessScore(
   failedChecks: number,
   hasLockfileDrift: boolean,
   hasOsRuntimeMismatch: boolean,
-  hasCriticalGap: boolean
+  hasCriticalGap: boolean,
+  skippedGapsCount: number = 0
 ): ReadinessScore {
   const deductions: Array<{ reason: string; points: number }> = [];
   let score = 100;
@@ -34,6 +35,15 @@ export function calculateReadinessScore(
   if (hasCriticalGap) {
     score -= 25;
     deductions.push({ reason: "Critical cross-platform gap", points: 25 });
+  }
+
+  if (skippedGapsCount > 0) {
+    const gapDeduction = Math.min(30, skippedGapsCount * 10);
+    score -= gapDeduction;
+    deductions.push({
+      reason: `${skippedGapsCount} unverified / missing toolchain gap(s)`,
+      points: gapDeduction,
+    });
   }
 
   score = Math.max(0, score);

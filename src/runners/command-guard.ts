@@ -6,10 +6,32 @@ export interface CommandRiskAssessment {
 }
 
 const SAFE_COMMANDS = [
-  "vibeci", "vitest", "jest", "pytest", "eslint", "ruff", "tsc", "mypy", "cargo check", "go test", "npm test", "pnpm test", "npm run typecheck", "pnpm run typecheck",
+  "vibeci",
+  "vitest",
+  "jest",
+  "pytest",
+  "eslint",
+  "ruff",
+  "black",
+  "clang-format",
+  "tsc",
+  "mypy",
+  "cargo check",
+  "go test",
+  "npm test",
+  "pnpm test",
+  "npm run typecheck",
+  "pnpm run typecheck",
 ];
 
-const MODERATE_COMMANDS = ["pnpm build", "npm ci", "npm run build", "pip install"];
+const MODERATE_COMMANDS = [
+  "pnpm build",
+  "npm ci",
+  "npm run build",
+  "pip install",
+  "cargo build",
+  "cmake",
+];
 
 const BLOCKED_PATTERNS = [
   /curl\s.*\|.*bash/,
@@ -20,27 +42,53 @@ const BLOCKED_PATTERNS = [
   /wget\s.*\|.*bash/,
 ];
 
+export function assessSubcommandRisk(subcmd: string): CommandRiskAssessment {
+  const trimmed = subcmd.trim();
+  if (!trimmed) return { risk: "SAFE" };
+
+  for (const pattern of BLOCKED_PATTERNS) {
+    if (pattern.test(trimmed)) {
+      return { risk: "BLOCKED", reason: `Command matches blocked pattern: ${pattern.source}` };
+    }
+  }
+
+  if (SAFE_COMMANDS.some((c) => trimmed.startsWith(c) || trimmed.includes(` ${c}`) || trimmed === c)) {
+    return { risk: "SAFE" };
+  }
+
+  if (MODERATE_COMMANDS.some((c) => trimmed.startsWith(c) || trimmed.includes(` ${c}`) || trimmed === c)) {
+    return { risk: "MODERATE", reason: `Moderate risk (${trimmed}) — requires --allow-build flag` };
+  }
+
+  return { risk: "MODERATE", reason: `Unknown command segment (${trimmed}) — defaulting to moderate risk` };
+}
+
 export function assessCommandRisk(command: string): CommandRiskAssessment {
-  // Check blocked patterns first
+  // Check full un-split command first for whole pipeline blocked patterns (e.g. curl ... | bash)
   for (const pattern of BLOCKED_PATTERNS) {
     if (pattern.test(command)) {
       return { risk: "BLOCKED", reason: `Command matches blocked pattern: ${pattern.source}` };
     }
   }
 
-  // Check if it's a known safe command
-  const baseCmd = command.trim().split(/\s+/)[0];
-  if (SAFE_COMMANDS.some((c) => command.includes(c))) {
-    return { risk: "SAFE" };
+  // Split on compound shell operators: &&, ||, ;, |
+  const segments = command.split(/&&|\|\||;/).map((s) => s.trim()).filter(Boolean);
+
+  let highestRisk: CommandRisk = "SAFE";
+  let combinedReason: string | undefined;
+
+  for (const seg of segments) {
+    const assessment = assessSubcommandRisk(seg);
+    if (assessment.risk === "BLOCKED") {
+      return assessment;
+    }
+    if (assessment.risk === "MODERATE") {
+      highestRisk = "MODERATE";
+      combinedReason = combinedReason ? `${combinedReason}; ${assessment.reason}` : assessment.reason;
+    }
   }
 
-  // Check moderate commands
-  if (MODERATE_COMMANDS.some((c) => command.includes(c))) {
-    return { risk: "MODERATE", reason: "Moderate risk — requires --allow-build flag" };
-  }
-
-  // Default to moderate for unknown commands
-  return { risk: "MODERATE", reason: "Unknown command — defaulting to moderate risk" };
+  return { risk: highestRisk, reason: combinedReason };
 }
 
 export function isCommandAllowed(

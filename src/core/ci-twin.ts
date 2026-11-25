@@ -48,16 +48,16 @@ export async function buildCITwin(repoRoot: string): Promise<CITwin> {
     gaps.push({
       id: "GAP-OS-01",
       category: "OS_MISMATCH",
-      severity: "MEDIUM",
+      severity: "LOW", // Informational advisory, not critical blocker
       localValue: localOS,
       ciValue: "ubuntu-latest (case-sensitive ext4)",
-      recommendation: "VibeCI Case-Sensitivity Guard enabled for relative imports.",
+      recommendation: "VibeCI Case-Sensitivity Guard active for imports. Keep files consistently cased.",
     });
-    score -= 10;
+    score -= 5;
   }
 
   for (const job of jobs) {
-    if (job.nodeVersion) {
+    if (job.nodeVersion && !job.nodeVersion.includes("${{")) {
       const ciMajor = job.nodeVersion.split(".")[0]?.replace(/[^0-9]/g, "");
       const localMajor = localNode.split(".")[0];
       if (ciMajor && localMajor && ciMajor !== localMajor) {
@@ -101,10 +101,8 @@ export async function buildCITwin(repoRoot: string): Promise<CITwin> {
               category: "CASE_SENSITIVITY_TRAP",
               severity: "CRITICAL",
               localValue: imp,
-              ciValue: check.actual ?? "exact-case-required",
-              file: relFile,
-              line: idx + 1,
-              recommendation: `Update import '${imp}' in ${relFile}:${idx + 1} to match exact disk filename '${check.actual}'. Will fail on Ubuntu CI!`,
+              ciValue: check.actual ?? "Unknown exact casing",
+              recommendation: `Fix import case in ${relFile}:${idx + 1} to match disk filename: '${check.actual}'`,
             });
             score -= 25;
           }
@@ -113,7 +111,9 @@ export async function buildCITwin(repoRoot: string): Promise<CITwin> {
     }
   }
 
-  const twin: CITwin = {
+  score = Math.max(0, score);
+
+  return {
     generatedAt: new Date().toISOString(),
     repository: path.basename(repoRoot),
     local: {
@@ -126,12 +126,6 @@ export async function buildCITwin(repoRoot: string): Promise<CITwin> {
       jobs,
     },
     gaps,
-    readinessScore: Math.max(0, score),
+    readinessScore: score,
   };
-
-  const outDir = path.join(repoRoot, ".vibeci");
-  fs.mkdirSync(outDir, { recursive: true });
-  fs.writeFileSync(path.join(outDir, "ci-twin.json"), JSON.stringify(twin, null, 2), "utf8");
-
-  return twin;
 }

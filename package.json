@@ -1,6 +1,6 @@
 {
   "name": "vibeci",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "The CI seatbelt for vibe coding and AI coding agents. Pre-PR CI Twin intelligence, cross-platform gap detection, and anti-cheat repair verification.",
   "type": "module",
   "bin": {

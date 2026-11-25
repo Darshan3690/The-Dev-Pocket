@@ -53,12 +53,17 @@ export async function auditRepairDiff(
   }
 
   let currentFile = "";
+  let isDocOrNonCode = false;
   let removedAssertions = 0;
   let addedAssertions = 0;
 
   for (const line of rawDiff.split("\n")) {
-    if (line.startsWith("+++ b/")) {
-      currentFile = line.slice(6).trim();
+    const diffHeaderMatch = line.match(/^(\+\+\+|---)\s+[ab]?\/?(.*)$/);
+    if (diffHeaderMatch && line.startsWith("+++")) {
+      currentFile = diffHeaderMatch[2].replace(/^"|"$/g, "").trim();
+      isDocOrNonCode = /\.(md|markdown|txt|rst|json|yaml|yml|svg|png|jpg)$/i.test(currentFile) ||
+                       currentFile.startsWith("docs/");
+
       if (currentFile.startsWith(".github/workflows/")) {
         violations.push(`CRITICAL: Prohibited modification to CI workflow file '${currentFile}'.`);
       }
@@ -66,20 +71,22 @@ export async function auditRepairDiff(
     }
 
     if (line.startsWith("+") && !line.startsWith("+++")) {
-      // Check for benign noqa first
-      const isBenign = BENIGN_NOQA_PATTERNS.some((p) => p.test(line));
-      if (!isBenign) {
-        for (const rule of PROHIBITED_SUPPRESSIONS) {
-          if (rule.pattern.test(line)) {
-            violations.push(`CHEAT DETECTED in ${currentFile}: Added ${rule.label} -> "${line.slice(1).trim()}"`);
+      // Skip suppression scanning for documentation / non-code files
+      if (!isDocOrNonCode) {
+        const isBenign = BENIGN_NOQA_PATTERNS.some((p) => p.test(line));
+        if (!isBenign) {
+          for (const rule of PROHIBITED_SUPPRESSIONS) {
+            if (rule.pattern.test(line)) {
+              violations.push(`CHEAT DETECTED in ${currentFile}: Added ${rule.label} -> "${line.slice(1).trim()}"`);
+            }
           }
         }
       }
-      if (/\b(expect|assert)\s*\(/.test(line)) addedAssertions++;
+      if (/\b(expect|assert|check|require|should)\s*\(/.test(line)) addedAssertions++;
     }
 
     if (line.startsWith("-") && !line.startsWith("---")) {
-      if (/\b(expect|assert)\s*\(/.test(line)) removedAssertions++;
+      if (/\b(expect|assert|check|require|should)\s*\(/.test(line)) removedAssertions++;
     }
   }
 
